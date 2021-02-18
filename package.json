@@ -1,0 +1,26 @@
+{
+  "name": "bachelor-fantasy-league-web-app",
+  "version": "0.0.1",
+  "repository": "https://github.com/bbush915/bachelor-fantasy-web-app.git",
+  "author": "Bryan Bush <bryan@dialexa.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vuedx-typecheck . && vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.3.11",
+    "graphql": "^15.5.0",
+    "graphql-tag": "^2.11.0",
+    "vue": "^3.0.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.1.4",
+    "@vue/compiler-sfc": "^3.0.5",
+    "@vuedx/typecheck": "^0.6.3",
+    "@vuedx/typescript-plugin-vue": "^0.6.3",
+    "typescript": "^4.1.5",
+    "vite": "^2.0.0"
+  }
+}
