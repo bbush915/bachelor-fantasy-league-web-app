@@ -1,9 +1,11 @@
 <template>
-  <h1>Bachelor Fantasy League</h1>
+  <div class="bg-gray-darkest">
+    <router-view />
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "App",
