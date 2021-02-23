@@ -2,7 +2,7 @@
   <div class="home h-full p-4 flex flex-col items-center">
     <div class="home__overlay fixed h-full w-full" />
 
-    <div class="w-32 mb-40">
+    <div class="w-24 mb-40">
       <Logo />
     </div>
 
@@ -14,14 +14,14 @@
       <Strikethrough class="title__strikethrough w-24" />
     </div>
 
-    <button class="w-72 mb-6 p-4 rounded-full bg-pink text-2xl">Sign Up</button>
+    <button class="w-48 mb-6 p-3 rounded-full bg-pink">Sign up</button>
 
-    <p class="mb-60 text-white text-2xl">
+    <p class="mb-60 text-white">
       <span class="mr-2">Already have an account?</span>
       <router-link class="text-pink underline" to="/">Log in.</router-link>
     </p>
 
-    <div class="space-y-4">
+    <div class="space-y-4 mb-40">
       <PetalLink
         v-for="(link, index) in links"
         :key="index"
@@ -40,6 +40,12 @@ import Logo from "@/assets/logo.svg";
 import Strikethrough from "@/assets/strikethrough.svg";
 import PetalLink from "./PetalLink.vue";
 
+const links = [
+  { to: "/about", content: "How it works" },
+  { to: "/find-league", content: "Find a League" },
+  { to: "/contestants", content: "Contestants" },
+];
+
 const Home = defineComponent({
   name: "Home",
 
@@ -50,12 +56,6 @@ const Home = defineComponent({
   },
 
   setup() {
-    const links = [
-      { to: "/", content: "How it Works" },
-      { to: "/", content: "Find a League" },
-      { to: "/", content: "Contestants" },
-    ];
-
     return {
       links,
     };

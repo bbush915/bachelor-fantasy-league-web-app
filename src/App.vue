@@ -1,13 +1,20 @@
 <template>
-  <div class="bg-gray-darkest">
-    <router-view />
+  <div class="min-h-screen bg-gray-darkest">
+    <Header />
+    <router-view class="h-full" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 
+import Header from "@/components/simple/Header/index.vue";
+
 export default defineComponent({
   name: "App",
+
+  components: {
+    Header,
+  },
 });
 </script>

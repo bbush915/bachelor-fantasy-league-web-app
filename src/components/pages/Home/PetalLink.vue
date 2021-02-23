@@ -3,7 +3,7 @@
     <router-link
       class="h-48 w-96 flex justify-center items-center"
       :class="['petal-link', { mirror }]"
-      to="/"
+      :to="to"
     >
       <span class="text-center text-white text-3xl">{{ content }}</span>
     </router-link>
