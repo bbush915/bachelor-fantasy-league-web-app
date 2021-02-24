@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen bg-gray-darkest">
+  <div class="min-h-screen flex flex-col bg-gray-darkest">
     <Header />
-    <router-view class="h-full" />
+    <router-view class="flex-grow" />
   </div>
 </template>
 
