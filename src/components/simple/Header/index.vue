@@ -1,12 +1,15 @@
 <template>
-  <div v-if="show" class="w-full bg-gray-dark px-12 py-3 flex">
+  <div
+    v-if="show"
+    class="w-full px-12 py-3 sticky top-0 flex bg-gray-dark z-50"
+  >
     <div class="w-24">
       <router-link to="/">
         <Logo />
       </router-link>
     </div>
 
-    <div class="flex items-center ml-32 space-x-20 flex-grow">
+    <div class="ml-32 flex items-center flex-grow space-x-20">
       <HeaderLink
         v-for="(link, index) in links"
         :key="index"
