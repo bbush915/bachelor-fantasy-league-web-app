@@ -3,7 +3,7 @@
     <GradientOverlay />
     <SteamOverlay class="z-10" />
 
-    <div class="h-full relative flex flex-col items-center bg-gray-darkest">
+    <div class="h-full flex flex-col items-center relative">
       <h1 class="text-white text-3xl self-start my-8 ml-48">How it works</h1>
 
       <div class="max-w-4xl mb-40">
