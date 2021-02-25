@@ -12,12 +12,14 @@ const routes = [
   { path: "/find-league", component: FindLeague },
 ];
 
-const router = createRouter({
-  history: createWebHistory(),
-  routes,
-  scrollBehavior(to, from, savedPosition) {
-    return { top: 0 };
-  },
-});
+export const getRouter = () => {
+  const router = createRouter({
+    history: createWebHistory(),
+    routes,
+    scrollBehavior(to, from, savedPosition) {
+      return { top: 0 };
+    },
+  });
 
-export default router;
+  return router;
+};
