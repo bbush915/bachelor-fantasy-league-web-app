@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="show"
-    class="w-full px-12 py-3 sticky top-0 flex bg-gray-dark z-50"
+    class="w-full px-12 py-3 sticky top-0 flex bg-gray-dark z-30"
   >
     <div class="w-24">
       <router-link to="/">
@@ -19,7 +19,7 @@
     </div>
 
     <div class="flex items-center">
-      <router-link class="mr-5 text-white" to="/">Log in</router-link>
+      <router-link class="mr-5" to="/">Log in</router-link>
 
       <button class="w-32 h-9 bg-pink rounded-full">Sign up</button>
     </div>

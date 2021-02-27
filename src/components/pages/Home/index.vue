@@ -9,16 +9,14 @@
       </div>
 
       <div class="w-80 relative mb-10">
-        <div class="text-white text-3xl text-center">
-          Welcome to the Fantasy Suite
-        </div>
+        <div class="text-3xl text-center">Welcome to the Fantasy Suite</div>
         <div class="font-accent text-red text-4xl text-right">League</div>
         <Strikethrough class="title__strikethrough w-24" />
       </div>
 
       <button class="w-48 mb-6 p-3 rounded-full bg-pink">Sign up</button>
 
-      <p class="mb-60 text-white">
+      <p class="mb-60">
         <span class="mr-2">Already have an account?</span>
         <router-link class="text-pink underline" to="/">Log in.</router-link>
       </p>

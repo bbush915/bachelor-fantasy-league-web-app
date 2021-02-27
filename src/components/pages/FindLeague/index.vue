@@ -1,6 +1,6 @@
 <template>
-  <div class="h-full bg-gray-darkest">
-    <h1 class="text-white">Find League</h1>
+  <div class="h-full">
+    <h1>Find League</h1>
   </div>
 </template>
 

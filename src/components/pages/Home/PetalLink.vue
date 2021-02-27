@@ -5,7 +5,7 @@
       :class="['petal-link', { mirror }]"
       :to="to"
     >
-      <span class="text-center text-white text-3xl">{{ content }}</span>
+      <span class="text-center text-3xl">{{ content }}</span>
     </router-link>
   </div>
 </template>
