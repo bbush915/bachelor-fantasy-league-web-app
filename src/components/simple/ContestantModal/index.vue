@@ -1,16 +1,16 @@
 <template>
-  <div class="overlay w-screen h-screen fixed top-0 z-50" @click="onClose">
+  <div class="fixed top-0 z-50 w-screen h-screen overlay" @click="onClose">
     <div
-      class="modal px-16 pb-12 bg-gray-darkest rounded-xl flex flex-col"
+      class="flex flex-col px-16 pb-12 modal bg-gray-darkest rounded-xl"
       @click.stop
     >
       <button class="absolute right-4 top-4" @click="onClose">
         <CloseIcon />
       </button>
 
-      <h1 class="absolute top-8 left-8 text-2xl">Contestant Details</h1>
+      <h1 class="absolute text-2xl top-8 left-8">Contestant Details</h1>
 
-      <div class="mt-20 mb-4 flex items-center">
+      <div class="flex items-center mt-20 mb-4">
         <div class="w-64 h-64 mr-8 overflow-hidden rounded-full">
           <img :src="contestant.image_sm_url" />
         </div>
@@ -18,7 +18,7 @@
         <div class="flex flex-col">
           <span class="mb-4 text-lg">{{ contestant.name }}</span>
 
-          <div class="text-sm font-thin flex flex-col space-y-1">
+          <div class="flex flex-col text-sm font-thin space-y-1">
             <span>{{ contestant.age }}</span>
             <span>{{ contestant.occupation }}</span>
             <span>{{ contestant.hometown }}</span>
@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <div class="text-sm font-thin max-w-2xl">
+      <div class="max-w-2xl text-sm font-thin">
         <p class="mb-4 leading-6">
           {{ contestant.bio }}
         </p>

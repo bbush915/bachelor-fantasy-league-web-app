@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="show"
-    class="w-full px-12 py-3 sticky top-0 flex bg-gray-dark z-30"
+    class="sticky top-0 z-30 flex w-full px-12 py-3 bg-gray-dark"
   >
     <div class="w-24">
       <router-link to="/">
@@ -9,7 +9,7 @@
       </router-link>
     </div>
 
-    <div class="ml-32 flex items-center flex-grow space-x-20">
+    <div class="flex items-center flex-grow ml-32 space-x-20">
       <HeaderLink
         v-for="(link, index) in links"
         :key="index"
@@ -21,7 +21,9 @@
     <div class="flex items-center">
       <router-link class="mr-5" to="/">Log in</router-link>
 
-      <button class="w-32 h-9 bg-pink rounded-full">Sign up</button>
+      <button class="w-32 rounded-full h-9 bg-pink text-gray-darkest">
+        Sign up
+      </button>
     </div>
   </div>
 </template>
@@ -35,7 +37,7 @@ import HeaderLink from "./HeaderLink.vue";
 
 const links = [
   { to: "/about", content: "How it works" },
-  { to: "/find-league", content: "Find a League" },
+  { to: "/join-league", content: "Join a League" },
   { to: "/contestants", content: "Contestants" },
 ];
 

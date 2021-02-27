@@ -1,17 +1,17 @@
 <template>
-  <div class="py-9 flex flex-wrap justify-center">
+  <div class="flex flex-wrap justify-center py-9">
     <div
       v-for="contestant in contestants"
       :key="contestant.id"
-      class="m-4 px-6 py-3 rounded-xl bg-gray"
+      class="px-6 py-3 m-4 rounded-xl bg-gray"
     >
       <span class="text-lg leading-8">{{ contestant.name }}</span>
 
-      <div class="w-64 h-64 rounded-full overflow-hidden">
+      <div class="w-64 h-64 overflow-hidden rounded-full">
         <img :src="contestant.image_sm_url" />
       </div>
 
-      <div class="flex flex-col text-xs leading-5 mb-6">
+      <div class="flex flex-col mb-6 text-xs leading-5">
         <span>{{ contestant.age }}</span>
         <span>{{ contestant.occupation }}</span>
         <span>{{ contestant.hometown }}</span>
@@ -19,7 +19,7 @@
 
       <div class="flex justify-center">
         <button
-          class="w-48 h-10 rounded-full border border-pink text-pink text-sm"
+          class="w-48 h-10 text-sm border rounded-full border-pink text-pink"
           @click="showContestantModal(contestant)"
         >
           About

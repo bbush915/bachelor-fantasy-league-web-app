@@ -3,8 +3,8 @@
     <GradientOverlay />
     <SteamOverlay class="z-10" />
 
-    <div class="h-full flex flex-col items-center relative">
-      <h1 class="text-3xl self-start my-8 ml-48">How it works</h1>
+    <div class="relative flex flex-col items-center h-full">
+      <h1 class="self-start my-8 ml-48 text-3xl">How it works</h1>
 
       <div class="max-w-4xl mb-40">
         <h2>Joining or creating a league</h2>
