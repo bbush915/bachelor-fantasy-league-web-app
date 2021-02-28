@@ -12,13 +12,13 @@
 
       <div class="flex items-center mt-20 mb-4">
         <div class="w-64 h-64 mr-8 overflow-hidden rounded-full">
-          <img :src="contestant.image_sm_url" />
+          <img :src="contestant.imageUrl" />
         </div>
 
         <div class="flex flex-col">
           <span class="mb-4 text-lg">{{ contestant.name }}</span>
 
-          <div class="flex flex-col text-sm font-thin space-y-1">
+          <div class="flex flex-col space-y-1 text-sm font-thin">
             <span>{{ contestant.age }}</span>
             <span>{{ contestant.occupation }}</span>
             <span>{{ contestant.hometown }}</span>
@@ -31,7 +31,7 @@
           {{ contestant.bio }}
         </p>
 
-        <ul class="font-thin space-y-2">
+        <ul class="space-y-2 font-thin">
           <li v-for="(fact, index) in contestant.trivia" :key="index">
             - {{ fact }}
           </li>

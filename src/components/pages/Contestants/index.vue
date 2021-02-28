@@ -8,7 +8,7 @@
       <span class="text-lg leading-8">{{ contestant.name }}</span>
 
       <div class="w-64 h-64 overflow-hidden rounded-full">
-        <img :src="contestant.image_sm_url" />
+        <img :src="contestant.imageUrl" />
       </div>
 
       <div class="flex flex-col mb-6 text-xs leading-5">
@@ -69,7 +69,7 @@ const Contestants = defineComponent({
           contestants {
             id
             name
-            image_sm_url
+            imageUrl
             age
             occupation
             hometown
