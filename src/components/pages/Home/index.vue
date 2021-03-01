@@ -37,22 +37,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 
-import Logo from "@/assets/logo.svg";
-import Strikethrough from "@/assets/strikethrough.svg";
-import GradientOverlay from "@/components/simple/GradientOverlay/index.vue";
-import SteamOverlay from "@/components/simple/SteamOverlay/index.vue";
-import PetalLink from "./PetalLink.vue";
+import Logo from '@/assets/logo.svg';
+import Strikethrough from '@/assets/strikethrough.svg';
+import GradientOverlay from '@/components/simple/GradientOverlay/index.vue';
+import SteamOverlay from '@/components/simple/SteamOverlay/index.vue';
+import PetalLink from './PetalLink.vue';
 
 const links = [
-  { to: "/about", content: "How it works" },
-  { to: "/find-league", content: "Find a League" },
-  { to: "/contestants", content: "Contestants" },
+  { to: '/about', content: 'How it works' },
+  { to: '/join-league', content: 'Join a League' },
+  { to: '/contestants', content: 'Contestants' },
 ];
 
 const Home = defineComponent({
-  name: "Home",
+  name: 'Home',
 
   components: {
     GradientOverlay,

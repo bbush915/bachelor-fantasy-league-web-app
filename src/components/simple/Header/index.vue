@@ -27,20 +27,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { defineComponent, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
-import Logo from "@/assets/logo.svg";
-import HeaderLink from "./HeaderLink.vue";
+import Logo from '@/assets/logo.svg';
+import HeaderLink from './HeaderLink.vue';
 
 const links = [
-  { to: "/about", content: "How it works" },
-  { to: "/find-league", content: "Find a League" },
-  { to: "/contestants", content: "Contestants" },
+  { to: '/about', content: 'How it works' },
+  { to: '/join-league', content: 'Join a League' },
+  { to: '/contestants', content: 'Contestants' },
 ];
 
 const Header = defineComponent({
-  name: "Header",
+  name: 'Header',
 
   components: {
     HeaderLink,
@@ -54,7 +54,7 @@ const Header = defineComponent({
     watch(
       () => route.path,
       () => {
-        show.value = route.path !== "/";
+        show.value = route.path !== '/';
       }
     );
 
