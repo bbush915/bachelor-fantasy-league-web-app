@@ -3,27 +3,25 @@
     <GradientOverlay />
     <SteamOverlay class="z-10" />
 
-    <div class="h-full p-4 relative flex flex-col items-center">
+    <div class="relative flex flex-col items-center h-full p-4">
       <div class="w-24 mb-40">
         <Logo />
       </div>
 
-      <div class="w-80 relative mb-10">
-        <div class="text-white text-3xl text-center">
-          Welcome to the Fantasy Suite
-        </div>
-        <div class="font-accent text-red text-4xl text-right">League</div>
-        <Strikethrough class="title__strikethrough w-24" />
+      <div class="relative mb-10 w-80">
+        <div class="text-3xl text-center">Welcome to the Fantasy Suite</div>
+        <div class="text-4xl text-right font-accent text-red">League</div>
+        <Strikethrough class="w-24 title__strikethrough" />
       </div>
 
-      <button class="w-48 mb-6 p-3 rounded-full bg-pink">Sign up</button>
+      <button class="w-48 p-3 mb-6 rounded-full bg-pink">Sign up</button>
 
-      <p class="mb-60 text-white">
+      <p class="mb-60">
         <span class="mr-2">Already have an account?</span>
-        <router-link class="text-pink underline" to="/">Log in.</router-link>
+        <router-link class="underline text-pink" to="/">Log in.</router-link>
       </p>
 
-      <div class="space-y-4 mb-40">
+      <div class="mb-40 space-y-4">
         <PetalLink
           v-for="(link, index) in links"
           :key="index"

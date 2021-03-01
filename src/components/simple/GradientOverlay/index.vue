@@ -1,5 +1,5 @@
 <template>
-  <div class="gradient-overlay fixed h-full w-full pointer-events-none" />
+  <div class="fixed w-full h-full pointer-events-none gradient-overlay" />
 </template>
 
 <script lang="ts">

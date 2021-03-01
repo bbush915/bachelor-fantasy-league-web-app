@@ -1,7 +1,7 @@
 <template>
   <div>
-    <router-link class="text-white relative" :to="to">
-      <LipstickSmear class="link__lipstick-smear w-52 absolute" />
+    <router-link class="relative" :to="to">
+      <LipstickSmear class="absolute link__lipstick-smear w-52" />
       <div>{{ content }}</div>
     </router-link>
   </div>

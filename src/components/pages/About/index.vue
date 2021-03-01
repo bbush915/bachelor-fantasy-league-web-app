@@ -3,18 +3,21 @@
     <GradientOverlay />
     <SteamOverlay class="z-10" />
 
-    <div class="h-full flex flex-col items-center relative">
-      <h1 class="text-white text-3xl self-start my-8 ml-48">How it works</h1>
+    <div class="relative flex flex-col items-center h-full">
+      <h1 class="self-start my-8 ml-48 text-3xl">How it works</h1>
 
       <div class="max-w-4xl mb-40">
         <h2>Joining or creating a league</h2>
+
         <p>
           To play you must join a league. You can search for a league to join or
           create your own. The person who creates the league is the League
           Commissioner and can invite other players to join their league. New
           players can join a league any time during the season.
         </p>
+
         <h2>Setting your lineup</h2>
+
         <p>
           Once you have joined a league, you can access the League Home Page,
           where you can set your lineup. You set your lineup each week by
@@ -24,7 +27,9 @@
           receive 0 points for that week. After the episode ends you can set
           your lineup for the following week.
         </p>
+
         <h2>Scoring</h2>
+
         <p>
           After the episode ends the scores will be calculated. Scores will be
           displayed the next day on the League Home page.
@@ -38,18 +43,18 @@
           <br />
           Additional bonus points will be awarded for:
           <br />
-          Contestant is chosen for a group date (+5 points)
+          - Contestant is chosen for a group date (+5 points)
           <br />
-          Contestant is chosen for a 1 on 1 date (+10 points)
+          - Contestant is chosen for a 1 on 1 date (+10 points)
           <br />
-          Contestant receives a rose outside of a rose ceremony (+5 points)
+          - Contestant receives a rose outside of a rose ceremony (+5 points)
           <br />
           <br />
           Points will be detracted for:
           <br />
-          Contestant is chosen for a 2 on 1 date (-5 points)
+          - Contestant is chosen for a 2 on 1 date (-5 points)
           <br />
-          Contestant leaves or is sent home outside of a rose ceremony (-10
+          - Contestant leaves or is sent home outside of a rose ceremony (-10
           points)
         </p>
       </div>
@@ -77,14 +82,10 @@ export default About;
 
 <style lang="postcss" scoped>
 h2 {
-  @apply text-white text-2xl mb-4;
+  @apply text-2xl mb-4;
 }
 
 p {
-  @apply text-white text-sm mb-16 leading-6 font-thin;
-}
-
-li {
-  @apply text-white;
+  @apply text-sm mb-16 leading-6 font-thin;
 }
 </style>

@@ -1,11 +1,11 @@
 <template>
   <div>
     <router-link
-      class="h-48 w-96 flex justify-center items-center"
+      class="flex items-center justify-center h-48 w-96"
       :class="['petal-link', { mirror }]"
       :to="to"
     >
-      <span class="text-center text-white text-3xl">{{ content }}</span>
+      <span class="text-3xl text-center">{{ content }}</span>
     </router-link>
   </div>
 </template>
