@@ -15,7 +15,7 @@ const getHeaders = () => {
 export const getApolloClient = () => {
   const httpLink = createHttpLink({
     uri: "http://localhost:4000/graphql",
-    headers: getHeaders,
+    headers: getHeaders(),
   });
 
   const cache = new InMemoryCache();

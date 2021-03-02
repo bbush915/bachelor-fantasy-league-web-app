@@ -46,16 +46,22 @@ import { defineComponent, PropType } from "vue";
 
 import CloseIcon from "@/assets/close.svg";
 
-type Contestant = {
+interface IContestant {
   name: string;
-};
+  imageUrl: string;
+  age: number;
+  occupation: string;
+  hometown: string;
+  bio: string;
+  trivia: string[];
+}
 
 const ContestantModal = defineComponent({
   name: "ContestantModal",
 
   props: {
     contestant: {
-      type: Object as PropType<Contestant>,
+      type: Object as PropType<IContestant>,
       required: true,
     },
 

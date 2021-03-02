@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="show"
-    class="sticky top-0 z-30 flex w-full px-12 py-3 bg-gray-dark"
+    class="sticky top-0 z-30 flex w-full px-12 py-3 header bg-gray-dark"
   >
     <div class="w-24">
       <router-link to="/">
@@ -29,20 +29,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { defineComponent, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
-import Logo from '@/assets/logo.svg';
-import HeaderLink from './HeaderLink.vue';
+import Logo from "@/assets/logo.svg";
+import HeaderLink from "./HeaderLink.vue";
 
 const links = [
-  { to: '/about', content: 'How it works' },
-  { to: '/join-league', content: 'Join a League' },
-  { to: '/contestants', content: 'Contestants' },
+  { to: "/about", content: "How it works" },
+  { to: "/join-league", content: "Join a League" },
+  { to: "/contestants", content: "Contestants" },
 ];
 
 const Header = defineComponent({
-  name: 'Header',
+  name: "Header",
 
   components: {
     HeaderLink,
@@ -56,7 +56,7 @@ const Header = defineComponent({
     watch(
       () => route.path,
       () => {
-        show.value = route.path !== '/';
+        show.value = route.path !== "/";
       }
     );
 
@@ -69,3 +69,9 @@ const Header = defineComponent({
 
 export default Header;
 </script>
+
+<style scoped>
+.header {
+  box-shadow: 0 0 8px black;
+}
+</style>
