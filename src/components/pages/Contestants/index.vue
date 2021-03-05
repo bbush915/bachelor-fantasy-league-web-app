@@ -18,10 +18,7 @@
       </div>
 
       <div class="flex justify-center">
-        <button
-          class="w-48 h-10 text-sm border rounded-full border-pink text-pink"
-          @click="showContestantModal(contestant)"
-        >
+        <button class="btn-secondary" @click="showContestantModal(contestant)">
           About
         </button>
       </div>
@@ -36,11 +33,10 @@
 </template>
 
 <script lang="ts">
-import { useQuery, useResult } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 
 import ContestantModal from "@/components/simple/ContestantModal/index.vue";
+import { useContestantModal, useContestants } from "@/composables";
 
 const Contestants = defineComponent({
   name: "Contestants",
@@ -50,44 +46,20 @@ const Contestants = defineComponent({
   },
 
   setup() {
-    let selectedContestant = ref<any>(null);
-    let isContestantModalVisible = ref(false);
-
-    function showContestantModal(contestant: any) {
-      selectedContestant.value = contestant;
-      isContestantModalVisible.value = true;
-    }
-
-    function hideContestantModal() {
-      isContestantModalVisible.value = false;
-      selectedContestant.value = null;
-    }
-
-    const { result } = useQuery(
-      gql`
-        query GetContestants {
-          contestants {
-            id
-            name
-            imageUrl
-            age
-            occupation
-            hometown
-            bio
-            trivia
-          }
-        }
-      `
-    );
-
-    const contestants = useResult(result, null, (data) => data.contestants);
+    const { contestants } = useContestants();
+    const {
+      selectedContestant,
+      isContestantModalVisible,
+      showContestantModal,
+      hideContestantModal,
+    } = useContestantModal();
 
     return {
       contestants,
       selectedContestant,
+      isContestantModalVisible,
       showContestantModal,
       hideContestantModal,
-      isContestantModalVisible,
     };
   },
 });

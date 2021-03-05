@@ -11,8 +11,13 @@
       </div>
 
       <router-link
-        class="flex items-center justify-center w-48 h-10 rounded-full bg-pink text-gray-darkest"
-        :to="{ name: 'set-lineup' }"
+        class="flex items-center justify-center btn-primary"
+        :to="{
+          name: 'set-lineup',
+          params: {
+            seasonWeekId: seasonWeek.id,
+          },
+        }"
       >
         Set Lineup
       </router-link>
@@ -21,7 +26,12 @@
     <router-link
       v-if="isLineupSet"
       class="absolute flex items-center top-8 right-8"
-      :to="{ name: 'set-lineup' }"
+      :to="{
+        name: 'set-lineup',
+        params: {
+          seasonWeekId: seasonWeek.id,
+        },
+      }"
     >
       <span class="mr-4 text-xs">Edit Lineup</span>
       <EditIcon />
@@ -45,7 +55,6 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
-import { useRoute, useRouter } from "vue-router";
 
 import AlertIcon from "@/assets/alert.svg";
 import EditIcon from "@/assets/edit.svg";
@@ -71,15 +80,17 @@ const Lineup = defineComponent({
   },
 
   props: {
+    seasonWeek: {
+      type: Object,
+      required: true,
+    },
+
     lineup: {
       type: Object as PropType<ILineup>,
     },
   },
 
   setup(props) {
-    const router = useRouter();
-    const route = useRoute();
-
     const contestants = props.lineup?.lineupContestants.map(
       (x) => x.contestant
     );
@@ -87,7 +98,7 @@ const Lineup = defineComponent({
     let isLineupSet = computed(() => (contestants?.length ?? 0) > 0);
 
     return {
-      week: 7,
+      week: props.seasonWeek.weekNumber,
       isLineupSet,
       contestants,
     };

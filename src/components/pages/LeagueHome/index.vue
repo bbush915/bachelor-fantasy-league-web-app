@@ -1,11 +1,15 @@
 <template>
-  <div class="flex flex-col items-center">
-    <div class="self-start ml-40">
-      <h1 class="mb-6 text-3xl">League Home</h1>
+  <div class="flex flex-col items-center pt-6 pb-8">
+    <div class="flex flex-col self-start mb-6 ml-40">
+      <span class="mb-1 text-sm font-thin text-pink">
+        {{ league?.name ?? "" }}
+      </span>
+
+      <h1 class="text-3xl">League Home</h1>
     </div>
 
-    <div class="flex flex-col w-3/5 mb-8 space-y-6">
-      <Lineup :lineup="currentLineup" />
+    <div class="flex flex-col w-3/5 space-y-6">
+      <Lineup v-if="seasonWeek" :seasonWeek="seasonWeek" :lineup="lineup" />
       <Leaderboard />
 
       <div class="flex w-full space-x-6">
@@ -19,13 +23,13 @@
 <script lang="ts">
 import { useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import { useRoute } from "vue-router";
 
 import ContestantScores from "./ContestantScores/index.vue";
 import Leaderboard from "./Leaderboard/index.vue";
-import MemberScores from "./MemberScores/index.vue";
 import Lineup from "./Lineup/index.vue";
+import MemberScores from "./MemberScores/index.vue";
 
 const LeagueHome = defineComponent({
   name: "LeagueHome",
@@ -40,15 +44,23 @@ const LeagueHome = defineComponent({
   setup() {
     const route = useRoute();
 
-    const leagueId = route.params.id;
-
     const { result } = useQuery(
       gql`
-        query LeaagueHome($leagueId: String!) {
+        query LeagueHome($leagueId: String!) {
+          league(id: $leagueId) {
+            id
+            name
+            season {
+              id
+              currentSeasonWeek {
+                id
+                weekNumber
+              }
+            }
+          }
           currentLineup(leagueId: $leagueId) {
             id
             lineupContestants {
-              id
               contestant {
                 id
                 name
@@ -59,14 +71,22 @@ const LeagueHome = defineComponent({
         }
       `,
       {
-        leagueId,
+        leagueId: route.params.leagueId,
+      },
+      {
+        fetchPolicy: "no-cache",
       }
     );
 
-    const currentLineup = useResult(result, null, (data) => data.currentLineup);
+    const league = useResult(result, null, (data) => data.league);
+    const lineup = useResult(result, null, (data) => data.currentLineup);
+
+    const seasonWeek = computed(() => league.value?.season.currentSeasonWeek);
 
     return {
-      currentLineup,
+      league,
+      seasonWeek,
+      lineup,
     };
   },
 });

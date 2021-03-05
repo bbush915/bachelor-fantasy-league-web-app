@@ -14,7 +14,7 @@
         <Strikethrough class="w-24 title__strikethrough" />
       </div>
 
-      <button class="w-48 p-3 mb-6 rounded-full bg-pink">Sign up</button>
+      <button class="mb-6 btn-primary">Sign up</button>
 
       <p class="mb-60">
         <span class="mr-2">Already have an account?</span>

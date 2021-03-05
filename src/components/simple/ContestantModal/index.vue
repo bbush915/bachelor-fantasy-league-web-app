@@ -45,16 +45,7 @@
 import { defineComponent, PropType } from "vue";
 
 import CloseIcon from "@/assets/close.svg";
-
-interface IContestant {
-  name: string;
-  imageUrl: string;
-  age: number;
-  occupation: string;
-  hometown: string;
-  bio: string;
-  trivia: string[];
-}
+import { IContestant } from "@/composables/useContestants";
 
 const ContestantModal = defineComponent({
   name: "ContestantModal",

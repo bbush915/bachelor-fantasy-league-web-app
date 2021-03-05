@@ -1,7 +1,11 @@
 <template>
-  <div class="flex flex-col items-center">
-    <div class="self-start ml-40">
-      <h1 class="mb-6 text-3xl">Set Lineup</h1>
+  <div class="flex flex-col items-center pb-8">
+    <div class="flex flex-col self-start my-6 ml-40">
+      <span class="mb-1 text-sm font-thin text-pink">
+        {{ league?.name ?? "" }}
+      </span>
+
+      <h1 class="text-3xl">Set Lineup</h1>
     </div>
 
     <div class="relative flex flex-col w-3/4 p-8 mb-8 bg-gray-dark rounded-xl">
@@ -23,7 +27,7 @@
         <div
           v-for="(contestant, index) in contestants"
           :key="index"
-          class="relative flex flex-col items-center my-3"
+          class="relative flex flex-col items-center p-2 mx-1 my-3"
         >
           <button
             class="absolute top-0 right-0"
@@ -33,18 +37,15 @@
           </button>
 
           <button
-            class="relative w-24 h-24 mx-3 mb-3 overflow-hidden rounded-full contestant"
-            @click="handleClick(contestant.id)"
+            class="relative w-24 h-24 mb-3 overflow-hidden rounded-full focus:outline-none contestant"
+            @click="toggleContestant(contestant)"
             :class="{
-              selected: selectedContestants.some((x) => x === contestant.id),
+              selected: contestant.isSelected,
             }"
           >
             <img :src="contestant.imageUrl" />
 
-            <div
-              v-if="selectedContestants.some((x) => x === contestant.id)"
-              class="absolute bottom-0 w-14"
-            >
+            <div v-if="contestant.isSelected" class="absolute bottom-0 w-14">
               <RoseIcon />
             </div>
           </button>
@@ -53,11 +54,10 @@
         </div>
       </div>
 
-      <button
-        class="self-center w-48 h-10 rounded-full bg-pink text-gray-darkest"
-      >
-        Save
-      </button>
+      <div class="self-end">
+        <button class="mr-4 btn-secondary">Cancel</button>
+        <button class="btn-primary" @click="handleSaveClick">Save</button>
+      </div>
     </div>
 
     <ContestantModal
@@ -69,13 +69,16 @@
 </template>
 
 <script lang="ts">
-import { useQuery, useResult } from "@vue/apollo-composable";
+import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 import InfoIcon from "@/assets/info.svg";
 import RoseIcon from "@/assets/rose.svg";
 import ContestantModal from "@/components/simple/ContestantModal/index.vue";
+import { useContestantModal } from "@/composables";
+import { IContestant } from "@/composables/useContestants";
 
 const SetLineup = defineComponent({
   name: "SetLineup",
@@ -87,61 +90,139 @@ const SetLineup = defineComponent({
   },
 
   setup() {
-    let rosesRemaining = ref(10);
-    let selectedContestants = ref<string[]>([]);
-    let selectedContestant = ref<any>(null);
-    let isContestantModalVisible = ref(false);
-
-    function showContestantModal(contestant: any) {
-      selectedContestant.value = contestant;
-      isContestantModalVisible.value = true;
-    }
-
-    function hideContestantModal() {
-      isContestantModalVisible.value = false;
-      selectedContestant.value = null;
-    }
+    const router = useRouter();
+    const route = useRoute();
 
     const { result } = useQuery(
       gql`
-        query GetContestants {
-          contestants {
+        query SetLineup($leagueId: String!, $seasonWeekId: String!) {
+          lineup(leagueId: $leagueId, seasonWeekId: $seasonWeekId) {
+            lineupContestants {
+              contestantId
+            }
+          }
+          league(id: $leagueId) {
             id
             name
-            imageUrl
-            age
-            occupation
-            hometown
-            bio
-            trivia
+            season {
+              id
+              currentSeasonWeek {
+                id
+                lineupSpotsAvailable
+                seasonWeekContestants {
+                  id
+                  contestant {
+                    id
+                    name
+                    imageUrl
+                    age
+                    occupation
+                    hometown
+                    bio
+                    trivia
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      {
+        leagueId: route.params.leagueId,
+        seasonWeekId: route.params.seasonWeekId,
+      },
+      {
+        fetchPolicy: "no-cache",
+      }
+    );
+
+    const { mutate: saveLineup } = useMutation(
+      gql`
+        mutation SaveLineup($input: SaveLineupInput!) {
+          saveLineup(input: $input) {
+            id
           }
         }
       `
     );
 
-    function handleClick(id: string) {
-      const index = selectedContestants.value.indexOf(id);
+    const league = useResult(result, null, (data) => data.league);
+    const contestantIds = useResult(result, null, (data) =>
+      data.lineup?.lineupContestants.map((x: any) => x.contestantId)
+    );
 
-      if (index > -1) {
-        selectedContestants.value.splice(index, 1);
+    const contestants_ = useResult<any, null, IContestant[]>(
+      result,
+      null,
+      (data) =>
+        data.league.season.currentSeasonWeek.seasonWeekContestants.map(
+          (x: any) => x.contestant
+        )
+    );
+
+    const {
+      selectedContestant,
+      isContestantModalVisible,
+      showContestantModal,
+      hideContestantModal,
+    } = useContestantModal();
+
+    const rosesRemaining = ref(0);
+
+    const contestants = computed(
+      () =>
+        contestants_.value?.map((x) => ({
+          ...x,
+          isSelected:
+            contestantIds.value?.some((y: any) => y === x.id) ?? false,
+        })) ?? []
+    );
+
+    watch(
+      () => league.value,
+      () => {
+        rosesRemaining.value =
+          league.value?.season.currentSeasonWeek.lineupSpotsAvailable -
+          contestants.value.filter((x) => x.isSelected).length;
+      }
+    );
+
+    function toggleContestant(
+      contestant: IContestant & { isSelected: boolean }
+    ) {
+      if (contestant.isSelected) {
+        contestant.isSelected = false;
         rosesRemaining.value++;
       } else if (rosesRemaining.value > 0) {
-        selectedContestants.value.push(id);
+        contestant.isSelected = true;
         rosesRemaining.value--;
       }
     }
 
-    const contestants = useResult(result, null, (data) => data.contestants);
+    async function handleSaveClick(): Promise<void> {
+      await saveLineup({
+        input: {
+          leagueId: league.value.id,
+          seasonWeekId: league.value.season.currentSeasonWeek.id,
+          contestantIds: contestants.value
+            .filter((x) => x.isSelected)
+            .map((x) => x.id),
+        },
+      });
+
+      router.push({ name: "league-home" });
+    }
 
     return {
+      league,
       contestants,
-      selectedContestants,
-      rosesRemaining,
-      handleClick,
       selectedContestant,
+      isContestantModalVisible,
       showContestantModal,
       hideContestantModal,
-      isContestantModalVisible,
+      rosesRemaining,
+      toggleContestant,
+      handleSaveClick,
     };
   },
 });
