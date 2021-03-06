@@ -14,11 +14,14 @@
         <Strikethrough class="w-24 title__strikethrough" />
       </div>
 
-      <button class="mb-6 btn-primary">Sign up</button>
+      <router-link class="flex items-center justify-center mb-6 btn-primary" to="/sign-up">
+        Sign up
+      </router-link>
 
       <p class="mb-60">
         <span class="mr-2">Already have an account?</span>
-        <router-link class="underline text-pink" to="/">Log in.</router-link>
+
+        <router-link class="underline text-pink" to="/login">Log in.</router-link>
       </p>
 
       <div class="mb-40 space-y-4">

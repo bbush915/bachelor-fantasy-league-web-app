@@ -3,7 +3,8 @@ import { createApp, h, provide } from "vue";
 
 import App from "./App.vue";
 import { getApolloClient } from "./gql";
-import { getRouter } from "./routes";
+import { getRouter } from "./router";
+import { getStore } from "./store";
 
 import "./styles/index.css";
 
@@ -15,4 +16,5 @@ createApp({
   render: () => h(App),
 })
   .use(getRouter())
+  .use(getStore())
   .mount("#app");
