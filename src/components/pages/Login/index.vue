@@ -6,18 +6,10 @@
       <h1 class="mb-6 text-xl text-center">Log in</h1>
 
       <label class="mb-2 text-xs font-thin">Email</label>
-      <input
-        class="h-10 px-3 mb-4 text-lg font-thin border border-white rounded-xl"
-        type="email"
-        v-model="email"
-      />
+      <input class="mb-4 input" type="email" v-model="email" />
 
       <label class="mb-2 text-xs font-thin">Password</label>
-      <input
-        class="h-10 px-3 text-2xl border border-white rounded-xl mb-14"
-        type="password"
-        v-model="password"
-      />
+      <input class="text-2xl input mb-14" type="password" v-model="password" />
 
       <button class="self-center btn-primary" @click="handleSubmit">Log in</button>
     </div>
@@ -66,7 +58,7 @@ const Login = defineComponent({
       if (data) {
         store.commit("updateToken", data.login.token);
 
-        router.push({ path: "/leagues/4266654e-0849-4774-8b20-a1a805b21fca" });
+        router.push({ path: "/my-leagues" });
 
         store.dispatch("pushNotification", {
           type: "success",
@@ -90,9 +82,3 @@ const Login = defineComponent({
 
 export default Login;
 </script>
-
-<style scoped>
-input {
-  background: transparent;
-}
-</style>

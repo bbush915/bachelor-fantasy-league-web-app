@@ -2,16 +2,12 @@
   <div class="relative p-8 bg-gray rounded-xl">
     <h1 class="text-lg">Top Week {{ week }} Contestants</h1>
 
-    <button class="absolute top-8 right-8">
+    <router-link class="absolute top-8 right-8" :to="{ name: 'contestant-score-details' }">
       <MoreIcon />
-    </button>
+    </router-link>
 
     <div class="mt-8 font-thin">
-      <div
-        v-for="(contestant, index) in contestants"
-        :key="index"
-        class="flex items-center py-2"
-      >
+      <div v-for="(contestant, index) in contestants" :key="index" class="flex items-center py-2">
         <span class="w-7">{{ getOrdinal(index + 1) }}</span>
         <div class="w-16 h-16 ml-5 overflow-hidden rounded-full">
           <img :src="contestant.image_sm_url" />

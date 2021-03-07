@@ -2,6 +2,7 @@
   <div class="min-h-screen bg-gray-darkest">
     <Header />
     <Notifications />
+
     <router-view />
   </div>
 </template>

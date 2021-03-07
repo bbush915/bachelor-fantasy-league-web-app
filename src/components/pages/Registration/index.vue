@@ -6,32 +6,16 @@
       <h1 class="mb-6 text-xl text-center">Create Account</h1>
 
       <label class="mb-2 text-xs font-thin">Email</label>
-      <input
-        class="h-10 px-3 mb-4 text-lg font-thin border border-white rounded-xl"
-        type="email"
-        v-model="email"
-      />
+      <input class="mb-4 input" type="email" v-model="email" />
 
       <label class="mb-2 text-xs font-thin">Username</label>
-      <input
-        class="h-10 px-3 mb-4 text-lg font-thin border border-white rounded-xl"
-        type="email"
-        v-model="username"
-      />
+      <input class="mb-4 input" type="email" v-model="username" />
 
       <label class="mb-2 text-xs font-thin">Password</label>
-      <input
-        class="h-10 px-3 mb-4 text-2xl border border-white rounded-xl"
-        type="password"
-        v-model="password"
-      />
+      <input class="mb-4 text-2xl input" type="password" v-model="password" />
 
       <label class="mb-2 text-xs font-thin">Re-enter password</label>
-      <input
-        class="h-10 px-3 text-2xl border border-white rounded-xl mb-14"
-        type="password"
-        v-model="passwordConfirmation"
-      />
+      <input class="text-2xl input mb-14" type="password" v-model="passwordConfirmation" />
 
       <button class="self-center btn-primary" @click="handleSubmit">Sign up</button>
     </div>
@@ -47,8 +31,8 @@ import { useStore } from "vuex";
 
 import GradientOverlay from "@/components/simple/GradientOverlay/index.vue";
 
-const SignUp = defineComponent({
-  name: "SignUp",
+const Registration = defineComponent({
+  name: "Registration",
 
   components: {
     GradientOverlay,
@@ -104,7 +88,7 @@ const SignUp = defineComponent({
   },
 });
 
-export default SignUp;
+export default Registration;
 </script>
 
 <style scoped>

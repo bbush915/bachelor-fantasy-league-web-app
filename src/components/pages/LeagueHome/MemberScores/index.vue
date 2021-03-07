@@ -2,9 +2,9 @@
   <div class="relative py-8 bg-gray rounded-xl">
     <h1 class="pl-8 text-lg">Week {{ week }} Scores</h1>
 
-    <button class="absolute top-8 right-8">
+    <router-link class="absolute top-8 right-8" :to="{ name: 'member-score-details' }">
       <MoreIcon />
-    </button>
+    </router-link>
 
     <div class="mt-8 font-thin">
       <div

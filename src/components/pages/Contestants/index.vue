@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap justify-center py-9">
+  <div class="flex flex-wrap justify-center py-3">
     <div
       v-for="contestant in contestants"
       :key="contestant.id"
@@ -18,9 +18,7 @@
       </div>
 
       <div class="flex justify-center">
-        <button class="btn-secondary" @click="showContestantModal(contestant)">
-          About
-        </button>
+        <button class="btn-secondary" @click="showContestantModal(contestant)">About</button>
       </div>
     </div>
 

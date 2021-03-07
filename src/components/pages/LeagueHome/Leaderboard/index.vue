@@ -2,9 +2,9 @@
   <div class="relative pt-8 bg-gray rounded-xl">
     <h1 class="pl-8 text-lg">Leaderboard</h1>
 
-    <button class="absolute top-8 right-8">
+    <router-link class="absolute top-8 right-8" :to="{ name: 'leaderboard-details' }">
       <MoreIcon />
-    </button>
+    </router-link>
 
     <div class="pr-8 mt-8 font-thin">
       <div

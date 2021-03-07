@@ -23,7 +23,7 @@
 
       <router-link
         class="flex items-center justify-center w-32 rounded-full h-9 bg-pink text-gray-darkest"
-        to="/sign-up"
+        to="/registration"
       >
         Sign up
       </router-link>
@@ -43,14 +43,13 @@ import { useStore } from "vuex";
 
 const links = [
   { to: "/about", content: "How it works" },
-  { to: "/join-league", content: "Join a League" },
   { to: "/contestants", content: "Contestants" },
 ];
 
 const authenticatedLinks = [
-  { to: "/", content: "My Fantasy Leagues" },
+  { to: "/my-leagues", content: "My Fantasy Leagues" },
   { to: "/join-league", content: "Join a League" },
-  { to: "/", content: "Create a League" },
+  { to: "/create-league", content: "Create a League" },
   { to: "/contestants", content: "Contestants" },
 ];
 

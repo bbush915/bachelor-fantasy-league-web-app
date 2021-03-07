@@ -6,6 +6,12 @@ body {
   @apply text-white bg-gray-darkest;
 }
 
+.input {
+  @apply h-10 px-3 text-lg font-thin border border-white rounded-xl;
+
+  background: transparent;
+}
+
 .btn-primary {
   @apply w-48 h-10 text-sm rounded-full bg-pink text-gray-darkest;
 }

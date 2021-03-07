@@ -14,7 +14,7 @@
         <Strikethrough class="w-24 title__strikethrough" />
       </div>
 
-      <router-link class="flex items-center justify-center mb-6 btn-primary" to="/sign-up">
+      <router-link class="flex items-center justify-center mb-6 btn-primary" to="/registration">
         Sign up
       </router-link>
 

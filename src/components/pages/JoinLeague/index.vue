@@ -1,20 +1,20 @@
 <template>
-  <div class="h-full gap-8 px-20 py-9 bg-gray-darkest">
-    <h1 class="mb-8 text-white">Join a League</h1>
-    <div class="px-6 py-6 bg-gray-dark rounded-xl">
-      <h2 class="mb-4 text-white">Search</h2>
-      <div class="flex flex-col">
-        <label class="font-thin">League Name</label>
-        <div class="flex items-center mb-6">
-          <input
-            class="h-8 px-2 border border-white rounded-lg bg-gray-dark"
-            aria-label="League Name"
-          />
+  <div class="flex flex-col items-center pt-6 pb-8">
+    <div class="flex flex-col self-start mb-6 ml-40">
+      <h1 class="text-3xl">Join a League</h1>
+    </div>
 
-          <button class="w-8 h-8 px-1 ml-2 rounded-full bg-pink text-gray-dark">
-            <SearchIcon />
-          </button>
-        </div>
+    <div class="flex flex-col w-3/5 p-8 bg-gray-dark rounded-3xl">
+      <h1 class="text-lg">Search</h1>
+
+      <label for="league-name" class="text-xs font-thin">League Name</label>
+
+      <div class="flex items-center w-1/2">
+        <input id="league-name" class="flex-grow mr-2 input" type="text" />
+
+        <button class="flex items-center justify-center rounded-full w-9 h-9 bg-pink">
+          <SearchIcon />
+        </button>
       </div>
     </div>
   </div>
@@ -22,10 +22,12 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+
 import SearchIcon from "@/assets/search.svg";
 
 const JoinLeague = defineComponent({
   name: "JoinLeague",
+
   components: {
     SearchIcon,
   },
