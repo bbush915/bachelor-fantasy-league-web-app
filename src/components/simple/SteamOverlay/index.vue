@@ -15,9 +15,9 @@ export default SteamOverlay;
 <style scoped>
 .steam-overlay {
   background: linear-gradient(
-    rgba(80, 11, 40, 0) 0%,
-    rgba(80, 11, 40, 0.44) 75%,
-    #e21c34 130%
+    rgba(0, 0, 0, 0) 0%,
+    rgba(80, 11, 40, 0.45) 75%,
+    rgba(226, 28, 52, 1) 130%
   );
 }
 </style>

@@ -9,6 +9,7 @@ import JoinLeague from "@/components/pages/JoinLeague/index.vue";
 import LeaderboardDetails from "@/components/pages/LeaderboardDetails/index.vue";
 import League from "@/components/pages/League/index.vue";
 import LeagueHome from "@/components/pages/LeagueHome/index.vue";
+import Loading from "@/components/simple/Loading/index.vue";
 import Login from "@/components/pages/Login/index.vue";
 import MemberScoreDetails from "@/components/pages/MemberScoreDetails/index.vue";
 import MyLeagues from "@/components/pages/MyLeagues/index.vue";
@@ -18,6 +19,7 @@ import { isAuthenticated } from "@/utils/authentication";
 
 const routes: RouteRecordRaw[] = [
   { path: "/", name: "home", component: Home },
+  { path: "/loading", name: "loading", component: Loading },
   { path: "/about", name: "about", component: About },
   { path: "/contestants", name: "contestants", component: Contestants },
   { path: "/login", name: "login", component: Login },

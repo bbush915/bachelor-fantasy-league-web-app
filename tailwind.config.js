@@ -13,7 +13,10 @@ module.exports = {
         DEFAULT: "#414a5e",
       },
       red: "#e21c34",
-      pink: "#ff8695",
+      pink: {
+        dark: "#ff8695",
+        DEFAULT: "#ffaab4",
+      },
       green: "#429634",
     },
     fontFamily: {
