@@ -4,7 +4,7 @@ import gql from "graphql-tag";
 export interface IContestant {
   id: string;
   name: string;
-  imageUrl: string;
+  headshotUrl: string;
   age: number;
   occupation: string;
   hometown: string;
@@ -19,7 +19,7 @@ function useContestants() {
         contestants {
           id
           name
-          imageUrl
+          headshotUrl
           age
           occupation
           hometown

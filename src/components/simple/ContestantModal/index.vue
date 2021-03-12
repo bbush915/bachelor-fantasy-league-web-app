@@ -1,9 +1,6 @@
 <template>
   <div class="fixed top-0 z-50 w-screen h-screen overlay" @click="onClose">
-    <div
-      class="flex flex-col px-16 pb-12 modal bg-gray-darkest rounded-xl"
-      @click.stop
-    >
+    <div class="flex flex-col px-16 pb-12 modal bg-gray-darkest rounded-xl" @click.stop>
       <button class="absolute right-4 top-4" @click="onClose">
         <CloseIcon />
       </button>
@@ -12,7 +9,7 @@
 
       <div class="flex items-center mt-20 mb-4">
         <div class="w-64 h-64 mr-8 overflow-hidden rounded-full">
-          <img :src="contestant.imageUrl" />
+          <img :src="contestant.headshotUrl" />
         </div>
 
         <div class="flex flex-col">
@@ -32,9 +29,7 @@
         </p>
 
         <ul class="space-y-2 font-thin">
-          <li v-for="(fact, index) in contestant.trivia" :key="index">
-            - {{ fact }}
-          </li>
+          <li v-for="(fact, index) in contestant.trivia" :key="index">- {{ fact }}</li>
         </ul>
       </div>
     </div>

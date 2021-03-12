@@ -15,7 +15,7 @@
 
     <div v-if="isAuthenticated">
       <span
-        >Welcome, <span class="text-pink">{{ username }}</span>
+        >Welcome, <span class="text-pink">{{ displayName }}</span>
       </span>
     </div>
     <div v-else class="flex items-center">
@@ -79,13 +79,13 @@ const Header = defineComponent({
       gql`
         query Me {
           me {
-            username
+            displayName
           }
         }
       `
     );
 
-    const username = useResult(result, null, (data) => data.me.username);
+    const displayName = useResult(result, null, (data) => data.me.displayName);
 
     watch(
       () => isAuthenticated,
@@ -99,7 +99,7 @@ const Header = defineComponent({
     return {
       show,
       isAuthenticated,
-      username,
+      displayName,
       links: isAuthenticated.value ? authenticatedLinks : links,
     };
   },

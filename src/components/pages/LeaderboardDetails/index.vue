@@ -3,12 +3,12 @@
     <div class="flex items-center justify-between w-full mb-10">
       <h1 class="text-3xl font-light">Leaderboard Details</h1>
 
-      <select v-model="selectedSeasonWeekId" class="font-light w-28">
+      <select v-model="selectedWeekNumber" class="font-light w-28">
         <option disabled>Select Week Number</option>
         <option
           v-for="seasonWeek in filteredSeasonWeeks"
           :key="seasonWeek.id"
-          :value="seasonWeek.id"
+          :value="seasonWeek.weekNumber"
         >
           Week {{ seasonWeek.weekNumber }}
         </option>
@@ -21,14 +21,14 @@
       <div class="py-4 bg-gray-dark rounded-xl">
         <div class="pr-8 mt-8 font-thin">
           <div
-            v-for="(member, index) in members"
-            :key="index"
+            v-for="member in members"
+            :key="member.id"
             class="flex items-center h-10 pl-8 pr-4 my-8 member"
             :style="{ width: `${member.width}%` }"
           >
             <span class="w-7">{{ member.place }}</span>
             <div class="w-16 h-16 ml-5 overflow-hidden rounded-full">
-              <img :src="member.profile_url" />
+              <img :src="member.avatarUrl" />
             </div>
             <span class="ml-5">{{ member.name }}</span>
             <div class="flex-grow" />
@@ -60,47 +60,47 @@ const LeaderboardDetails = defineComponent({
   },
 
   setup({ leagueContext }) {
-    const { id: leagueId, seasonId, currentSeasonWeekId, currentSeasonWeekNumber } = leagueContext;
+    const { id: leagueId, seasonId, currentSeasonWeekNumber } = leagueContext;
 
-    const selectedSeasonWeekId = ref(currentSeasonWeekId);
+    const selectedWeekNumber = ref(currentSeasonWeekNumber - 1);
 
     const { seasonWeeks } = useSeasonWeeks(seasonId);
 
     const filteredSeasonWeeks = computed(
-      () => seasonWeeks.value?.filter((x) => x.weekNumber <= currentSeasonWeekNumber) ?? []
+      () => seasonWeeks.value?.filter((x) => x.weekNumber < currentSeasonWeekNumber) ?? []
     );
 
     const { result } = useQuery(
       gql`
-        query Leaderboard($leagueId: String!, $seasonWeekId: String!) {
-          leaderboard(leagueId: $leagueId, seasonWeekId: $seasonWeekId) {
+        query LeaderboardDetails($leagueId: String!, $weekNumber: Int!) {
+          leaderboardDetails(leagueId: $leagueId, weekNumber: $weekNumber) {
             id
-            leagueMember {
+            user {
               id
-              user {
-                id
-                username
-                avatarUrl
-              }
+              displayName
+              avatarUrl
             }
-            weeklyScore
+            cumulativeScore
           }
         }
       `,
-      { leagueId, seasonWeekId: selectedSeasonWeekId }
+      { leagueId, weekNumber: selectedWeekNumber }
     );
 
     const members = useResult<any, [], any[]>(result, [], (data) => {
-      const minScore = Math.min(...data.leaderboard.map((x: any) => x.weeklyScore));
-      const maxScore = Math.max(...data.leaderboard.map((x: any) => x.weeklyScore));
+      const minScore = Math.min(...data.leaderboardDetails.map((x: any) => x.cumulativeScore));
+      const maxScore = Math.max(...data.leaderboardDetails.map((x: any) => x.cumulativeScore));
 
-      return data.leaderboard.map((x: any, index: number) => ({
-        place: getOrdinal(index + 1),
-        name: x.leagueMember.user.username,
-        profile_url: x.leagueMember.user.avatarUrl,
-        score: x.weeklyScore,
-        width: getWidth(minScore, maxScore, x.weeklyScore),
-      }));
+      return data.leaderboardDetails
+        .slice(0)
+        .sort((x: any, y: any) => y.cumulativeScore - x.cumulativeScore)
+        .map((x: any, index: number) => ({
+          place: getOrdinal(index + 1),
+          name: x.user.displayName,
+          avatarUrl: x.user.avatarUrl,
+          score: x.cumulativeScore,
+          width: getWidth(minScore, maxScore, x.cumulativeScore),
+        }));
     });
 
     function getWidth(min: number, max: number, value: number): number {
@@ -110,7 +110,7 @@ const LeaderboardDetails = defineComponent({
     return {
       members,
       filteredSeasonWeeks,
-      selectedSeasonWeekId,
+      selectedWeekNumber,
     };
   },
 });

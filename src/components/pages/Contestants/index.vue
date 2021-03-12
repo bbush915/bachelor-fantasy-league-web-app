@@ -8,7 +8,7 @@
       <span class="text-lg leading-8">{{ contestant.name }}</span>
 
       <div class="w-64 h-64 overflow-hidden rounded-full">
-        <img :src="contestant.imageUrl" />
+        <img :src="contestant.headshotUrl" />
       </div>
 
       <div class="flex flex-col mb-6 text-xs leading-5">

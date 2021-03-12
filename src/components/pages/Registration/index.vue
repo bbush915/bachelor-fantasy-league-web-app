@@ -8,8 +8,8 @@
       <label class="mb-2 text-xs font-thin">Email</label>
       <input class="mb-4 input" type="email" v-model="email" />
 
-      <label class="mb-2 text-xs font-thin">Username</label>
-      <input class="mb-4 input" type="email" v-model="username" />
+      <label class="mb-2 text-xs font-thin">Display name</label>
+      <input class="mb-4 input" type="text" v-model="displayName" />
 
       <label class="mb-2 text-xs font-thin">Password</label>
       <input class="mb-4 text-2xl input" type="password" v-model="password" />
@@ -53,13 +53,13 @@ const Registration = defineComponent({
     );
 
     const email = ref("");
-    const username = ref("");
+    const displayName = ref("");
     const password = ref("");
     const passwordConfirmation = ref("");
 
     async function handleSubmit() {
       const { data } = await register(
-        { input: { email: email.value, username: username.value, password: password.value } },
+        { input: { email: email.value, displayName: displayName.value, password: password.value } },
         { errorPolicy: "ignore" }
       );
 
@@ -80,7 +80,7 @@ const Registration = defineComponent({
 
     return {
       email,
-      username,
+      displayName,
       password,
       passwordConfirmation,
       handleSubmit,

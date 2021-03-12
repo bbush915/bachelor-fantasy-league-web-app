@@ -1,22 +1,17 @@
 <template>
   <div class="relative p-8 bg-gray rounded-xl">
-    <h1 class="text-lg">My Week {{ week }} Lineup</h1>
+    <h1 class="text-lg">My Week {{ weekNumber }} Lineup</h1>
 
     <div v-if="!isLineupSet" class="flex flex-col items-center mt-8">
       <div class="flex items-center mb-6">
         <AlertIcon />
-        <span class="ml-2 font-thin"
-          >You have not set your lineup for this week!</span
-        >
+        <span class="ml-2 font-thin">You have not set your lineup for this week!</span>
       </div>
 
       <router-link
         class="flex items-center justify-center btn-primary"
         :to="{
           name: 'set-lineup',
-          params: {
-            seasonWeekId: seasonWeek.id,
-          },
         }"
       >
         Set Lineup
@@ -28,9 +23,6 @@
       class="absolute flex items-center top-8 right-8"
       :to="{
         name: 'set-lineup',
-        params: {
-          seasonWeekId: seasonWeek.id,
-        },
       }"
     >
       <span class="mr-4 text-xs">Edit Lineup</span>
@@ -44,7 +36,7 @@
         class="flex flex-col items-center m-2"
       >
         <div class="w-24 h-24 mb-2 overflow-hidden rounded-full">
-          <img :src="contestant.imageUrl" />
+          <img :src="contestant.headshotUrl" />
         </div>
 
         <span>{{ contestant.name }}</span>
@@ -66,7 +58,7 @@ interface ILineup {
     contestant: {
       id: string;
       name: string;
-      imageUrl: string;
+      headshotUrl: string;
     };
   }[];
 }
@@ -80,8 +72,8 @@ const Lineup = defineComponent({
   },
 
   props: {
-    seasonWeek: {
-      type: Object,
+    weekNumber: {
+      type: Number,
       required: true,
     },
 
@@ -91,14 +83,11 @@ const Lineup = defineComponent({
   },
 
   setup(props) {
-    const contestants = props.lineup?.lineupContestants.map(
-      (x) => x.contestant
-    );
+    const contestants = props.lineup?.lineupContestants.map((x) => x.contestant);
 
-    let isLineupSet = computed(() => (contestants?.length ?? 0) > 0);
+    const isLineupSet = computed(() => (contestants?.length ?? 0) > 0);
 
     return {
-      week: props.seasonWeek.weekNumber,
       isLineupSet,
       contestants,
     };

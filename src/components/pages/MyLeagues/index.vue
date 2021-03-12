@@ -24,7 +24,7 @@
               <tr v-for="league in leagues" :key="league.id">
                 <td class="w-14">
                   <div class="overflow-hidden w-14 h-14 rounded-xl">
-                    <img :src="league.imageUrl" />
+                    <img :src="league.logoUrl" />
                   </div>
                 </td>
 
@@ -109,7 +109,7 @@ const MyLeagues = defineComponent({
           myLeagues {
             id
             name
-            imageUrl
+            logoUrl
           }
         }
       `
