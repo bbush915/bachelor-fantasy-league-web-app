@@ -6,8 +6,24 @@ body {
   @apply text-white bg-gray-darkest;
 }
 
+h1 {
+  @apply text-3xl leading-8;
+}
+
+h2 {
+  @apply text-lg font-medium leading-8;
+}
+
+label {
+  @apply text-xs font-light leading-4;
+}
+
+.txt-body {
+  @apply h-6 text-sm font-light leading-6;
+}
+
 .input {
-  @apply h-10 px-3 text-lg font-thin border border-white rounded-xl;
+  @apply h-10 px-3 font-thin border border-white rounded-xl;
 
   background: transparent;
 }
@@ -18,4 +34,27 @@ body {
 
 .btn-secondary {
   @apply w-48 h-10 text-sm border-2 rounded-full border-pink text-pink;
+}
+
+.tooltip {
+  @apply w-48 p-2 text-xs font-light leading-4 rounded-md bg-gray;
+}
+
+.tooltip .tooltip-arrow {
+  @apply absolute z-50 w-0 h-0 m-1 border-solid border-gray;
+}
+
+.tooltip[x-placement^="top"] {
+  @apply mb-1;
+}
+
+.tooltip[x-placement^="top"] .tooltip-arrow {
+  border-width: 5px 5px 0 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  bottom: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
 }

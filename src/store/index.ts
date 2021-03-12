@@ -21,9 +21,14 @@ export const getStore = () => {
     },
 
     mutations: {
-      updateToken(state, token: string) {
+      login(state, token: string) {
         window.localStorage.setItem("token", token);
         state.token = token;
+      },
+
+      logout(state) {
+        window.localStorage.removeItem("token");
+        state.token = null;
       },
 
       addNotification(state, notification: Notification) {

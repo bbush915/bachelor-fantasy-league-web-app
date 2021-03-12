@@ -1,7 +1,8 @@
 export type LeagueContext = {
-  id: string;
-  name: string;
+  userId: string;
+  leagueId: string;
+  leagueName: string;
   seasonId: string;
   currentSeasonWeekId: string;
-  currentSeasonWeekNumber: number;
+  currentWeekNumber: number;
 };

@@ -2,7 +2,7 @@
   <div class="relative pt-8 bg-gray rounded-xl">
     <h1 class="pl-8 text-lg">Leaderboard</h1>
 
-    <router-link class="absolute top-8 right-8" :to="{ name: 'leaderboard-details' }">
+    <router-link class="absolute top-8 right-8" :to="{ name: 'overall-score-details' }">
       <MoreIcon />
     </router-link>
 

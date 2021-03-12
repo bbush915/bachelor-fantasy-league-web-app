@@ -2,7 +2,7 @@
   <div class="relative py-8 bg-gray rounded-xl">
     <h1 class="pl-8 text-lg">Week {{ week }} Scores</h1>
 
-    <router-link class="absolute top-8 right-8" :to="{ name: 'member-score-details' }">
+    <router-link class="absolute top-8 right-8" :to="{ name: 'weekly-score-details' }">
       <MoreIcon />
     </router-link>
 
@@ -31,8 +31,8 @@ import { defineComponent } from "vue";
 import MoreIcon from "@/assets/more.svg";
 import { getOrdinal } from "@/utils";
 
-const MemberScores = defineComponent({
-  name: "MemberScores",
+const WeeklyScores = defineComponent({
+  name: "WeeklyScores",
 
   components: {
     MoreIcon,
@@ -78,5 +78,5 @@ const MemberScores = defineComponent({
   },
 });
 
-export default MemberScores;
+export default WeeklyScores;
 </script>

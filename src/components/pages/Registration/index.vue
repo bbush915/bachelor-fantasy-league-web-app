@@ -12,10 +12,10 @@
       <input class="mb-4 input" type="text" v-model="displayName" />
 
       <label class="mb-2 text-xs font-thin">Password</label>
-      <input class="mb-4 text-2xl input" type="password" v-model="password" />
+      <input class="mb-4 input" type="password" v-model="password" />
 
       <label class="mb-2 text-xs font-thin">Re-enter password</label>
-      <input class="text-2xl input mb-14" type="password" v-model="passwordConfirmation" />
+      <input class="input mb-14" type="password" v-model="passwordConfirmation" />
 
       <button class="self-center btn-primary" @click="handleSubmit">Sign up</button>
     </div>
@@ -94,5 +94,10 @@ export default Registration;
 <style scoped>
 input {
   background: transparent;
+}
+
+input[type="password"] {
+  font-family: Verdana, sans-serif;
+  letter-spacing: 0.125rem;
 }
 </style>

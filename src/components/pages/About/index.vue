@@ -4,7 +4,7 @@
     <SteamOverlay class="z-10" />
 
     <div class="relative flex flex-col items-center h-full">
-      <h1 class="self-start my-8 ml-48 text-3xl">How it works</h1>
+      <h1 class="self-start my-8 ml-48 text-3xl font-light">How it works</h1>
 
       <div class="max-w-4xl mb-40">
         <h2>Joining or creating a league</h2>
@@ -39,6 +39,7 @@
           <br />
           Additional bonus points will be awarded for:
           <br />
+          <br />
           - Contestant is chosen for a group date (+5 points)
           <br />
           - Contestant is chosen for a 1 on 1 date (+10 points)
@@ -46,7 +47,8 @@
           - Contestant receives a rose outside of a rose ceremony (+5 points)
           <br />
           <br />
-          Points will be detracted for:
+          Points will be deducted for:
+          <br />
           <br />
           - Contestant is chosen for a 2 on 1 date (-5 points)
           <br />
@@ -81,6 +83,6 @@ h2 {
 }
 
 p {
-  @apply text-sm mb-16 leading-6 font-thin;
+  @apply text-sm mb-16 leading-6 font-extralight;
 }
 </style>

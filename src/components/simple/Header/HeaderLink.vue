@@ -2,7 +2,7 @@
   <div>
     <router-link class="relative" :to="to">
       <LipstickSmear class="absolute link__lipstick-smear w-52" />
-      <div>{{ content }}</div>
+      <div class="text-sm">{{ content }}</div>
     </router-link>
   </div>
 </template>

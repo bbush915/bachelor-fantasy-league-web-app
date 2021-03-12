@@ -8,8 +8,11 @@
       <label class="mb-2 text-xs font-thin">Email</label>
       <input class="mb-4 input" type="email" v-model="email" />
 
-      <label class="mb-2 text-xs font-thin">Password</label>
-      <input class="text-2xl input mb-14" type="password" v-model="password" />
+      <div class="flex justify-between mb-2 text-xs font-thin">
+        <label>Password</label>
+        <router-link class="text-pink" to="/">Forgot password?</router-link>
+      </div>
+      <input class="input mb-14" type="password" v-model="password" />
 
       <button class="self-center btn-primary" @click="handleSubmit">Log in</button>
     </div>
@@ -56,14 +59,14 @@ const Login = defineComponent({
       );
 
       if (data) {
-        store.commit("updateToken", data.login.token);
-
-        router.push({ path: "/my-leagues" });
+        store.commit("login", data.login.token);
 
         store.dispatch("pushNotification", {
           type: "success",
           message: "Login successful!",
         });
+
+        router.push({ path: "/my-leagues" });
       } else {
         store.dispatch("pushNotification", {
           type: "error",
@@ -82,3 +85,10 @@ const Login = defineComponent({
 
 export default Login;
 </script>
+
+<style scoped>
+input[type="password"] {
+  font-family: Verdana, sans-serif;
+  letter-spacing: 0.125rem;
+}
+</style>

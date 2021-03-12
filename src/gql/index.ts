@@ -22,6 +22,11 @@ export const getApolloClient = () => {
   const apolloClient = new ApolloClient({
     link: authLink.concat(httpLink),
     cache,
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: "no-cache",
+      },
+    },
   });
 
   return apolloClient;

@@ -12,7 +12,7 @@ export interface IContestant {
   trivia: string[];
 }
 
-function useContestants() {
+export function useContestants() {
   const { result } = useQuery(
     gql`
       query Contestants {
@@ -27,7 +27,9 @@ function useContestants() {
           trivia
         }
       }
-    `
+    `,
+    {},
+    { fetchPolicy: "cache-first" }
   );
 
   const contestants = useResult<any, null, IContestant[]>(result, null, (data) => data.contestants);
@@ -36,5 +38,3 @@ function useContestants() {
     contestants,
   };
 }
-
-export default useContestants;

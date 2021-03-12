@@ -15,14 +15,14 @@
 
     <div v-if="isAuthenticated">
       <span
-        >Welcome, <span class="text-pink">{{ displayName }}</span>
+        >Welcome, <router-link class="text-pink" to="/profile">{{ displayName }}</router-link>
       </span>
     </div>
     <div v-else class="flex items-center">
-      <router-link class="mr-5" to="/login">Log in</router-link>
+      <router-link class="mr-5 text-sm font-thin" to="/login">Log in</router-link>
 
       <router-link
-        class="flex items-center justify-center w-32 rounded-full h-9 bg-pink text-gray-darkest"
+        class="flex items-center justify-center w-32 text-sm rounded-full h-9 bg-pink text-gray-darkest"
         to="/registration"
       >
         Sign up
@@ -41,7 +41,7 @@ import Logo from "@/assets/logo.svg";
 import HeaderLink from "./HeaderLink.vue";
 import { useStore } from "vuex";
 
-const links = [
+const publicLinks = [
   { to: "/about", content: "How it works" },
   { to: "/contestants", content: "Contestants" },
 ];
@@ -74,6 +74,7 @@ const Header = defineComponent({
     const store = useStore();
 
     const isAuthenticated = computed(() => !!store.state.token);
+    const links = computed(() => (isAuthenticated.value ? authenticatedLinks : publicLinks));
 
     const { result, refetch } = useQuery(
       gql`
@@ -82,14 +83,17 @@ const Header = defineComponent({
             displayName
           }
         }
-      `
+      `,
+      {},
+      { fetchPolicy: "no-cache" }
     );
 
     const displayName = useResult(result, null, (data) => data.me.displayName);
 
     watch(
-      () => isAuthenticated,
+      () => isAuthenticated.value,
       () => {
+        console.log("here");
         refetch();
       }
     );
@@ -100,7 +104,7 @@ const Header = defineComponent({
       show,
       isAuthenticated,
       displayName,
-      links: isAuthenticated.value ? authenticatedLinks : links,
+      links,
     };
   },
 });

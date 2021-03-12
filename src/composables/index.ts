@@ -1,3 +1,5 @@
-export { default as useContestantModal } from "./useContestantModal";
-export { default as useContestants } from "./useContestants";
-export { default as useSeasonWeeks } from "./useSeasonWeeks";
+export * from "./useContestantModal";
+export * from "./useContestants";
+export * from "./useOverallLeaderboard";
+export * from "./useSeasonWeeks";
+export * from "./useWeeklyLeaderboard";

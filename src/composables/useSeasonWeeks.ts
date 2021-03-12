@@ -1,12 +1,12 @@
 import { useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 
-export interface ISeasonWeek {
+interface ISeasonWeek {
   id: string;
   weekNumber: number;
 }
 
-function useSeasonWeeks(seasonId: string) {
+export function useSeasonWeeks(seasonId: string) {
   const { result } = useQuery(
     gql`
       query SeasonWeeks($seasonId: String!) {
@@ -16,9 +16,7 @@ function useSeasonWeeks(seasonId: string) {
         }
       }
     `,
-    {
-      seasonId,
-    }
+    { seasonId }
   );
 
   const seasonWeeks = useResult<any, null, ISeasonWeek[]>(result, null, (data) => data.seasonWeeks);
@@ -27,5 +25,3 @@ function useSeasonWeeks(seasonId: string) {
     seasonWeeks,
   };
 }
-
-export default useSeasonWeeks;

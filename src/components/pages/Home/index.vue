@@ -9,7 +9,7 @@
       </div>
 
       <div class="relative mb-10 w-80">
-        <div class="text-3xl text-center">Welcome to the Fantasy Suite</div>
+        <div class="text-3xl font-light text-center">Welcome to the Fantasy Suite</div>
         <div class="text-4xl text-right font-accent text-red">League</div>
         <Strikethrough class="w-24 title__strikethrough" />
       </div>
@@ -19,7 +19,7 @@
       </router-link>
 
       <p class="mb-60">
-        <span class="mr-2">Already have an account?</span>
+        <span class="mr-2 font-extralight">Already have an account?</span>
 
         <router-link class="underline text-pink" to="/login">Log in.</router-link>
       </p>

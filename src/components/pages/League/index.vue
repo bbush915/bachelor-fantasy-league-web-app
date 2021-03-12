@@ -1,7 +1,7 @@
 <template>
   <div v-if="leagueContext" class="flex flex-col px-40">
     <span class="mt-4 mb-2 text-sm font-light text-pink">
-      {{ leagueContext.name }}
+      {{ leagueContext.leagueName }}
     </span>
 
     <router-view :leagueContext="leagueContext" />
@@ -27,6 +27,9 @@ const League = defineComponent({
     const { result } = useQuery(
       gql`
         query League($id: String!) {
+          me {
+            id
+          }
           league(id: $id) {
             id
             name
@@ -44,11 +47,12 @@ const League = defineComponent({
     );
 
     const leagueContext = useResult<any, null, LeagueContext>(result, null, (data) => ({
-      id: data.league.id,
-      name: data.league.name,
+      userId: data.me.id,
+      leagueId: data.league.id,
+      leagueName: data.league.name,
       seasonId: data.league.season.id,
       currentSeasonWeekId: data.league.season.currentSeasonWeek.id,
-      currentSeasonWeekNumber: data.league.season.currentSeasonWeek.weekNumber,
+      currentWeekNumber: data.league.season.currentSeasonWeek.weekNumber,
     }));
 
     return {

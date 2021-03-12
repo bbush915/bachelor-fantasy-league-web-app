@@ -2,7 +2,7 @@ import { ref } from "vue";
 
 import { IContestant } from "./useContestants";
 
-function useContestantModal() {
+export function useContestantModal() {
   const selectedContestant = ref<IContestant | null>(null);
   const isContestantModalVisible = ref(false);
 
@@ -23,5 +23,3 @@ function useContestantModal() {
     hideContestantModal,
   };
 }
-
-export default useContestantModal;

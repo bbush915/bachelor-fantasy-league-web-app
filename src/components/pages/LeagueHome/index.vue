@@ -9,7 +9,7 @@
       <Leaderboard />
 
       <div class="flex w-full space-x-6">
-        <MemberScores class="w-1/2" />
+        <WeeklyScores class="w-1/2" />
         <ContestantScores class="w-1/2" />
       </div>
     </div>
@@ -25,7 +25,7 @@ import { LeagueContext } from "@/types";
 import ContestantScores from "./ContestantScores/index.vue";
 import Leaderboard from "./Leaderboard/index.vue";
 import Lineup from "./Lineup/index.vue";
-import MemberScores from "./MemberScores/index.vue";
+import WeeklyScores from "./WeeklyScores/index.vue";
 
 const LeagueHome = defineComponent({
   name: "LeagueHome",
@@ -34,7 +34,7 @@ const LeagueHome = defineComponent({
     ContestantScores,
     Leaderboard,
     Lineup,
-    MemberScores,
+    WeeklyScores,
   },
 
   props: {
@@ -61,7 +61,7 @@ const LeagueHome = defineComponent({
         }
       `,
       {
-        leagueId: leagueContext.id,
+        leagueId: leagueContext.leagueId,
         seasonWeekId: leagueContext.currentSeasonWeekId,
       },
       {

@@ -6,15 +6,16 @@ import ContestantScoreDetails from "@/components/pages/ContestantScoreDetails/in
 import CreateLeague from "@/components/pages/CreateLeague/index.vue";
 import Home from "@/components/pages/Home/index.vue";
 import JoinLeague from "@/components/pages/JoinLeague/index.vue";
-import LeaderboardDetails from "@/components/pages/LeaderboardDetails/index.vue";
 import League from "@/components/pages/League/index.vue";
 import LeagueHome from "@/components/pages/LeagueHome/index.vue";
 import Loading from "@/components/simple/Loading/index.vue";
 import Login from "@/components/pages/Login/index.vue";
-import MemberScoreDetails from "@/components/pages/MemberScoreDetails/index.vue";
 import MyLeagues from "@/components/pages/MyLeagues/index.vue";
+import OverallScoreDetails from "@/components/pages/OverallScoreDetails/index.vue";
+import Profile from "@/components/pages/Profile/index.vue";
 import Registration from "@/components/pages/Registration/index.vue";
 import SetLineup from "@/components/pages/SetLineup/index.vue";
+import WeeklyScoreDetails from "@/components/pages/WeeklyScoreDetails/index.vue";
 import { isAuthenticated } from "@/utils/authentication";
 
 const routes: RouteRecordRaw[] = [
@@ -27,6 +28,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 const authenticatedRoutes: RouteRecordRaw[] = [
+  { path: "/profile", name: "profile", component: Profile },
   { path: "/join-league", name: "join-league", component: JoinLeague },
   { path: "/create-league", name: "create-league", component: CreateLeague },
   { path: "/my-leagues", name: "my-leagues", component: MyLeagues },
@@ -46,8 +48,8 @@ const authenticatedRoutes: RouteRecordRaw[] = [
       },
       {
         path: "leaderboard",
-        name: "leaderboard-details",
-        component: LeaderboardDetails,
+        name: "overall-score-details",
+        component: OverallScoreDetails,
       },
       {
         path: "contestant-scores",
@@ -55,9 +57,9 @@ const authenticatedRoutes: RouteRecordRaw[] = [
         component: ContestantScoreDetails,
       },
       {
-        path: "member-scores",
-        name: "member-score-details",
-        component: MemberScoreDetails,
+        path: "weekly-scores",
+        name: "weekly-score-details",
+        component: WeeklyScoreDetails,
       },
     ],
   },

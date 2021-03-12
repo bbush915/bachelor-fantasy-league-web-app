@@ -1,5 +1,6 @@
 import { DefaultApolloClient } from "@vue/apollo-composable";
-import { createApp, h, provide } from "vue";
+import { createApp, h, provide, Plugin } from "vue";
+import { VTooltip } from "v-tooltip";
 
 import App from "./App.vue";
 import { getApolloClient } from "./gql";
@@ -17,4 +18,5 @@ createApp({
 })
   .use(getRouter())
   .use(getStore())
+  .directive("tooltip", VTooltip)
   .mount("#app");
