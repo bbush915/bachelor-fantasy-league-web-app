@@ -1,20 +1,25 @@
 import { useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
-import { Ref } from "vue";
+import { computed, reactive, Ref } from "vue";
 
 import { getOrdinal } from "@/utils";
 
-interface ILeagueMember {
-  userId: string;
-  ordinal: string;
-  avatarUrl: string;
-  displayName: string;
-  score: number;
-  lineup: { id: string; name: string; headshotUrl: string; score: number }[];
-}
+type TResult = {
+  weeklyScoreDetails: {
+    id: string;
+    user: {
+      id: string;
+      displayName: string;
+      avatarUrl: string;
+    };
+    weeklyScore: number;
+  }[];
+};
 
 export function useWeeklyLeaderboard(leagueId: string, seasonWeekId: Ref<string | undefined>) {
-  const { result } = useQuery(
+  const isQueryEnabled = computed(() => !!seasonWeekId.value);
+
+  const { result } = useQuery<TResult>(
     gql`
       query WeeklyLeaderboard($leagueId: String!, $seasonWeekId: String!) {
         weeklyScoreDetails(leagueId: $leagueId, seasonWeekId: $seasonWeekId) {
@@ -24,42 +29,40 @@ export function useWeeklyLeaderboard(leagueId: string, seasonWeekId: Ref<string 
             displayName
             avatarUrl
           }
-          lineup(seasonWeekId: $seasonWeekId) {
-            id
-            lineupContestants {
-              id
-              contestant {
-                id
-                name
-                headshotUrl
-              }
-              score(seasonWeekId: $seasonWeekId)
-            }
-          }
           weeklyScore
         }
       }
     `,
-    { leagueId, seasonWeekId }
+    { leagueId, seasonWeekId },
+    reactive({
+      enabled: isQueryEnabled,
+    })
   );
 
-  const leagueMembers = useResult<any, [], ILeagueMember[]>(result, [], (data) => {
-    return data.weeklyScoreDetails
-      .sort((x: any, y: any) => y.weeklyScore - x.weeklyScore)
-      .map((x: any, index: number) => ({
-        userId: x.user.id,
-        ordinal: getOrdinal(index + 1),
-        avatarUrl: x.user.avatarUrl,
-        displayName: x.user.displayName,
-        score: x.weeklyScore,
-        lineup: x.lineup.lineupContestants
-          .sort((x: any, y: any) => x.contestant.name.localeCompare(y.contestant.name))
-          .map((x: any) => ({
-            id: x.id,
-            name: x.contestant.name,
-            headshotUrl: x.contestant.headshotUrl,
-            score: x.score,
-          })),
+  const leagueMembers = useResult(result, [] as TResult["weeklyScoreDetails"], (data) => {
+    const leagueMembers = data.weeklyScoreDetails;
+
+    const scores = leagueMembers
+      .map((leagueMember) => leagueMember.weeklyScore)
+      .sort((x, y) => y - x);
+
+    return leagueMembers
+      .slice(0)
+      .sort((x, y) => {
+        const scoreComparison = y.weeklyScore - x.weeklyScore;
+
+        if (scoreComparison === 0) {
+          return x.user.displayName.localeCompare(y.user.displayName);
+        } else {
+          return scoreComparison;
+        }
+      })
+      .map((leagueMember) => ({
+        id: leagueMember.id,
+        ordinal: getOrdinal(scores.findIndex((x) => x === leagueMember.weeklyScore) + 1),
+        avatarUrl: leagueMember.user.avatarUrl,
+        displayName: leagueMember.user.displayName,
+        score: leagueMember.weeklyScore,
       }));
   });
 

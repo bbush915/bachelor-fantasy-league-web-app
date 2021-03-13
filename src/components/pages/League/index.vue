@@ -4,7 +4,7 @@
       {{ leagueContext.leagueName }}
     </span>
 
-    <router-view :leagueContext="leagueContext" />
+    <router-view v-if="leagueContext" :leagueContext="leagueContext" />
   </div>
 </template>
 
@@ -14,7 +14,25 @@ import gql from "graphql-tag";
 import { defineComponent } from "vue";
 import { useRoute } from "vue-router";
 
-import { LeagueContext } from "@/types";
+type TResult = {
+  league: {
+    id: string;
+    name: string;
+    season: {
+      id: string;
+      currentWeekNumber: number;
+      currentSeasonWeek: {
+        id: string;
+      };
+      previousSeasonWeek: {
+        id: string;
+      };
+    };
+    myLeagueMember: {
+      id: string;
+    };
+  };
+};
 
 const League = defineComponent({
   name: "League",
@@ -24,21 +42,25 @@ const League = defineComponent({
       params: { leagueId },
     } = useRoute();
 
-    const { result } = useQuery(
+    const { result } = useQuery<TResult>(
       gql`
         query League($id: String!) {
-          me {
-            id
-          }
           league(id: $id) {
             id
             name
             season {
               id
+              currentWeekNumber
               currentSeasonWeek {
+                id
+              }
+              previousSeasonWeek {
                 id
                 weekNumber
               }
+            }
+            myLeagueMember {
+              id
             }
           }
         }
@@ -46,13 +68,14 @@ const League = defineComponent({
       { id: leagueId }
     );
 
-    const leagueContext = useResult<any, null, LeagueContext>(result, null, (data) => ({
-      userId: data.me.id,
+    const leagueContext = useResult(result, null, (data) => ({
+      seasonId: data.league.season.id,
+      weekNumber: data.league.season.currentWeekNumber,
+      currentSeasonWeekId: data.league.season.currentSeasonWeek.id,
+      previousSeasonWeekId: data.league.season.previousSeasonWeek.id,
       leagueId: data.league.id,
       leagueName: data.league.name,
-      seasonId: data.league.season.id,
-      currentSeasonWeekId: data.league.season.currentSeasonWeek.id,
-      currentWeekNumber: data.league.season.currentSeasonWeek.weekNumber,
+      leagueMemberId: data.league.myLeagueMember.id,
     }));
 
     return {

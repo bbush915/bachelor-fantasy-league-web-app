@@ -4,17 +4,20 @@ import { Ref } from "vue";
 
 import { getOrdinal } from "@/utils";
 
-interface ILeagueMember {
-  userId: string;
-  ordinal: string;
-  avatarUrl: string;
-  displayName: string;
-  score: number;
-  normalizedWidth: number;
-}
+type TResult = {
+  overallScoreDetails: {
+    id: string;
+    user: {
+      id: string;
+      displayName: string;
+      avatarUrl: string;
+    };
+    cumulativeScore: number;
+  }[];
+};
 
 export function useOverallLeaderboard(leagueId: string, weekNumber: Ref<number>) {
-  const { result } = useQuery(
+  const { result } = useQuery<TResult>(
     gql`
       query OverallLeaderboard($leagueId: String!, $weekNumber: Int!) {
         overallScoreDetails(leagueId: $leagueId, weekNumber: $weekNumber) {
@@ -31,19 +34,40 @@ export function useOverallLeaderboard(leagueId: string, weekNumber: Ref<number>)
     { leagueId, weekNumber }
   );
 
-  const leagueMembers = useResult<any, [], ILeagueMember[]>(result, [], (data) => {
-    const minScore = Math.min(...data.overallScoreDetails.map((x: any) => x.cumulativeScore));
-    const maxScore = Math.max(...data.overallScoreDetails.map((x: any) => x.cumulativeScore));
+  const leagueMembers = useResult(result, [] as TResult["overallScoreDetails"], (data) => {
+    const leagueMembers = data.overallScoreDetails;
 
-    return data.overallScoreDetails
-      .sort((x: any, y: any) => y.cumulativeScore - x.cumulativeScore)
-      .map((x: any, index: number) => ({
-        userId: x.user.id,
-        ordinal: getOrdinal(index + 1),
-        avatarUrl: x.user.avatarUrl,
-        displayName: x.user.displayName,
-        score: x.cumulativeScore,
-        normalizedWidth: getNormalizedWidth(minScore, maxScore, x.cumulativeScore),
+    let minScore = Number.MAX_VALUE;
+    let maxScore = Number.MIN_VALUE;
+    const scores: number[] = [];
+
+    for (const leagueMember of leagueMembers) {
+      if (leagueMember.cumulativeScore < minScore) minScore = leagueMember.cumulativeScore;
+      if (leagueMember.cumulativeScore > maxScore) maxScore = leagueMember.cumulativeScore;
+
+      scores.push(leagueMember.cumulativeScore);
+    }
+
+    scores.sort((x, y) => y - x);
+
+    return leagueMembers
+      .slice(0)
+      .sort((x, y) => {
+        const scoreComparison = y.cumulativeScore - x.cumulativeScore;
+
+        if (scoreComparison === 0) {
+          return x.user.displayName.localeCompare(y.user.displayName);
+        } else {
+          return scoreComparison;
+        }
+      })
+      .map((leagueMember) => ({
+        id: leagueMember.id,
+        ordinal: getOrdinal(scores.findIndex((x) => x === leagueMember.cumulativeScore) + 1),
+        avatarUrl: leagueMember.user.avatarUrl,
+        displayName: leagueMember.user.displayName,
+        score: leagueMember.cumulativeScore,
+        normalizedWidth: getNormalizedWidth(minScore, maxScore, leagueMember.cumulativeScore),
       }));
   });
 

@@ -19,7 +19,11 @@ export function useSeasonWeeks(seasonId: string) {
     { seasonId }
   );
 
-  const seasonWeeks = useResult<any, null, ISeasonWeek[]>(result, null, (data) => data.seasonWeeks);
+  const seasonWeeks = useResult<any, ISeasonWeek[], ISeasonWeek[]>(
+    result,
+    [],
+    (data) => data.seasonWeeks
+  );
 
   return {
     seasonWeeks,
