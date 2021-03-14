@@ -43,8 +43,8 @@
 <script lang="ts">
 import { defineComponent, toRefs } from "vue";
 
-const ScoreTableRow = defineComponent({
-  name: "ScoreTableRow",
+const BodyRow = defineComponent({
+  name: "BodyRow",
 
   props: {
     seasonWeekContestant: {
@@ -86,5 +86,5 @@ const ScoreTableRow = defineComponent({
   },
 });
 
-export default ScoreTableRow;
+export default BodyRow;
 </script>

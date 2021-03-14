@@ -29,7 +29,7 @@ label {
 }
 
 .btn-primary {
-  @apply w-48 h-10 text-sm rounded-full bg-pink text-gray-darkest;
+  @apply flex items-center justify-center w-48 h-10 text-sm rounded-full bg-pink text-gray-darkest;
 
   &:disabled {
     opacity:  0.5;
@@ -37,7 +37,7 @@ label {
 }
 
 .btn-secondary {
-  @apply w-48 h-10 text-sm border-2 rounded-full border-pink text-pink;
+  @apply flex items-center justify-center w-48 h-10 text-sm border-2 rounded-full border-pink text-pink;
 }
 
 .tooltip {

@@ -1,121 +1,83 @@
 <template>
-  <div class="flex flex-col items-center pt-6 pb-8">
-    <div class="flex flex-col self-start mb-6 ml-40">
-      <h1 class="text-3xl">My Fantasy Leagues</h1>
-    </div>
+  <div class="flex flex-col mx-40 my-8">
+    <h1 class="mb-8">My Fantasy Leagues</h1>
 
-    <div class="flex flex-col items-center w-3/5 p-8 bg-gray-dark rounded-3xl">
-      <h1 class="self-start text-lg">Current Season</h1>
+    <div class="flex flex-col px-8 py-6 mx-40 bg-gray-dark rounded-xl">
+      <h2 class="mb-8">Current Season</h2>
 
-      <div class="flex flex-col w-full">
-        <div v-if="leagues?.length > 0">
-          <table class="w-full">
-            <thead>
-              <tr>
-                <th />
-                <th />
-                <th>Place</th>
-                <th>Lineup Set?</th>
-                <th>Edit Lineup</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="league in leagues" :key="league.id">
-                <td class="w-14">
-                  <div class="overflow-hidden w-14 h-14 rounded-xl">
-                    <img :src="league.logoUrl" />
-                  </div>
-                </td>
-
-                <td>
-                  <span>{{ league.name }}</span>
-                </td>
-
-                <td align="center">
-                  <span>1st</span>
-                </td>
-
-                <td align="center">
-                  <div class="w-5 h-5">
-                    <AlertIcon />
-                  </div>
-                </td>
-
-                <td align="center">
-                  <router-link :to="`/leagues/${league.id}/set-lineup`">
-                    <EditIcon />
-                  </router-link>
-                </td>
-
-                <td align="center">
-                  <router-link
-                    class="flex items-center justify-center btn-secondary"
-                    :to="`/leagues/${league.id}`"
-                  >
-                    League Home
-                  </router-link>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <div class="flex flex-col">
+        <div v-if="leagues.length > 0" class="mb-8">
+          <LeagueTable class="w-full" :leagues="leagues" />
         </div>
 
-        <div v-else>
+        <div v-else class="flex flex-col items-center mb-16">
           <div class="w-16 h-16 mb-8">
             <RoseIcon />
           </div>
 
-          <p class="mb-12 text-sm font-thin">
+          <p class="w-2/3 text-center txt-body">
             You are not a member of any fantasy leagues! Search for a league to join or create a new
             league to get started.
           </p>
         </div>
 
-        <router-link class="flex items-center justify-center mb-6 btn-primary" to="/join-league">
-          Join a League
-        </router-link>
-
-        <router-link class="flex items-center justify-center btn-primary" to="/create-league">
-          Create a League
-        </router-link>
+        <div class="flex flex-col items-center">
+          <router-link class="mb-6 btn-primary" to="/join-league">Join a League</router-link>
+          <router-link class="btn-primary" to="/create-league">Create a League</router-link>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import gql from "graphql-tag";
 import { useQuery, useResult } from "@vue/apollo-composable";
+import gql from "graphql-tag";
 import { defineComponent } from "vue";
 
-import AlertIcon from "@/assets/alert.svg";
-import EditIcon from "@/assets/edit.svg";
 import RoseIcon from "@/assets/rose.svg";
+import LeagueTable from "./components/LeagueTable/index.vue";
+
+type TResult = {
+  myLeagues: {
+    id: string;
+    name: string;
+    logoUrl: string;
+    myLeagueMember: {
+      id: string;
+      place: number;
+      isLineupSet: boolean;
+    };
+  }[];
+};
 
 const MyLeagues = defineComponent({
   name: "MyLeagues",
 
   components: {
-    AlertIcon,
-    EditIcon,
+    LeagueTable,
     RoseIcon,
   },
 
   setup() {
-    const { result } = useQuery(
+    const { result } = useQuery<TResult>(
       gql`
         query MyLeagues {
           myLeagues {
             id
             name
             logoUrl
+            myLeagueMember {
+              id
+              place
+              isLineupSet
+            }
           }
         }
       `
     );
 
-    const leagues = useResult(result, null, (data) => data.myLeagues);
+    const leagues = useResult(result, [] as TResult["myLeagues"], (data) => data.myLeagues);
 
     return {
       leagues,

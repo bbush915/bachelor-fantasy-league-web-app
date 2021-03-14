@@ -47,15 +47,15 @@ import { defineComponent } from "vue";
 
 import InfoIcon from "@/assets/info.svg";
 
-const ScoreTableHeader = defineComponent({
-  name: "ScoreTableHeader",
+const HeaderRow = defineComponent({
+  name: "HeaderRow",
 
   components: {
     InfoIcon,
   },
 });
 
-export default ScoreTableHeader;
+export default HeaderRow;
 </script>
 
 <style lang="postcss" scoped>

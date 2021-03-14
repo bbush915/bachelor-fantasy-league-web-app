@@ -10,7 +10,7 @@
 
       <div class="flex justify-between mb-2 text-xs font-thin">
         <label>Password</label>
-        <router-link class="text-pink" to="/">Forgot password?</router-link>
+        <router-link class="text-pink txt-body" to="/">Forgot password?</router-link>
       </div>
       <input class="input mb-14" type="password" v-model="password" />
 

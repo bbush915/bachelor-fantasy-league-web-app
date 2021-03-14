@@ -12,7 +12,7 @@
       </div>
 
       <router-link
-        class="flex items-center justify-center btn-primary"
+        class="btn-primary"
         :to="{
           name: 'set-lineup',
         }"
@@ -30,7 +30,7 @@
     >
       <span class="mr-4 text-xs">Edit Lineup</span>
 
-      <div>
+      <div class="w-4 h-4">
         <EditIcon />
       </div>
     </router-link>

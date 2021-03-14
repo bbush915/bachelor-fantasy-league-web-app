@@ -47,13 +47,7 @@
       </div>
 
       <div class="flex self-end">
-        <router-link
-          class="flex items-center justify-center mr-4 btn-secondary"
-          :to="{ name: 'league-home' }"
-        >
-          Cancel
-        </router-link>
-
+        <router-link class="mr-4 btn-secondary" :to="{ name: 'league-home' }"> Cancel </router-link>
         <button class="btn-primary" :disabled="!canSave" @click="handleSaveClick">Save</button>
       </div>
     </div>
