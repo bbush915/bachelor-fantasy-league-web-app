@@ -3,11 +3,16 @@
     <h1 class="mb-10">League Home</h1>
 
     <div class="flex flex-col px-40 space-y-8">
+      <Lineup :leagueContext="leagueContext" />
       <OverallScores :leagueContext="leagueContext" />
 
       <div class="flex space-x-8">
         <WeeklyScores class="flex-1" :leagueContext="leagueContext" />
-        <ContestantScores class="flex-1" :leagueContext="leagueContext" />
+        <ContestantScores
+          class="flex-1"
+          :style="{ height: 'fit-content' }"
+          :leagueContext="leagueContext"
+        />
       </div>
     </div>
   </div>

@@ -62,8 +62,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import GradientOverlay from "@/components/simple/GradientOverlay/index.vue";
-import SteamOverlay from "@/components/simple/SteamOverlay/index.vue";
+import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
+import SteamOverlay from "@/components/common/SteamOverlay/index.vue";
 
 const About = defineComponent({
   name: "About",

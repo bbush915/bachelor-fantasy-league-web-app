@@ -29,7 +29,7 @@ import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
-import GradientOverlay from "@/components/simple/GradientOverlay/index.vue";
+import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
 
 const Registration = defineComponent({
   name: "Registration",

@@ -10,8 +10,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import Header from "@/components/simple/Header/index.vue";
-import Notifications from "@/components/simple/Notifications/index.vue";
+import Header from "@/components/common/Header/index.vue";
+import Notifications from "@/components/common/Notifications/index.vue";
 
 export default defineComponent({
   name: "App",

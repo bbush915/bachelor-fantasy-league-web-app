@@ -4,10 +4,12 @@
       <div
         v-for="notification in notifications"
         :key="notification.timestamp"
-        class="flex items-center h-10 px-10 mb-4 text-sm font-thin rounded-l-full notification"
+        class="flex items-center h-10 px-10 mb-4 rounded-l-full notification"
         :class="[notification.type]"
       >
-        {{ notification.message }}
+        <span class="txt-body">
+          {{ notification.message }}
+        </span>
       </div>
     </transition-group>
   </div>

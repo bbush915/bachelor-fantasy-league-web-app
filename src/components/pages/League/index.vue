@@ -23,6 +23,7 @@ type TResult = {
       currentWeekNumber: number;
       currentSeasonWeek: {
         id: string;
+        lineupSpotsAvailable: number;
       };
       previousSeasonWeek: {
         id: string;
@@ -53,6 +54,7 @@ const League = defineComponent({
               currentWeekNumber
               currentSeasonWeek {
                 id
+                lineupSpotsAvailable
               }
               previousSeasonWeek {
                 id
@@ -72,6 +74,7 @@ const League = defineComponent({
       seasonId: data.league.season.id,
       weekNumber: data.league.season.currentWeekNumber,
       currentSeasonWeekId: data.league.season.currentSeasonWeek.id,
+      lineupSpotsAvailable: data.league.season.currentSeasonWeek.lineupSpotsAvailable,
       previousSeasonWeekId: data.league.season.previousSeasonWeek.id,
       leagueId: data.league.id,
       leagueName: data.league.name,

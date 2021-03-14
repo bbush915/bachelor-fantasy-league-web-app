@@ -33,7 +33,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import ContestantModal from "@/components/simple/ContestantModal/index.vue";
+import ContestantModal from "@/components/common/ContestantModal/index.vue";
 import { useContestantModal, useContestants } from "@/composables";
 
 const Contestants = defineComponent({

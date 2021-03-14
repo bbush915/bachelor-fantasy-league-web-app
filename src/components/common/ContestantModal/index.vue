@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed top-0 z-50 w-screen h-screen overlay" @click="onClose">
+  <div class="fixed top-0 left-0 z-50 w-screen h-screen overlay" @click="onClose">
     <div class="flex flex-col px-16 pb-12 modal bg-gray-darkest rounded-xl" @click.stop>
       <button class="absolute right-4 top-4" @click="onClose">
         <CloseIcon />
@@ -40,7 +40,7 @@
 import { defineComponent, PropType } from "vue";
 
 import CloseIcon from "@/assets/close.svg";
-import { IContestant } from "@/composables/useContestants";
+import { IContestant } from "@/composables";
 
 const ContestantModal = defineComponent({
   name: "ContestantModal",

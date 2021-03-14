@@ -23,24 +23,9 @@
 </template>
 
 <script lang="ts">
-import { useQuery, useResult } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { computed, defineComponent, reactive, toRef, toRefs } from "vue";
+import { defineComponent, toRef, toRefs } from "vue";
 
-type TResult = {
-  lineup: {
-    id: string;
-    lineupContestants: {
-      id: string;
-      contestant: {
-        id: string;
-        name: string;
-        headshotUrl: string;
-      };
-      score: number;
-    }[];
-  };
-};
+import { useLineupContestants } from "@/composables";
 
 const Lineup = defineComponent({
   name: "Lineup",
@@ -61,39 +46,9 @@ const Lineup = defineComponent({
     const { selectedLeagueMemberId } = toRefs(props);
     const selectedSeasonWeekId = toRef(props, "selectedSeasonWeekId");
 
-    const isQueryEnabled = computed(() => !!selectedSeasonWeekId.value);
-
-    const { result } = useQuery<TResult>(
-      gql`
-        query Lineup($leagueMemberId: String!, $seasonWeekId: String!) {
-          lineup(leagueMemberId: $leagueMemberId, seasonWeekId: $seasonWeekId) {
-            id
-            lineupContestants {
-              id
-              contestant {
-                id
-                name
-                headshotUrl
-              }
-              score(seasonWeekId: $seasonWeekId)
-            }
-          }
-        }
-      `,
-      { leagueMemberId: selectedLeagueMemberId, seasonWeekId: selectedSeasonWeekId },
-      reactive({ fetchPolicy: "cache-first", enabled: isQueryEnabled })
-    );
-
-    const lineupContestants = useResult(result, [], (data) =>
-      data.lineup.lineupContestants
-        .slice(0)
-        .sort((x, y) => x.contestant.name.localeCompare(y.contestant.name))
-        .map((lineupContestant) => ({
-          id: lineupContestant.id,
-          name: lineupContestant.contestant.name,
-          headshotUrl: lineupContestant.contestant.headshotUrl,
-          score: lineupContestant.score,
-        }))
+    const { lineupContestants } = useLineupContestants(
+      selectedLeagueMemberId,
+      selectedSeasonWeekId
     );
 
     return {

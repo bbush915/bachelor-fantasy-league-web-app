@@ -1,22 +1,17 @@
 <template>
-  <div class="flex flex-col items-center pb-8">
-    <div class="flex flex-col self-start my-6 ml-40">
-      <span class="mb-1 text-sm font-thin text-pink">
-        {{ league?.name ?? "" }}
-      </span>
+  <div class="flex flex-col">
+    <h1 class="mb-10">Set Lineup</h1>
 
-      <h1 class="text-3xl">Set Lineup</h1>
-    </div>
-
-    <div class="relative flex flex-col w-3/4 p-8 mb-8 bg-gray-dark rounded-xl">
-      <h2 class="mb-4 text-lg">Select who you think deserves a rose.</h2>
+    <div class="relative flex flex-col p-8 bg-gray-dark rounded-xl">
+      <h2 class="mb-4">Select who you think deserves a rose.</h2>
 
       <div class="flex flex-col items-start">
-        <span class="my-2 text-sm font-thin"
-          >{{ rosesRemaining }} roses left</span
-        >
+        <span class="my-2 txt-body">
+          {{ rosesRemaining === 1 ? "1 rose" : `${rosesRemaining} roses` }}
+          left
+        </span>
 
-        <div class="flex flex-wrap mb-8">
+        <div class="flex flex-wrap h-12 mb-8">
           <div v-for="i in rosesRemaining" :key="i" class="w-12 h-12">
             <RoseIcon />
           </div>
@@ -25,14 +20,11 @@
 
       <div class="flex flex-wrap justify-center mb-8">
         <div
-          v-for="(contestant, index) in contestants"
-          :key="index"
+          v-for="contestant in contestants"
+          :key="contestant.id"
           class="relative flex flex-col items-center p-2 mx-1 my-3"
         >
-          <button
-            class="absolute top-0 right-0"
-            @click="showContestantModal(contestant)"
-          >
+          <button class="absolute top-0 right-0 w-4 h-4" @click="showContestantModal(contestant)">
             <InfoIcon />
           </button>
 
@@ -43,20 +35,26 @@
               selected: contestant.isSelected,
             }"
           >
-            <img :src="contestant.imageUrl" />
+            <img :src="contestant.headshotUrl" />
 
             <div v-if="contestant.isSelected" class="absolute bottom-0 w-14">
               <RoseIcon />
             </div>
           </button>
 
-          <span class="text-sm font-thin">{{ contestant.name }}</span>
+          <span class="txt-body">{{ contestant.name }}</span>
         </div>
       </div>
 
-      <div class="self-end">
-        <button class="mr-4 btn-secondary">Cancel</button>
-        <button class="btn-primary" @click="handleSaveClick">Save</button>
+      <div class="flex self-end">
+        <router-link
+          class="flex items-center justify-center mr-4 btn-secondary"
+          :to="{ name: 'league-home' }"
+        >
+          Cancel
+        </router-link>
+
+        <button class="btn-primary" :disabled="!canSave" @click="handleSaveClick">Save</button>
       </div>
     </div>
 
@@ -71,14 +69,19 @@
 <script lang="ts">
 import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
-import { computed, defineComponent, ref, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { computed, defineComponent, PropType, ref, toRefs, watch } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 import InfoIcon from "@/assets/info.svg";
 import RoseIcon from "@/assets/rose.svg";
-import ContestantModal from "@/components/simple/ContestantModal/index.vue";
-import { useContestantModal } from "@/composables";
-import { IContestant } from "@/composables/useContestants";
+import ContestantModal from "@/components/common/ContestantModal/index.vue";
+import { IContestant, useContestantModal, useLineupContestants } from "@/composables";
+import { LeagueContext } from "@/types";
+
+type TResult = {
+  weeklyContestants: IContestant[];
+};
 
 const SetLineup = defineComponent({
   name: "SetLineup",
@@ -89,75 +92,54 @@ const SetLineup = defineComponent({
     RoseIcon,
   },
 
-  setup() {
-    const router = useRouter();
-    const route = useRoute();
+  props: {
+    leagueContext: {
+      type: Object as PropType<LeagueContext>,
+      required: true,
+    },
+  },
 
-    const { result } = useQuery(
+  setup(props) {
+    const { leagueContext } = toRefs(props);
+
+    const {
+      leagueId,
+      leagueMemberId,
+      currentSeasonWeekId,
+      lineupSpotsAvailable,
+    } = leagueContext.value;
+
+    const router = useRouter();
+    const store = useStore();
+
+    const { result } = useQuery<TResult>(
       gql`
-        query SetLineup($leagueId: String!, $seasonWeekId: String!) {
-          lineup(leagueId: $leagueId, seasonWeekId: $seasonWeekId) {
-            lineupContestants {
-              contestantId
-            }
-          }
-          league(id: $leagueId) {
+        query WeeklyContestants($seasonWeekId: String!) {
+          weeklyContestants(seasonWeekId: $seasonWeekId) {
             id
             name
-            season {
-              id
-              currentSeasonWeek {
-                id
-                lineupSpotsAvailable
-                seasonWeekContestants {
-                  id
-                  contestant {
-                    id
-                    name
-                    imageUrl
-                    age
-                    occupation
-                    hometown
-                    bio
-                    trivia
-                  }
-                }
-              }
-            }
+            headshotUrl
+            age
+            occupation
+            hometown
+            bio
+            trivia
           }
         }
       `,
-      {
-        leagueId: route.params.leagueId,
-        seasonWeekId: route.params.seasonWeekId,
-      },
-      {
-        fetchPolicy: "no-cache",
-      }
+      { seasonWeekId: currentSeasonWeekId },
+      { fetchPolicy: "cache-first" }
     );
 
-    const { mutate: saveLineup } = useMutation(
-      gql`
-        mutation SaveLineup($input: SaveLineupInput!) {
-          saveLineup(input: $input) {
-            id
-          }
-        }
-      `
-    );
-
-    const league = useResult(result, null, (data) => data.league);
-    const contestantIds = useResult(result, null, (data) =>
-      data.lineup?.lineupContestants.map((x: any) => x.contestantId)
-    );
-
-    const contestants_ = useResult<any, null, IContestant[]>(
+    const weeklyContestants = useResult(
       result,
-      null,
-      (data) =>
-        data.league.season.currentSeasonWeek.seasonWeekContestants.map(
-          (x: any) => x.contestant
-        )
+      [] as TResult["weeklyContestants"],
+      (data) => data.weeklyContestants
+    );
+
+    const { lineupContestants } = useLineupContestants(
+      ref(leagueMemberId),
+      ref(currentSeasonWeekId)
     );
 
     const {
@@ -167,29 +149,45 @@ const SetLineup = defineComponent({
       hideContestantModal,
     } = useContestantModal();
 
-    const rosesRemaining = ref(0);
-
-    const contestants = computed(
-      () =>
-        contestants_.value?.map((x) => ({
-          ...x,
-          isSelected:
-            contestantIds.value?.some((y: any) => y === x.id) ?? false,
-        })) ?? []
+    const { mutate: saveLineup } = useMutation(
+      gql`
+        mutation SaveLineup($input: SaveLineupInput!) {
+          saveLineup(input: $input) {
+            id
+            lineupContestants {
+              id
+              contestant {
+                id
+                name
+                headshotUrl
+              }
+            }
+          }
+        }
+      `
     );
 
+    const contestants = computed(() =>
+      weeklyContestants.value.map((contestant) => ({
+        ...contestant,
+        isSelected: lineupContestants.value.some(
+          (lineupContestant) => lineupContestant.contestantId === contestant.id
+        ),
+      }))
+    );
+
+    const rosesRemaining = ref(lineupSpotsAvailable - lineupContestants.value.length);
+
+    const canSave = computed(() => rosesRemaining.value === 0);
+
     watch(
-      () => league.value,
+      () => lineupContestants.value,
       () => {
-        rosesRemaining.value =
-          league.value?.season.currentSeasonWeek.lineupSpotsAvailable -
-          contestants.value.filter((x) => x.isSelected).length;
+        rosesRemaining.value = lineupSpotsAvailable - lineupContestants.value.length;
       }
     );
 
-    function toggleContestant(
-      contestant: IContestant & { isSelected: boolean }
-    ) {
+    function toggleContestant(contestant: typeof contestants.value[number]) {
       if (contestant.isSelected) {
         contestant.isSelected = false;
         rosesRemaining.value++;
@@ -200,21 +198,30 @@ const SetLineup = defineComponent({
     }
 
     async function handleSaveClick(): Promise<void> {
-      await saveLineup({
-        input: {
-          leagueId: league.value.id,
-          seasonWeekId: league.value.season.currentSeasonWeek.id,
-          contestantIds: contestants.value
-            .filter((x) => x.isSelected)
-            .map((x) => x.id),
-        },
-      });
+      try {
+        await saveLineup({
+          input: {
+            leagueId,
+            seasonWeekId: currentSeasonWeekId,
+            contestantIds: contestants.value.filter((x) => x.isSelected).map((x) => x.id),
+          },
+        });
 
-      router.push({ name: "league-home" });
+        store.dispatch("pushNotification", {
+          type: "success",
+          message: "Lineup set successfuly!",
+        });
+
+        router.push({ name: "league-home" });
+      } catch (error) {
+        store.dispatch("pushNotification", {
+          type: "error",
+          message: "Failed to set lineup. Try again later",
+        });
+      }
     }
 
     return {
-      league,
       contestants,
       selectedContestant,
       isContestantModalVisible,
@@ -222,6 +229,7 @@ const SetLineup = defineComponent({
       hideContestantModal,
       rosesRemaining,
       toggleContestant,
+      canSave,
       handleSaveClick,
     };
   },
@@ -232,8 +240,15 @@ export default SetLineup;
 
 <style lang="postcss" scoped>
 .contestant {
+  transition: transform 0.1s ease;
+
   &.selected {
     box-shadow: 0px 0px 8px 8px #e21c34;
+  }
+
+  &:hover,
+  &:focus {
+    transform: scale(1.075);
   }
 }
 </style>

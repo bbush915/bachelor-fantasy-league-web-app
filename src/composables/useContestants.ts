@@ -1,6 +1,10 @@
 import { useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 
+type TResult = {
+  allContestants: IContestant[];
+};
+
 export interface IContestant {
   id: string;
   name: string;
@@ -13,10 +17,10 @@ export interface IContestant {
 }
 
 export function useContestants() {
-  const { result } = useQuery(
+  const { result } = useQuery<TResult>(
     gql`
       query Contestants {
-        contestants {
+        allContestants {
           id
           name
           headshotUrl
@@ -32,7 +36,11 @@ export function useContestants() {
     { fetchPolicy: "cache-first" }
   );
 
-  const contestants = useResult<any, null, IContestant[]>(result, null, (data) => data.contestants);
+  const contestants = useResult(
+    result,
+    [] as TResult["allContestants"],
+    (data) => data.allContestants
+  );
 
   return {
     contestants,

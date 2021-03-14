@@ -42,8 +42,8 @@ import { defineComponent } from "vue";
 
 import Logo from "@/assets/logo.svg";
 import Strikethrough from "@/assets/strikethrough.svg";
-import GradientOverlay from "@/components/simple/GradientOverlay/index.vue";
-import SteamOverlay from "@/components/simple/SteamOverlay/index.vue";
+import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
+import SteamOverlay from "@/components/common/SteamOverlay/index.vue";
 import PetalLink from "./PetalLink.vue";
 
 const links = [
