@@ -9,10 +9,10 @@
       <input class="w-1/2 mb-4 input" type="text" v-model="name" />
 
       <label class="mb-2">League Description</label>
-      <textarea class="w-2/3 h-32 mb-4 resize-none input" v-model="description" />
+      <textarea class="w-1/2 h-32 mb-4 resize-none input" v-model="description" />
 
       <label class="mb-2">Upload Logo</label>
-      <div class="relative w-48 h-48 mb-4 overflow-hidden border border-white rounded-xl bg-gray">
+      <div class="relative w-48 h-48 mb-4 overflow-hidden rounded-xl bg-gray">
         <input
           class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
           type="file"
