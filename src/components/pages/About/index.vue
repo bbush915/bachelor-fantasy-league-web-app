@@ -3,11 +3,11 @@
     <GradientOverlay />
     <SteamOverlay class="z-10" />
 
-    <div class="relative flex flex-col items-center h-full">
-      <h1 class="self-start my-8 ml-48 text-3xl font-light">How it works</h1>
+    <div class="relative flex flex-col mx-40">
+      <h1 class="my-8">How it works</h1>
 
-      <div class="max-w-4xl mb-40">
-        <h2>Joining or creating a league</h2>
+      <div class="mx-80">
+        <h2 class="my-4">Joining or creating a league</h2>
 
         <p>
           To play you must join a league. You can search for a league to join or create your own.
@@ -15,7 +15,7 @@
           to join their league. New players can join a league any time during the season.
         </p>
 
-        <h2>Setting your lineup</h2>
+        <h2 class="my-4">Setting your lineup</h2>
 
         <p>
           Once you have joined a league, you can access the League Home Page, where you can set your
@@ -25,7 +25,7 @@
           that week. After the episode ends you can set your lineup for the following week.
         </p>
 
-        <h2>Scoring</h2>
+        <h2 class="my-4">Scoring</h2>
 
         <p>
           After the episode ends the scores will be calculated. Scores will be displayed the next
@@ -76,13 +76,3 @@ const About = defineComponent({
 
 export default About;
 </script>
-
-<style lang="postcss" scoped>
-h2 {
-  @apply text-2xl mb-4;
-}
-
-p {
-  @apply text-sm mb-16 leading-6 font-extralight;
-}
-</style>

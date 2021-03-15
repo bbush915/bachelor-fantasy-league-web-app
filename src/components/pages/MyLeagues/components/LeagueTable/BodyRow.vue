@@ -1,7 +1,7 @@
 <template>
-  <tr>
+  <tr class="h-20">
     <td>
-      <div class="overflow-hidden w-14 h-14 rounded-xl">
+      <div class="overflow-hidden border border-white w-14 h-14 rounded-xl">
         <img :src="logoUrl" />
       </div>
     </td>
@@ -77,7 +77,7 @@ const BodyRow = defineComponent({
       id,
       name,
       logoUrl,
-      place: getOrdinal(place),
+      place: place > 0 ? getOrdinal(place) : "N/A",
       isLineupSet,
     };
   },

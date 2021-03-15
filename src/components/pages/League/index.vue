@@ -1,5 +1,5 @@
 <template>
-  <div v-if="leagueContext" class="flex flex-col px-40">
+  <div v-if="leagueContext" class="flex flex-col mx-40">
     <span class="mt-4 mb-2 text-sm font-light text-pink">
       {{ leagueContext.leagueName }}
     </span>
