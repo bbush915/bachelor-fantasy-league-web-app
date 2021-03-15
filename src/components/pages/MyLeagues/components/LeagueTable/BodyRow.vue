@@ -77,7 +77,7 @@ const BodyRow = defineComponent({
       id,
       name,
       logoUrl,
-      place: place > 0 ? getOrdinal(place) : "N/A",
+      place: getOrdinal(place),
       isLineupSet,
     };
   },
