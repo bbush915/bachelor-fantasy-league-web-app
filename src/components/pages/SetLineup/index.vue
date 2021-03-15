@@ -133,7 +133,8 @@ const SetLineup = defineComponent({
 
     const { lineupContestants } = useLineupContestants(
       ref(leagueMemberId),
-      ref(currentSeasonWeekId)
+      ref(currentSeasonWeekId),
+      "no-cache"
     );
 
     const {
