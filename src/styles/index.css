@@ -29,15 +29,15 @@ label {
 }
 
 .btn-primary {
-  @apply flex items-center justify-center w-48 h-10 text-sm rounded-full bg-pink text-gray-darkest;
+  @apply flex items-center justify-center h-10 px-8 text-sm rounded-full bg-pink text-gray-darkest;
 
   &:disabled {
-    opacity:  0.5;
+    opacity: 0.5;
   }
 }
 
 .btn-secondary {
-  @apply flex items-center justify-center w-48 h-10 text-sm border-2 rounded-full border-pink text-pink;
+  @apply flex items-center justify-center h-10 px-8 text-sm border-2 rounded-full border-pink text-pink;
 }
 
 .tooltip {
@@ -48,11 +48,11 @@ label {
   @apply absolute z-50 w-0 h-0 m-1 border-solid border-gray;
 }
 
-.tooltip[x-placement^="top"] {
+.tooltip[x-placement^='top'] {
   @apply mb-1;
 }
 
-.tooltip[x-placement^="top"] .tooltip-arrow {
+.tooltip[x-placement^='top'] .tooltip-arrow {
   border-width: 5px 5px 0 5px;
   border-left-color: transparent !important;
   border-right-color: transparent !important;

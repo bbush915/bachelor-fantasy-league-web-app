@@ -11,13 +11,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 
-import BodyRow from "./BodyRow.vue";
-import HeaderRow from "./HeaderRow.vue";
+import BodyRow from './BodyRow.vue';
+import HeaderRow from './HeaderRow.vue';
 
 const LeagueTable = defineComponent({
-  name: "LeagueTable",
+  name: 'LeagueTable',
 
   props: {
     leagues: {
