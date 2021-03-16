@@ -32,7 +32,7 @@
         <tbody>
           <tr v-for="league in leagues" :key="league.id">
             <td>
-              <div class="flex items-center">
+              <div class="flex items-center my-2">
                 <div class="overflow-hidden w-14 h-14 rounded-xl">
                   <img :src="league.logoUrl" />
                 </div>
@@ -101,7 +101,7 @@ const JoinLeague = defineComponent({
   setup() {
     const router = useRouter();
     const store = useStore();
-    const query = ref<string>('lex');
+    const query = ref<string>();
     const { result } = useQuery<TResult>(
       gql`
         query Leagues($query: String!) {
@@ -150,7 +150,7 @@ const JoinLeague = defineComponent({
       } catch (error) {
         store.dispatch('pushNotification', {
           type: 'error',
-          message: 'Failed to join league. Try again later',
+          message: error?.message ?? 'Failed to join league. Try again later',
         });
       }
       return;

@@ -18,7 +18,8 @@ label {
   @apply text-xs font-light leading-4;
 }
 
-p, .txt-body {
+p,
+.txt-body {
   @apply text-sm font-light leading-6;
 }
 
@@ -34,7 +35,7 @@ textarea {
 }
 
 .btn-primary {
-  @apply flex items-center justify-center h-10 px-8 text-sm rounded-full bg-pink text-gray-darkest;
+  @apply flex items-center justify-center w-40 h-10 text-sm rounded-full bg-pink text-gray-darkest;
 
   &:disabled {
     opacity: 0.5;
@@ -42,7 +43,7 @@ textarea {
 }
 
 .btn-secondary {
-  @apply flex items-center justify-center h-10 px-8 text-sm border-2 rounded-full border-pink text-pink;
+  @apply flex items-center justify-center w-40 h-10 text-sm border-2 rounded-full border-pink text-pink;
 }
 
 .tooltip {
