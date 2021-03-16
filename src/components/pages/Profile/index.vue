@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col px-40 py-10">
+  <div class="flex flex-col py-10 mx-40">
     <h1>My Profile</h1>
 
     <div v-if="user" class="relative px-8 pt-4 pb-16 mt-8 ml-40 rounded-3xl bg-gray-dark">

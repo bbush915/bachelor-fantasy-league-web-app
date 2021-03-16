@@ -1,10 +1,10 @@
 <template>
-  <div v-if="leagueContext" class="flex flex-col px-40">
+  <div v-if="leagueContext" class="flex flex-col mx-40">
     <span class="mt-4 mb-2 text-sm font-light text-pink">
       {{ leagueContext.leagueName }}
     </span>
 
-    <router-view v-if="leagueContext" :leagueContext="leagueContext" />
+    <router-view :leagueContext="leagueContext" />
   </div>
 </template>
 
@@ -75,7 +75,7 @@ const League = defineComponent({
       weekNumber: data.league.season.currentWeekNumber,
       currentSeasonWeekId: data.league.season.currentSeasonWeek.id,
       lineupSpotsAvailable: data.league.season.currentSeasonWeek.lineupSpotsAvailable,
-      previousSeasonWeekId: data.league.season.previousSeasonWeek.id,
+      previousSeasonWeekId: data.league.season.previousSeasonWeek?.id,
       leagueId: data.league.id,
       leagueName: data.league.name,
       leagueMemberId: data.league.myLeagueMember.id,

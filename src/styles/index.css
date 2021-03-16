@@ -18,14 +18,19 @@ label {
   @apply text-xs font-light leading-4;
 }
 
-.txt-body {
-  @apply h-6 text-sm font-light leading-6;
+p, .txt-body {
+  @apply text-sm font-light leading-6;
 }
 
 .input {
-  @apply h-10 px-3 font-thin border border-white rounded-xl;
+  @apply px-3 font-thin border border-white rounded-xl;
 
   background: transparent;
+  min-height: 40px;
+}
+
+textarea {
+  @apply py-3;
 }
 
 .btn-primary {

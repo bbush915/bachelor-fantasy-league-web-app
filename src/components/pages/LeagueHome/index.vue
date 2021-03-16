@@ -2,7 +2,7 @@
   <div class="flex flex-col">
     <h1 class="mb-10">League Home</h1>
 
-    <div class="flex flex-col px-40 space-y-8">
+    <div class="flex flex-col mx-40 space-y-8">
       <Lineup :leagueContext="leagueContext" />
       <OverallScores :leagueContext="leagueContext" />
 

@@ -11,7 +11,7 @@
       </select>
     </div>
 
-    <div class="flex justify-center px-40 space-x-8">
+    <div class="flex justify-center mx-40 space-x-8">
       <div class="flex-1">
         <div class="pb-8 txt-body">Week {{ selectedWeekNumber }} Scores</div>
 

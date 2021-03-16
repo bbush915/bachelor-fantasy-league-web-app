@@ -1,31 +1,46 @@
 <template>
   <div class="relative py-8 bg-gray-dark rounded-xl">
-    <h2 class="pl-8 mb-8">Top Week {{ leagueContext.weekNumber - 1 }} Contestants</h2>
+    <h2 class="pl-8 mb-8">Top Week {{ Math.max(leagueContext.weekNumber - 1, 1) }} Contestants</h2>
 
-    <router-link class="absolute top-8 right-8" :to="{ name: 'contestant-score-details' }">
+    <router-link
+      v-if="leagueContext.previousSeasonWeekId"
+      class="absolute top-8 right-8"
+      :to="{ name: 'contestant-score-details' }"
+    >
       <MoreIcon />
     </router-link>
 
-    <div
-      v-for="contestant in contestants"
-      :key="contestant.id"
-      class="flex items-center justify-between w-full px-8 py-1"
-    >
-      <div class="flex items-center">
-        <span class="w-8 txt-body">{{ contestant.ordinal }}</span>
+    <div v-if="!leagueContext.previousSeasonWeekId" class="relative mx-8">
+      <PlaceholderIcon />
 
-        <div class="w-16 h-16 mx-6 overflow-hidden rounded-full">
-          <img :src="contestant.headshotUrl" />
+      <span class="absolute txt-body placeholder-text">
+        Contestant Scores will become available<br />
+        once Week 1 is scored.
+      </span>
+    </div>
+
+    <div v-if="leagueContext.previousSeasonWeekId">
+      <div
+        v-for="contestant in contestants"
+        :key="contestant.id"
+        class="flex items-center justify-between w-full px-8 py-1"
+      >
+        <div class="flex items-center">
+          <span class="w-8 txt-body">{{ contestant.ordinal }}</span>
+
+          <div class="w-16 h-16 mx-6 overflow-hidden rounded-full">
+            <img :src="contestant.headshotUrl" />
+          </div>
+
+          <span class="txt-body">
+            {{ contestant.name }}
+          </span>
         </div>
 
         <span class="txt-body">
-          {{ contestant.name }}
+          {{ contestant.score }}
         </span>
       </div>
-
-      <span class="txt-body">
-        {{ contestant.score }}
-      </span>
     </div>
   </div>
 </template>
@@ -34,6 +49,7 @@
 import { computed, defineComponent, PropType, ref, toRefs } from "vue";
 
 import MoreIcon from "@/assets/more.svg";
+import PlaceholderIcon from "@/assets/placeholder.svg";
 import { useSeasonWeekContestants } from "@/composables";
 import { LeagueContext } from "@/types";
 import { getOrdinal } from "@/utils";
@@ -43,6 +59,7 @@ const ContestantScores = defineComponent({
 
   components: {
     MoreIcon,
+    PlaceholderIcon,
   },
 
   props: {
@@ -92,3 +109,11 @@ const ContestantScores = defineComponent({
 
 export default ContestantScores;
 </script>
+
+<style scoped>
+.placeholder-text {
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+</style>

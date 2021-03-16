@@ -1,3 +1,4 @@
+import { FetchPolicy } from "@apollo/client/core";
 import { useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { computed, reactive, Ref } from "vue";
@@ -27,7 +28,8 @@ interface ILineupContestant {
 
 export function useLineupContestants(
   leagueMemberId: Ref<string>,
-  seasonWeekId: Ref<string | undefined>
+  seasonWeekId: Ref<string | undefined>,
+  fetchPolicy: FetchPolicy = "cache-first"
 ) {
   const isQueryEnabled = computed(() => !!seasonWeekId.value);
 
@@ -49,7 +51,7 @@ export function useLineupContestants(
       }
     `,
     { leagueMemberId, seasonWeekId },
-    reactive({ fetchPolicy: "cache-first", enabled: isQueryEnabled })
+    reactive({ fetchPolicy, enabled: isQueryEnabled })
   );
 
   const lineupContestants = useResult(result, [] as ILineupContestant[], (data) =>
