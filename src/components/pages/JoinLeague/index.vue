@@ -133,6 +133,10 @@ const JoinLeague = defineComponent({
     );
     const leagues = useResult(result, null, (data) => data.leagues);
 
+    async function handleDetailsClick(leagueId: string): Promise<void> {
+      router.push({ name: 'league-details', params: { leagueId } });
+    }
+
     async function handleJoinClick(leagueId: string): Promise<void> {
       try {
         await joinLeague({
@@ -155,7 +159,7 @@ const JoinLeague = defineComponent({
       }
       return;
     }
-    return { leagues, query, handleJoinClick };
+    return { leagues, query, handleJoinClick, handleDetailsClick };
   },
   components: {
     SearchIcon,
