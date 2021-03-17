@@ -19,11 +19,10 @@
             You are not a member of any fantasy leagues! Search for a league to join or create a new
             league to get started.
           </p>
-        </div>
-
-        <div class="flex flex-col items-center">
-          <router-link class="mb-6 btn-primary" to="/join-league">Join a League</router-link>
-          <router-link class="btn-primary" to="/create-league">Create a League</router-link>
+          <div class="flex flex-col items-center">
+            <router-link class="mb-6 btn-primary" to="/join-league">Join a League</router-link>
+            <router-link class="btn-primary" to="/create-league">Create a League</router-link>
+          </div>
         </div>
       </div>
     </div>

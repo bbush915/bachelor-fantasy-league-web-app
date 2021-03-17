@@ -15,11 +15,12 @@
 
     <div v-if="isAuthenticated">
       <span
-        >Welcome, <router-link class="text-pink" to="/profile">{{ displayName }}</router-link>
+        >Welcome,
+        <router-link class="text-pink" to="/profile">{{ displayName }}</router-link>
       </span>
     </div>
     <div v-else class="flex items-center">
-      <router-link class="mr-5 text-sm font-thin" to="/login">Log in</router-link>
+      <router-link class="mr-5 text-sm" to="/login">Log in</router-link>
 
       <router-link
         class="flex items-center justify-center w-32 text-sm rounded-full h-9 bg-pink text-gray-darkest"
@@ -43,6 +44,7 @@ import { useStore } from "vuex";
 
 const publicLinks = [
   { to: "/about", content: "How it works" },
+  { to: "/join-league", content: "Join a League" },
   { to: "/contestants", content: "Contestants" },
 ];
 
@@ -50,6 +52,7 @@ const authenticatedLinks = [
   { to: "/my-leagues", content: "My Fantasy Leagues" },
   { to: "/join-league", content: "Join a League" },
   { to: "/create-league", content: "Create a League" },
+  { to: "/about", content: "How it works" },
   { to: "/contestants", content: "Contestants" },
 ];
 

@@ -3,7 +3,7 @@
     <GradientOverlay />
     <SteamOverlay class="z-10" />
 
-    <div class="relative flex flex-col mx-40">
+    <div class="relative flex flex-col mx-40 mb-80">
       <h1 class="my-8">How it works</h1>
 
       <div class="mx-80">
