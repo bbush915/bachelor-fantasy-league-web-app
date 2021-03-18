@@ -45,12 +45,16 @@ import { computed, defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
+import { useUpdateImage } from "@/composables";
+
 const CreateLeague = defineComponent({
   name: "CreateLeague",
 
   setup() {
     const router = useRouter();
     const store = useStore();
+
+    const { imageUrl: logo, handleImageChange: handleLogoChange } = useUpdateImage();
 
     const { mutate: createLeague } = useMutation(
       gql`
@@ -64,36 +68,11 @@ const CreateLeague = defineComponent({
 
     const name = ref<string>();
     const description = ref<string>();
-    const logo = ref<string>();
+
     const isPublic = ref(false);
     const isShareable = ref(false);
 
     const canCreate = computed(() => name.value && description.value && logo.value);
-
-    function handleLogoChange(event: Event) {
-      const target = event.target as HTMLInputElement;
-
-      if (target.files?.item(0)) {
-        const file = target.files[0];
-
-        if (!file.type.startsWith("image/") || file.size > 5 * 1024 * 1024) {
-          store.dispatch("pushNotification", {
-            type: "error",
-            message: "Must upload an image (PNG, JPG) that is less than 5 MB",
-          });
-
-          return;
-        }
-
-        const fileReader = new FileReader();
-
-        fileReader.onload = (e) => {
-          logo.value = e.target?.result as string | undefined;
-        };
-
-        fileReader.readAsDataURL(target.files[0]);
-      }
-    }
 
     async function handleCreateClick() {
       const { data } = await createLeague({
