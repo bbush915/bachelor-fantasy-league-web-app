@@ -4,6 +4,8 @@ import About from "@/components/pages/About/index.vue";
 import Contestants from "@/components/pages/Contestants/index.vue";
 import ContestantScoreDetails from "@/components/pages/ContestantScoreDetails/index.vue";
 import CreateLeague from "@/components/pages/CreateLeague/index.vue";
+import EditProfile from "@/components/pages/EditProfile/index.vue";
+import ViewProfile from "@/components/pages/ViewProfile/index.vue";
 import Home from "@/components/pages/Home/index.vue";
 import JoinLeague from "@/components/pages/JoinLeague/index.vue";
 import League from "@/components/pages/League/index.vue";
@@ -26,7 +28,22 @@ const routes: RouteRecordRaw[] = [
 ];
 
 const authenticatedRoutes: RouteRecordRaw[] = [
-  { path: "/profile", name: "profile", component: Profile },
+  {
+    path: "/profile",
+    component: Profile,
+    children: [
+      {
+        path: "",
+        name: "profile",
+        component: ViewProfile,
+      },
+      {
+        path: "edit-profile",
+        name: "edit-profile",
+        component: EditProfile,
+      },
+    ],
+  },
   { path: "/join-league", name: "join-league", component: JoinLeague },
   { path: "/create-league", name: "create-league", component: CreateLeague },
   { path: "/my-leagues", name: "my-leagues", component: MyLeagues },

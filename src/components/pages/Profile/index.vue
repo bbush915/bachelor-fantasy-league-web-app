@@ -1,33 +1,7 @@
 <template>
   <div class="flex flex-col py-10 mx-40">
     <h1>My Profile</h1>
-
-    <div v-if="user" class="relative px-8 pt-4 pb-16 mt-8 ml-40 rounded-3xl bg-gray-dark">
-      <h2 class="mb-4">Details</h2>
-
-      <div class="absolute top-6 right-6">
-        <router-link class="flex items-center" to="/">
-          <span class="mr-3 text-xs">Edit Details</span>
-          <EditIcon />
-        </router-link>
-      </div>
-
-      <div class="flex items-center">
-        <div class="w-48 h-48 mr-20 overflow-hidden rounded-full">
-          <img :src="user.avatarUrl" />
-        </div>
-
-        <div class="flex flex-col">
-          <label class="mb-1">Display name</label>
-          <span class="mb-4 txt-body">{{ user.displayName }}</span>
-
-          <label class="mb-1">Email</label>
-          <span class="mb-4 txt-body">{{ user.email }}</span>
-
-          <button class="btn-primary" @click="logout">Logout</button>
-        </div>
-      </div>
-    </div>
+    <router-view />
   </div>
 </template>
 
@@ -66,14 +40,8 @@ const Profile = defineComponent({
 
     const user = useResult(result, null, (data) => data.me);
 
-    function logout() {
-      store.commit("logout");
-      router.push("/");
-    }
-
     return {
       user,
-      logout,
     };
   },
 });
