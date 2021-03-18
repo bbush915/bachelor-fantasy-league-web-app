@@ -1,81 +1,130 @@
 import { useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
-import { Ref } from "vue";
+import { computed, reactive, Ref } from "vue";
 
 import { getOrdinal } from "@/utils";
 
 type TResult = {
-  overallScoreDetails: {
-    id: string;
-    user: {
+  league: {
+    leagueMembers: {
       id: string;
-      displayName: string;
-      avatarUrl: string;
-    };
-    cumulativeScore: number;
-  }[];
+      isActive: boolean;
+      user: {
+        id: string;
+        displayName: string;
+        avatarUrl: string;
+      };
+      leagueMemberScore: {
+        leagueMemberId: string;
+        seasonWeekId: string;
+        weeklyScore?: number;
+        weeklyRank?: number;
+        cumulativeScore?: number;
+        cumulativeRank?: number;
+      };
+    }[];
+  };
 };
 
-export function useOverallLeaderboard(leagueId: string, weekNumber: Ref<number>) {
+type OverallLeaderboardEntry = {
+  leagueMemberId: string;
+  ordinal: string;
+  avatarUrl: string;
+  displayName: string;
+  score: string;
+  widthFactor: number;
+};
+
+export function useOverallLeaderboard(leagueId: string, seasonWeekId: Ref<string | undefined>) {
+  const isQueryEnabled = computed(() => !!seasonWeekId.value);
+
   const { result } = useQuery<TResult>(
     gql`
-      query OverallLeaderboard($leagueId: String!, $weekNumber: Int!) {
-        overallScoreDetails(leagueId: $leagueId, weekNumber: $weekNumber) {
+      query OverallLeaderboard($leagueId: String!, $seasonWeekId: String!) {
+        league(id: $leagueId) {
           id
-          user {
+          leagueMembers {
             id
-            displayName
-            avatarUrl
+            isActive
+            user {
+              id
+              displayName
+              avatarUrl
+            }
+            leagueMemberScore(seasonWeekId: $seasonWeekId) {
+              leagueMemberId
+              seasonWeekId
+              weeklyScore
+              weeklyRank
+              cumulativeScore
+              cumulativeRank
+            }
           }
-          cumulativeScore
         }
       }
     `,
-    { leagueId, weekNumber }
+    { leagueId, seasonWeekId },
+    reactive({
+      enabled: isQueryEnabled,
+    })
   );
 
-  const leagueMembers = useResult(result, [] as TResult["overallScoreDetails"], (data) => {
-    const leagueMembers = data.overallScoreDetails;
+  const leaderboardEntries = useResult(result, [] as OverallLeaderboardEntry[], (data) => {
+    const leagueMembers = data.league.leagueMembers.filter((x) => x.isActive);
 
     let minScore = Number.MAX_VALUE;
     let maxScore = Number.MIN_VALUE;
-    const scores: number[] = [];
 
     for (const leagueMember of leagueMembers) {
-      if (leagueMember.cumulativeScore < minScore) minScore = leagueMember.cumulativeScore;
-      if (leagueMember.cumulativeScore > maxScore) maxScore = leagueMember.cumulativeScore;
+      const { cumulativeScore } = leagueMember.leagueMemberScore;
 
-      scores.push(leagueMember.cumulativeScore);
+      if (cumulativeScore) {
+        if (cumulativeScore < minScore) minScore = cumulativeScore;
+        if (cumulativeScore > maxScore) maxScore = cumulativeScore;
+      }
     }
-
-    scores.sort((x, y) => y - x);
 
     return leagueMembers
       .slice(0)
       .sort((x, y) => {
-        const scoreComparison = y.cumulativeScore - x.cumulativeScore;
+        const rankComparison =
+          (x.leagueMemberScore.cumulativeRank ?? Number.MAX_VALUE) -
+          (y.leagueMemberScore.cumulativeRank ?? Number.MAX_VALUE);
 
-        if (scoreComparison === 0) {
+        if (rankComparison === 0) {
           return x.user.displayName.localeCompare(y.user.displayName);
         } else {
-          return scoreComparison;
+          return rankComparison;
         }
       })
-      .map((leagueMember) => ({
-        id: leagueMember.id,
-        ordinal: getOrdinal(scores.findIndex((x) => x === leagueMember.cumulativeScore) + 1),
-        avatarUrl: leagueMember.user.avatarUrl,
-        displayName: leagueMember.user.displayName,
-        score: leagueMember.cumulativeScore,
-        normalizedWidth: getNormalizedWidth(minScore, maxScore, leagueMember.cumulativeScore),
-      }));
+      .map(
+        (leagueMember) =>
+          ({
+            leagueMemberId: leagueMember.id,
+            ordinal: leagueMember.leagueMemberScore.cumulativeRank
+              ? getOrdinal(leagueMember.leagueMemberScore.cumulativeRank)
+              : "-",
+            avatarUrl: leagueMember.user.avatarUrl,
+            displayName: leagueMember.user.displayName,
+            score: leagueMember.leagueMemberScore.cumulativeScore ?? "-",
+            widthFactor: getWidthFactor(
+              minScore,
+              maxScore,
+              leagueMember.leagueMemberScore.cumulativeScore
+            ),
+          } as OverallLeaderboardEntry)
+      );
   });
 
   return {
-    leagueMembers,
+    leaderboardEntries,
   };
 }
 
-function getNormalizedWidth(min: number, max: number, value: number): number {
-  return (0.33 + 0.67 * ((value - min) / (max - min))) * 100;
+function getWidthFactor(min: number, max: number, value?: number): number {
+  if (!value) {
+    return 0.33;
+  }
+
+  return 0.33 + 0.67 * ((value - min) / (max - min));
 }

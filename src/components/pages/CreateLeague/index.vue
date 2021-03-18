@@ -31,9 +31,13 @@
         <label class="ml-2 txt-body" for="is-shareable"> Members can invite new members </label>
       </div>
 
-      <button class="self-center btn-primary" :disabled="!canCreate" @click="handleCreateClick">
-        Create
-      </button>
+      <div class="flex self-end space-x-4">
+        <router-link class="btn-secondary" :to="{ name: 'my-leagues' }"> Cancel </router-link>
+
+        <button class="self-end btn-primary" :disabled="!canCreate" @click="handleCreateClick">
+          Save
+        </button>
+      </div>
     </div>
   </div>
 </template>

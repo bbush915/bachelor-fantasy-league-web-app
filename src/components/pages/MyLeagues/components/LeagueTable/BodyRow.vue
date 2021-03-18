@@ -1,7 +1,7 @@
 <template>
   <tr class="h-20">
     <td>
-      <div class="overflow-hidden border border-white w-14 h-14 rounded-xl">
+      <div class="overflow-hidden w-14 h-14 rounded-xl">
         <img :src="logoUrl" />
       </div>
     </td>
@@ -12,7 +12,7 @@
       </span>
     </td>
 
-    <td class="text-center">{{ place }}</td>
+    <td class="text-center">{{ ordinal }}</td>
 
     <td>
       <div class="flex justify-center">
@@ -71,13 +71,14 @@ const BodyRow = defineComponent({
     const { league } = toRefs(props);
 
     const { id, name, logoUrl, myLeagueMember } = league.value;
-    const { place, isLineupSet } = myLeagueMember;
+    const { isLineupSet, leagueMemberScore } = myLeagueMember;
+    //const { cumulativeRank } = leagueMemberScore;
 
     return {
       id,
       name,
       logoUrl,
-      place: getOrdinal(place),
+      //ordinal: cumulativeRank ? getOrdinal(cumulativeRank) : "-",
       isLineupSet,
     };
   },

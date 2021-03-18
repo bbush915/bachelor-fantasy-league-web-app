@@ -5,13 +5,14 @@
     <div class="z-10 flex flex-col w-1/4 mt-10">
       <h1 class="mb-6 text-xl text-center">Log in</h1>
 
-      <label class="mb-2 text-xs font-thin">Email</label>
+      <label class="mb-2">Email</label>
       <input class="mb-4 input" type="email" v-model="email" />
 
-      <div class="flex justify-between mb-2 text-xs font-thin">
+      <div class="flex items-end justify-between mb-2 font-thin">
         <label>Password</label>
-        <router-link class="text-pink txt-body" to="/">Forgot password?</router-link>
+        <router-link class="text-xs font-normal text-pink" to="/">Forgot password?</router-link>
       </div>
+
       <input class="input mb-14" type="password" v-model="password" />
 
       <button class="self-center btn-primary" @click="handleSubmit">Log in</button>

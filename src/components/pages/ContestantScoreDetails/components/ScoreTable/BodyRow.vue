@@ -1,9 +1,7 @@
 <template>
   <tr>
     <td class="pl-4">
-      <div class="w-16 h-16 my-1 overflow-hidden rounded-full">
-        <img :src="headshotUrl" />
-      </div>
+      <Avatar class="w-16 h-16 my-1" :src="headshotUrl" />
     </td>
 
     <td class="text-left">
@@ -43,8 +41,14 @@
 <script lang="ts">
 import { defineComponent, toRefs } from "vue";
 
+import Avatar from "@/components/common/Avatar/index.vue";
+
 const BodyRow = defineComponent({
   name: "BodyRow",
+
+  components: {
+    Avatar,
+  },
 
   props: {
     seasonWeekContestant: {

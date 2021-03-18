@@ -2,26 +2,32 @@
   <div>
     <component
       :is="condensed ? 'div' : 'button'"
-      v-for="leagueMember in leagueMembers"
-      :key="leagueMember.id"
-      :class="{ selected: leagueMember.id === selectedLeagueMemberId }"
+      v-for="leaderboardEntry in leaderboardEntries"
+      :key="leaderboardEntry.leagueMemberId"
+      :class="{ selected: leaderboardEntry.leagueMemberId === selectedLeagueMemberId }"
       class="flex items-center justify-between w-full px-8 py-1 league-member"
-      @click="condensed ? undefined : $emit('update:selectedLeagueMemberId', leagueMember.id)"
+      @click="
+        condensed
+          ? undefined
+          : $emit('update:selectedLeagueMemberId', leaderboardEntry.leagueMemberId)
+      "
     >
       <div class="flex items-center">
-        <span class="w-8 txt-body">{{ leagueMember.ordinal }}</span>
+        <span class="w-8 txt-body">{{ leaderboardEntry.ordinal }}</span>
 
-        <div class="w-16 h-16 mx-6 overflow-hidden rounded-full">
-          <img :src="leagueMember.avatarUrl" />
-        </div>
+        <Avatar class="w-16 h-16 mx-6" :src="leaderboardEntry.avatarUrl" />
 
         <span class="txt-body">
-          {{ leagueMember.id === leagueMemberId ? "You" : leagueMember.displayName }}
+          {{
+            leaderboardEntry.leagueMemberId === leagueMemberId
+              ? "You"
+              : leaderboardEntry.displayName
+          }}
         </span>
       </div>
 
       <span class="txt-body">
-        {{ leagueMember.score }}
+        {{ leaderboardEntry.score }}
       </span>
     </component>
   </div>
@@ -30,11 +36,16 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, toRef, toRefs } from "vue";
 
+import Avatar from "@/components/common/Avatar/index.vue";
 import { useWeeklyLeaderboard } from "@/composables";
 import { LeagueContext } from "@/types";
 
 const WeeklyLeaderboard = defineComponent({
   name: "WeeklyLeaderboard",
+
+  components: {
+    Avatar,
+  },
 
   props: {
     leagueContext: {
@@ -65,20 +76,21 @@ const WeeklyLeaderboard = defineComponent({
 
     const { leagueId, leagueMemberId } = leagueContext.value;
 
-    const { leagueMembers } = useWeeklyLeaderboard(leagueId, seasonWeekId);
+    const { leaderboardEntries } = useWeeklyLeaderboard(leagueId, seasonWeekId);
 
-    const filteredLeagueMembers = computed(() => {
+    const filteredLeaderboardEntries = computed(() => {
       if (condensed.value) {
-        return leagueMembers.value.filter(
-          (leagueMember, index) => leagueMember.id === leagueMemberId || index < 3
+        return leaderboardEntries.value.filter(
+          (leaderboardEntry, index) =>
+            leaderboardEntry.leagueMemberId === leagueMemberId || index < 3
         );
       }
 
-      return leagueMembers.value;
+      return leaderboardEntries.value;
     });
 
     return {
-      leagueMembers: filteredLeagueMembers,
+      leaderboardEntries: filteredLeaderboardEntries,
       leagueMemberId,
       selectedLeagueMemberId,
     };

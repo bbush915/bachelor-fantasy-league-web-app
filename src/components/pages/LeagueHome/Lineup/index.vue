@@ -41,9 +41,7 @@
         :key="id"
         class="flex flex-col items-center m-2"
       >
-        <div class="w-24 h-24 mb-2 overflow-hidden rounded-full">
-          <img :src="headshotUrl" />
-        </div>
+        <Avatar class="w-24 h-24 mb-2" :src="headshotUrl" />
 
         <span class="txt-body">{{ name }}</span>
       </div>
@@ -56,14 +54,16 @@ import { computed, defineComponent, PropType, ref, toRefs } from "vue";
 
 import AlertIcon from "@/assets/alert.svg";
 import EditIcon from "@/assets/edit.svg";
-import { LeagueContext } from "@/types";
+import Avatar from "@/components/common/Avatar/index.vue";
 import { useLineupContestants } from "@/composables";
+import { LeagueContext } from "@/types";
 
 const Lineup = defineComponent({
   name: "Lineup",
 
   components: {
     AlertIcon,
+    Avatar,
     EditIcon,
   },
 

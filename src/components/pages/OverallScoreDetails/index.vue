@@ -15,7 +15,10 @@
       <div class="pb-8 txt-body">Leaderboard</div>
 
       <div class="bg-gray-dark rounded-xl">
-        <OverallLeaderboard :leagueContext="leagueContext" :weekNumber="selectedWeekNumber" />
+        <OverallLeaderboard
+          :leagueContext="leagueContext"
+          :selectedSeasonWeekId="selectedSeasonWeekId"
+        />
       </div>
     </div>
   </div>
@@ -54,9 +57,14 @@ const OverallScoreDetails = defineComponent({
 
     const selectedWeekNumber = ref(weekNumber - 1);
 
+    const selectedSeasonWeekId = computed(
+      () => filteredSeasonWeeks.value.find((x) => x.weekNumber === selectedWeekNumber.value)?.id
+    );
+
     return {
       seasonWeeks: filteredSeasonWeeks,
       selectedWeekNumber,
+      selectedSeasonWeekId,
       leagueContext,
     };
   },

@@ -11,13 +11,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, toRefs } from "vue";
 
-import BodyRow from './BodyRow.vue';
-import HeaderRow from './HeaderRow.vue';
+import BodyRow from "./BodyRow.vue";
+import HeaderRow from "./HeaderRow.vue";
 
 const LeagueTable = defineComponent({
-  name: 'LeagueTable',
+  name: "LeagueTable",
+
+  components: {
+    BodyRow,
+    HeaderRow,
+  },
 
   props: {
     leagues: {
@@ -26,9 +31,16 @@ const LeagueTable = defineComponent({
     },
   },
 
-  components: {
-    BodyRow,
-    HeaderRow,
+  setup(props) {
+    const { leagues } = toRefs(props);
+
+    const filteredLeagues = computed(() =>
+      leagues.value.filter((x: any) => x.myLeagueMember.isActive)
+    );
+
+    return {
+      leagues: filteredLeagues,
+    };
   },
 });
 

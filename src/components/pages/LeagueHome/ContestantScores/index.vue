@@ -28,9 +28,7 @@
         <div class="flex items-center">
           <span class="w-8 txt-body">{{ contestant.ordinal }}</span>
 
-          <div class="w-16 h-16 mx-6 overflow-hidden rounded-full">
-            <img :src="contestant.headshotUrl" />
-          </div>
+          <Avatar class="w-16 h-16 mx-6" :src="contestant.headshotUrl" />
 
           <span class="txt-body">
             {{ contestant.name }}
@@ -50,6 +48,7 @@ import { computed, defineComponent, PropType, ref, toRefs } from "vue";
 
 import MoreIcon from "@/assets/more.svg";
 import PlaceholderIcon from "@/assets/placeholder.svg";
+import Avatar from "@/components/common/Avatar/index.vue";
 import { useSeasonWeekContestants } from "@/composables";
 import { LeagueContext } from "@/types";
 import { getOrdinal } from "@/utils";
@@ -58,6 +57,7 @@ const ContestantScores = defineComponent({
   name: "ContestantScores",
 
   components: {
+    Avatar,
     MoreIcon,
     PlaceholderIcon,
   },

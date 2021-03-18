@@ -9,6 +9,7 @@ import ViewProfile from "@/components/pages/ViewProfile/index.vue";
 import Home from "@/components/pages/Home/index.vue";
 import JoinLeague from "@/components/pages/JoinLeague/index.vue";
 import League from "@/components/pages/League/index.vue";
+import LeagueDetails from "@/components/pages/LeagueDetails/index.vue";
 import LeagueHome from "@/components/pages/LeagueHome/index.vue";
 import Login from "@/components/pages/Login/index.vue";
 import MyLeagues from "@/components/pages/MyLeagues/index.vue";
@@ -25,6 +26,7 @@ const routes: RouteRecordRaw[] = [
   { path: "/contestants", name: "contestants", component: Contestants },
   { path: "/login", name: "login", component: Login },
   { path: "/registration", name: "registration", component: Registration },
+  { path: "/leagues/:leagueId/details", name: "league-details", component: LeagueDetails },
 ];
 
 const authenticatedRoutes: RouteRecordRaw[] = [

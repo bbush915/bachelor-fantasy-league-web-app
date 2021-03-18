@@ -6,24 +6,24 @@
       <h2 class="mb-8">Current Season</h2>
 
       <div class="flex flex-col">
-        <div v-if="leagues.length > 0" class="mb-8">
+        <div v-if="leagues.length > 0">
           <LeagueTable class="w-full" :leagues="leagues" />
         </div>
 
-        <div v-else class="flex flex-col items-center mb-16">
+        <div v-else class="flex flex-col items-center">
           <div class="w-16 h-16 mb-8">
             <RoseIcon />
           </div>
 
-          <p class="w-2/3 text-center txt-body">
+          <p class="w-2/3 mb-8 text-center txt-body">
             You are not a member of any fantasy leagues! Search for a league to join or create a new
             league to get started.
           </p>
-        </div>
 
-        <div class="flex flex-col items-center">
-          <router-link class="mb-6 btn-primary" to="/join-league">Join a League</router-link>
-          <router-link class="btn-primary" to="/create-league">Create a League</router-link>
+          <div class="flex flex-col items-center">
+            <router-link class="mb-6 btn-primary" to="/join-league">Join a League</router-link>
+            <router-link class="btn-primary" to="/create-league">Create a League</router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -45,7 +45,7 @@ type TResult = {
     logoUrl: string;
     myLeagueMember: {
       id: string;
-      place: number;
+      isActive: boolean;
       isLineupSet: boolean;
     };
   }[];
@@ -69,7 +69,7 @@ const MyLeagues = defineComponent({
             logoUrl
             myLeagueMember {
               id
-              place
+              isActive
               isLineupSet
             }
           }

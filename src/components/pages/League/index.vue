@@ -1,8 +1,13 @@
 <template>
   <div v-if="leagueContext" class="flex flex-col mx-40">
-    <span class="mt-4 mb-2 text-sm font-light text-pink">
-      {{ leagueContext.leagueName }}
-    </span>
+    <div class="mt-4 mb-2">
+      <router-link
+        class="underline txt-body text-pink"
+        :to="{ name: 'league-home', params: { leagueId: leagueContext.leagueId } }"
+      >
+        {{ leagueContext.leagueName }}
+      </router-link>
+    </div>
 
     <router-view :leagueContext="leagueContext" />
   </div>
@@ -39,9 +44,11 @@ const League = defineComponent({
   name: "League",
 
   setup() {
+    const route = useRoute();
+
     const {
       params: { leagueId },
-    } = useRoute();
+    } = route;
 
     const { result } = useQuery<TResult>(
       gql`

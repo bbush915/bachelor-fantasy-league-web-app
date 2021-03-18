@@ -17,7 +17,13 @@ export const getApolloClient = () => {
     uri: "http://localhost:4000/graphql",
   });
 
-  const cache = new InMemoryCache();
+  const cache = new InMemoryCache({
+    typePolicies: {
+      LeagueMemberScore: {
+        keyFields: ["leagueMemberId", "seasonWeekId"],
+      },
+    },
+  });
 
   const apolloClient = new ApolloClient({
     link: authLink.concat(httpLink),

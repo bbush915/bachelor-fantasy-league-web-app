@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="show"
-    class="sticky top-0 z-30 flex items-center w-full px-12 py-3 header bg-gray-dark"
-  >
+  <div class="sticky top-0 flex items-center w-full h-20 px-12 py-3 header bg-gray-dark">
     <div class="w-24">
       <router-link to="/">
         <Logo />
@@ -62,15 +59,6 @@ const Header = defineComponent({
   },
 
   setup() {
-    const route = useRoute();
-
-    watch(
-      () => route.path,
-      () => {
-        show.value = route.path !== "/";
-      }
-    );
-
     const store = useStore();
 
     const isAuthenticated = computed(() => !!store.state.token);
@@ -93,15 +81,11 @@ const Header = defineComponent({
     watch(
       () => isAuthenticated.value,
       () => {
-        console.log("here");
         refetch();
       }
     );
 
-    const show = ref(false);
-
     return {
-      show,
       isAuthenticated,
       displayName,
       links,

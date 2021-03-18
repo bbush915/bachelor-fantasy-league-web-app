@@ -1,17 +1,24 @@
 <template>
-  <div class="min-h-screen bg-gray-darkest">
-    <Header />
+  <div class="bg-gray-darkest">
+    <Header v-if="showHeader" />
     <Notifications />
 
-    <router-view />
+    <ScrollContainer
+      class="scroll-container"
+      :style="{ 'max-height': `calc(100vh - ${showHeader ? '96px' : '0px'})` }"
+    >
+      <router-view />
+    </ScrollContainer>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
+import { useRoute } from "vue-router";
 
 import Header from "@/components/common/Header/index.vue";
 import Notifications from "@/components/common/Notifications/index.vue";
+import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
 
 export default defineComponent({
   name: "App",
@@ -19,6 +26,19 @@ export default defineComponent({
   components: {
     Header,
     Notifications,
+    ScrollContainer,
+  },
+
+  setup() {
+    const route = useRoute();
+
+    const showHeader = computed(() => route.path !== "/");
+
+    return {
+      showHeader,
+    };
   },
 });
 </script>
+
+<style scoped></style>

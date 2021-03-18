@@ -21,7 +21,9 @@ export function useSeasonWeeks(seasonId: string) {
     { seasonId }
   );
 
-  const seasonWeeks = useResult(result, [] as TResult["seasonWeeks"], (data) => data.seasonWeeks);
+  const seasonWeeks = useResult(result, [] as TResult["seasonWeeks"], (data) =>
+    data.seasonWeeks.slice(0).sort((x, y) => x.weekNumber - y.weekNumber)
+  );
 
   return {
     seasonWeeks,

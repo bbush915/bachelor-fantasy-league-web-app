@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-col py-10 mx-40">
     <h1>My Profile</h1>
+
     <router-view />
   </div>
 </template>
@@ -10,14 +11,16 @@ import { useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 import EditIcon from "@/assets/edit.svg";
-import { useStore } from "vuex";
+import Avatar from "@/components/common/Avatar/index.vue";
 
 const Profile = defineComponent({
   name: "Profile",
 
   components: {
+    Avatar,
     EditIcon,
   },
 

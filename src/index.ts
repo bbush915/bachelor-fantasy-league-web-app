@@ -1,5 +1,5 @@
 import { DefaultApolloClient } from "@vue/apollo-composable";
-import { createApp, h, provide, Plugin } from "vue";
+import { createApp, h, provide } from "vue";
 import { VTooltip } from "v-tooltip";
 
 import App from "./App.vue";
@@ -7,6 +7,7 @@ import { getApolloClient } from "./gql";
 import { getRouter } from "./router";
 import { getStore } from "./store";
 
+import "simplebar/dist/simplebar.css";
 import "./styles/index.css";
 
 createApp({

@@ -1,36 +1,43 @@
 <template>
-  <transition-group class="py-8 pr-8 space-y-8" name="league-member-list" tag="div">
+  <transition-group class="py-8 pr-8 space-y-8" name="leaderboard" tag="div">
     <div
-      v-for="leagueMember in leagueMembers"
-      :key="leagueMember.id"
-      class="flex items-center justify-between h-10 pl-8 pr-4 league-member"
-      :style="{ width: `${leagueMember.normalizedWidth}%` }"
+      v-for="leaderboardEntry in leaderboardEntries"
+      :key="leaderboardEntry.leagueMemberId"
+      class="flex items-center justify-between h-10 pl-8 pr-4 leaderboard-entry"
+      :style="{ width: `${leaderboardEntry.widthFactor * 100}%` }"
     >
       <div class="flex items-center">
-        <span class="w-8 txt-body">{{ leagueMember.ordinal }}</span>
+        <span class="w-8 txt-body">{{ leaderboardEntry.ordinal }}</span>
 
-        <div class="w-16 h-16 mx-6 overflow-hidden rounded-full">
-          <img :src="leagueMember.avatarUrl" />
-        </div>
+        <Avatar class="w-16 h-16 mx-6" :src="leaderboardEntry.avatarUrl" />
 
         <span class="txt-body">
-          {{ leagueMember.id === leagueMemberId ? "You" : leagueMember.displayName }}
+          {{
+            leaderboardEntry.leagueMemberId === leagueMemberId
+              ? "You"
+              : leaderboardEntry.displayName
+          }}
         </span>
       </div>
 
-      <span class="txt-body">{{ leagueMember.score }}</span>
+      <span class="txt-body">{{ leaderboardEntry.score }}</span>
     </div>
   </transition-group>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, toRefs } from "vue";
+import { computed, defineComponent, PropType, toRef, toRefs } from "vue";
 
+import Avatar from "@/components/common/Avatar/index.vue";
 import { useOverallLeaderboard } from "@/composables";
 import { LeagueContext } from "@/types";
 
 const OverallLeaderboard = defineComponent({
   name: "OverallLeaderboard",
+
+  components: {
+    Avatar,
+  },
 
   props: {
     leagueContext: {
@@ -38,9 +45,9 @@ const OverallLeaderboard = defineComponent({
       required: true,
     },
 
-    weekNumber: {
-      type: Number,
-      required: true,
+    selectedSeasonWeekId: {
+      type: String,
+      required: false,
     },
 
     condensed: {
@@ -51,23 +58,26 @@ const OverallLeaderboard = defineComponent({
   },
 
   setup(props) {
-    const { leagueContext, condensed, weekNumber } = toRefs(props);
+    const { leagueContext, condensed } = toRefs(props);
+    const seasonWeekId = toRef(props, "selectedSeasonWeekId");
+
     const { leagueId, leagueMemberId } = leagueContext.value;
 
-    const { leagueMembers } = useOverallLeaderboard(leagueId, weekNumber);
+    const { leaderboardEntries } = useOverallLeaderboard(leagueId, seasonWeekId);
 
-    const filteredLeagueMembers = computed(() => {
+    const filteredLeaderboardEntries = computed(() => {
       if (condensed.value) {
-        return leagueMembers.value.filter(
-          (leagueMember, index) => leagueMember.id === leagueMemberId || index < 3
+        return leaderboardEntries.value.filter(
+          (leaderboardEntry, index) =>
+            leaderboardEntry.leagueMemberId === leagueMemberId || index < 3
         );
       }
 
-      return leagueMembers.value;
+      return leaderboardEntries.value;
     });
 
     return {
-      leagueMembers: filteredLeagueMembers,
+      leaderboardEntries: filteredLeaderboardEntries,
       leagueMemberId,
     };
   },
@@ -77,11 +87,11 @@ export default OverallLeaderboard;
 </script>
 
 <style scoped>
-.league-member-list-move {
+.leaderboard-move {
   transition: transform 1s ease;
 }
 
-.league-member {
+.leaderboard-entry {
   background: linear-gradient(270deg, rgba(226, 28, 52, 0.85) -10%, rgba(226, 28, 52, 0.1) 130%);
 }
 </style>
