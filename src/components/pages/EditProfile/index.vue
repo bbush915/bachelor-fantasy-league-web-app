@@ -45,6 +45,7 @@
 </template>
 
 <script lang="ts">
+import { useUpdateImage } from "@/composables";
 import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { defineComponent, ref, watch } from "vue";
@@ -90,8 +91,7 @@ const EditProfile = defineComponent({
 
     const displayName = ref<string>();
     const email = ref<string>();
-    const userAvatar = ref<string>();
-
+    const { imageUrl: avatarUrl, handleImageChange } = useUpdateImage();
     const user = useResult(result, null, (data) => data.me);
 
     watch(
@@ -99,7 +99,7 @@ const EditProfile = defineComponent({
       () => {
         displayName.value = user.value.displayName;
         email.value = user.value.email;
-        userAvatar.value = user.value.userAvatar;
+        avatarUrl.value = user.value.avatarUrl;
       }
     );
 
@@ -107,7 +107,7 @@ const EditProfile = defineComponent({
       try {
         await updateProfile({
           input: {
-            avatarUrl: userAvatar.value,
+            avatarUrl: avatarUrl.value,
             displayName: displayName.value,
             email: email.value,
           },
@@ -130,8 +130,10 @@ const EditProfile = defineComponent({
     return {
       user,
       email,
+      avatarUrl,
       displayName,
       handleSaveClick,
+      handleImageChange,
     };
   },
 });
