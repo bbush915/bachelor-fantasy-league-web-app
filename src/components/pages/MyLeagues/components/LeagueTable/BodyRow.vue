@@ -25,7 +25,11 @@
 
     <td>
       <div class="flex justify-center">
-        <router-link :to="`/leagues/${id}/set-lineup`">
+        <div v-if="isLocked" class="w-6 h-6">
+          <LockIcon />
+        </div>
+
+        <router-link v-else :to="`/leagues/${id}/set-lineup`">
           <div class="w-6 h-6">
             <EditIcon />
           </div>
@@ -65,6 +69,11 @@ const BodyRow = defineComponent({
       type: Object,
       required: true,
     },
+
+    isLocked: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   setup(props) {
@@ -72,13 +81,13 @@ const BodyRow = defineComponent({
 
     const { id, name, logoUrl, myLeagueMember } = league.value;
     const { isLineupSet, leagueMemberScore } = myLeagueMember;
-    //const { cumulativeRank } = leagueMemberScore;
+    const { cumulativeRank } = leagueMemberScore;
 
     return {
       id,
       name,
       logoUrl,
-      //ordinal: cumulativeRank ? getOrdinal(cumulativeRank) : "-",
+      ordinal: cumulativeRank ? getOrdinal(cumulativeRank) : "-",
       isLineupSet,
     };
   },

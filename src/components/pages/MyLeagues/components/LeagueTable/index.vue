@@ -5,7 +5,7 @@
     </thead>
 
     <tbody>
-      <BodyRow v-for="league in leagues" :key="league.id" :league="league" />
+      <BodyRow v-for="league in leagues" :key="league.id" :league="league" :isLocked="isLocked" />
     </tbody>
   </table>
 </template>
@@ -27,6 +27,11 @@ const LeagueTable = defineComponent({
   props: {
     leagues: {
       type: Array,
+      required: true,
+    },
+
+    isLocked: {
+      type: Boolean,
       required: true,
     },
   },

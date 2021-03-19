@@ -11,7 +11,7 @@ type TResult = {
 export function useSeasonWeeks(seasonId: string) {
   const { result } = useQuery<TResult>(
     gql`
-      query SeasonWeeks($seasonId: String!) {
+      query SeasonWeeks($seasonId: ID!) {
         seasonWeeks(seasonId: $seasonId) {
           id
           weekNumber

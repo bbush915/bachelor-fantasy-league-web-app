@@ -1,5 +1,6 @@
 export * from "./useContestantModal";
 export * from "./useContestants";
+export * from "./useCurrentSeasonWeek";
 export * from "./useLineupContestants";
 export * from "./useOverallLeaderboard";
 export * from "./useSeasonWeekContestants";

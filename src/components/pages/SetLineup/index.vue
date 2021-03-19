@@ -110,7 +110,7 @@ const SetLineup = defineComponent({
 
     const { result } = useQuery<TResult>(
       gql`
-        query WeeklyContestants($seasonWeekId: String!) {
+        query WeeklyContestants($seasonWeekId: ID!) {
           weeklyContestants(seasonWeekId: $seasonWeekId) {
             id
             name

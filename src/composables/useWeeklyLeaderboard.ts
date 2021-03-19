@@ -39,7 +39,7 @@ export function useWeeklyLeaderboard(leagueId: string, seasonWeekId: Ref<string 
 
   const { result } = useQuery<TResult>(
     gql`
-      query WeeklyLeaderboard($leagueId: String!, $seasonWeekId: String!) {
+      query WeeklyLeaderboard($leagueId: ID!, $seasonWeekId: ID!) {
         league(id: $leagueId) {
           id
           leagueMembers {

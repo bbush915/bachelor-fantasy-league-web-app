@@ -7,7 +7,7 @@
 
       <div class="flex flex-col">
         <div v-if="leagues.length > 0">
-          <LeagueTable class="w-full" :leagues="leagues" />
+          <LeagueTable class="w-full" :leagues="leagues" :isLocked="isLocked" />
         </div>
 
         <div v-else class="flex flex-col items-center">
@@ -33,9 +33,10 @@
 <script lang="ts">
 import { useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
-import { defineComponent } from "vue";
+import { computed, defineComponent, reactive } from "vue";
 
 import RoseIcon from "@/assets/rose.svg";
+import { useCurrentSeasonWeek } from "@/composables";
 import LeagueTable from "./components/LeagueTable/index.vue";
 
 type TResult = {
@@ -60,9 +61,19 @@ const MyLeagues = defineComponent({
   },
 
   setup() {
+    const { currentSeasonWeek } = useCurrentSeasonWeek();
+
+    const currentSeasonWeekId = computed(() => currentSeasonWeek.value?.id);
+    const isQueryEnabled = computed(() => !!currentSeasonWeekId.value);
+    const isLocked = computed(
+      () =>
+        currentSeasonWeek.value?.episodeAirDate &&
+        new Date(currentSeasonWeek.value.episodeAirDate) < new Date()
+    );
+
     const { result } = useQuery<TResult>(
       gql`
-        query MyLeagues {
+        query MyLeagues($seasonWeekId: ID!) {
           myLeagues {
             id
             name
@@ -71,16 +82,27 @@ const MyLeagues = defineComponent({
               id
               isActive
               isLineupSet
+              leagueMemberScore(seasonWeekId: $seasonWeekId) {
+                leagueMemberId
+                seasonWeekId
+                weeklyScore
+                weeklyRank
+                cumulativeScore
+                cumulativeRank
+              }
             }
           }
         }
-      `
+      `,
+      { seasonWeekId: currentSeasonWeekId },
+      reactive({ enabled: isQueryEnabled })
     );
 
     const leagues = useResult(result, [] as TResult["myLeagues"], (data) => data.myLeagues);
 
     return {
       leagues,
+      isLocked,
     };
   },
 });

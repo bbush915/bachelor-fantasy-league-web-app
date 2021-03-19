@@ -52,7 +52,7 @@ const League = defineComponent({
 
     const { result } = useQuery<TResult>(
       gql`
-        query League($id: String!) {
+        query League($id: ID!) {
           league(id: $id) {
             id
             name

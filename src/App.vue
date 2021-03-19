@@ -5,7 +5,7 @@
 
     <ScrollContainer
       class="scroll-container"
-      :style="{ 'max-height': `calc(100vh - ${showHeader ? '96px' : '0px'})` }"
+      :style="{ 'max-height': `calc(100vh - ${showHeader ? '88px' : '0px'})` }"
     >
       <router-view />
     </ScrollContainer>
