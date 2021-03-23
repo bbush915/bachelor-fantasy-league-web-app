@@ -17,6 +17,7 @@
 
       <EpisodeCountdown class="pl-8 pr-16" />
     </div>
+
     <div v-else class="flex items-center mr-12">
       <router-link class="mr-5 text-sm font-thin" to="/login">Log in</router-link>
 
@@ -42,6 +43,7 @@ import Link from "./components/Link/index.vue";
 
 const publicLinks = [
   { to: "/about", content: "How it works" },
+  { to: "/join-league", content: "Join a League" },
   { to: "/contestants", content: "Contestants" },
 ];
 
@@ -49,6 +51,7 @@ const authenticatedLinks = [
   { to: "/my-leagues", content: "My Fantasy Leagues" },
   { to: "/join-league", content: "Join a League" },
   { to: "/create-league", content: "Create a League" },
+  { to: "/about", content: "How it works" },
   { to: "/contestants", content: "Contestants" },
 ];
 
