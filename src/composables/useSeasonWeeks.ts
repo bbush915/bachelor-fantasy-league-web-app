@@ -11,7 +11,7 @@ type TResult = {
 export function useSeasonWeeks(seasonId: string) {
   const { result } = useQuery<TResult>(
     gql`
-      query SeasonWeeks($seasonId: String!) {
+      query SeasonWeeks($seasonId: ID!) {
         seasonWeeks(seasonId: $seasonId) {
           id
           weekNumber
@@ -21,7 +21,9 @@ export function useSeasonWeeks(seasonId: string) {
     { seasonId }
   );
 
-  const seasonWeeks = useResult(result, [] as TResult["seasonWeeks"], (data) => data.seasonWeeks);
+  const seasonWeeks = useResult(result, [] as TResult["seasonWeeks"], (data) =>
+    data.seasonWeeks.slice(0).sort((x, y) => x.weekNumber - y.weekNumber)
+  );
 
   return {
     seasonWeeks,

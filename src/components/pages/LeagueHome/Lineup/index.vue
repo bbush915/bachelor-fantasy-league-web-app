@@ -12,6 +12,7 @@
       </div>
 
       <router-link
+        v-if="!isLocked"
         class="btn-primary"
         :to="{
           name: 'set-lineup',
@@ -21,8 +22,16 @@
       </router-link>
     </div>
 
+    <div v-if="isLocked" class="absolute flex items-center top-8 right-8">
+      <span class="mr-3 text-xs">Locked</span>
+
+      <div class="w-4 h-4 mb-1">
+        <LockIcon />
+      </div>
+    </div>
+
     <router-link
-      v-if="isLineupSet"
+      v-if="isLineupSet && !isLocked"
       class="absolute flex items-center top-8 right-8"
       :to="{
         name: 'set-lineup',
@@ -41,9 +50,7 @@
         :key="id"
         class="flex flex-col items-center m-2"
       >
-        <div class="w-24 h-24 mb-2 overflow-hidden rounded-full">
-          <img :src="headshotUrl" />
-        </div>
+        <Avatar class="w-24 h-24 mb-2" :src="headshotUrl" />
 
         <span class="txt-body">{{ name }}</span>
       </div>
@@ -56,15 +63,19 @@ import { computed, defineComponent, PropType, ref, toRefs } from "vue";
 
 import AlertIcon from "@/assets/alert.svg";
 import EditIcon from "@/assets/edit.svg";
+import LockIcon from "@/assets/lock.svg";
+import Avatar from "@/components/common/Avatar/index.vue";
+import { useCurrentSeasonWeek, useLineupContestants } from "@/composables";
 import { LeagueContext } from "@/types";
-import { useLineupContestants } from "@/composables";
 
 const Lineup = defineComponent({
   name: "Lineup",
 
   components: {
     AlertIcon,
+    Avatar,
     EditIcon,
+    LockIcon,
   },
 
   props: {
@@ -86,9 +97,18 @@ const Lineup = defineComponent({
 
     const isLineupSet = computed(() => lineupContestants.value.length > 0);
 
+    const { currentSeasonWeek } = useCurrentSeasonWeek();
+
+    const isLocked = computed(
+      () =>
+        currentSeasonWeek.value?.episodeAirDate &&
+        new Date(currentSeasonWeek.value.episodeAirDate) < new Date()
+    );
+
     return {
       isLineupSet,
       lineupContestants,
+      isLocked,
     };
   },
 });

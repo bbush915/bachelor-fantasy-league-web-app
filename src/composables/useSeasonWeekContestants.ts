@@ -25,7 +25,7 @@ export function useSeasonWeekContestants(seasonWeekId: Ref<string | undefined>) 
 
   const { result } = useQuery<TResult>(
     gql`
-      query ContestantScoreDetails($seasonWeekId: String!) {
+      query ContestantScoreDetails($seasonWeekId: ID!) {
         seasonWeekContestants(seasonWeekId: $seasonWeekId) {
           id
           contestant {

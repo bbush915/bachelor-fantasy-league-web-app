@@ -1,26 +1,22 @@
 <template>
   <div class="flex flex-col mx-40">
     <h1 class="my-8">Join a League</h1>
-    <div class="flex flex-col px-8 pt-6 pb-8 bg-gray-dark rounded-xl">
-      <h1 class="pb-2 text-lg">Search</h1>
 
-      <label for="league-name" class="text-xs font-thin">League Name</label>
+    <div class="flex flex-col px-8 pt-6 pb-8 bg-gray-dark rounded-xl">
+      <h2 class="pb-2">Search</h2>
+
+      <label for="league-name" class="mb-2">League Name</label>
 
       <div class="flex items-center w-1/2">
-        <input
-          id="league-name"
-          class="flex-grow mr-2 input"
-          type="text"
-          v-model="query"
-        />
+        <input id="league-name" class="flex-grow mr-2 input" type="text" v-model="query" />
 
-        <button
-          class="flex items-center justify-center rounded-full w-9 h-9 bg-pink"
-        >
+        <button class="flex items-center justify-center rounded-full w-9 h-9 bg-pink">
           <SearchIcon />
         </button>
       </div>
+
       <h2 class="mt-8">Search Results</h2>
+
       <table class="table-fixed">
         <thead>
           <tr class="h-12">
@@ -43,9 +39,8 @@
             </td>
             <td>
               <div class="flex items-center">
-                <div class="overflow-hidden rounded-full w-14 h-14">
-                  <img :src="league.commissioner.user.avatarUrl" />
-                </div>
+                <Avatar class="w-14 h-14" :src="league.commissioner.user.avatarUrl" />
+
                 <span class="ml-4">
                   {{ league.commissioner.user.displayName }}
                 </span>
@@ -53,16 +48,10 @@
             </td>
             <td>
               <div class="flex items-center">
-                <button
-                  class="btn-secondary"
-                  @click="handleDetailsClick(league.id)"
-                >
+                <button class="btn-secondary" @click="handleDetailsClick(league.id)">
                   Details
                 </button>
-                <button
-                  class="ml-4 btn-primary"
-                  @click="handleJoinClick(league.id)"
-                >
+                <button class="ml-4 btn-primary" @click="handleJoinClick(league.id)">
                   Join League
                 </button>
               </div>
@@ -75,13 +64,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref } from "vue";
 
-import SearchIcon from '@/assets/search.svg';
-import { useMutation, useQuery, useResult } from '@vue/apollo-composable';
-import gql from 'graphql-tag';
-import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import SearchIcon from "@/assets/search.svg";
+import Avatar from "@/components/common/Avatar/index.vue";
+import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
+import gql from "graphql-tag";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 type TResult = {
   leagues: {
@@ -97,7 +87,7 @@ type TResult = {
 };
 
 const JoinLeague = defineComponent({
-  name: 'JoinLeague',
+  name: "JoinLeague",
   setup() {
     const router = useRouter();
     const store = useStore();
@@ -134,7 +124,7 @@ const JoinLeague = defineComponent({
     const leagues = useResult(result, null, (data) => data.leagues);
 
     async function handleDetailsClick(leagueId: string): Promise<void> {
-      router.push({ name: 'league-details', params: { leagueId } });
+      router.push({ name: "league-details", params: { leagueId } });
     }
 
     async function handleJoinClick(leagueId: string): Promise<void> {
@@ -145,16 +135,16 @@ const JoinLeague = defineComponent({
           },
         });
 
-        store.dispatch('pushNotification', {
-          type: 'success',
-          message: 'Joined league successfuly!',
+        store.dispatch("pushNotification", {
+          type: "success",
+          message: "Joined league successfuly!",
         });
 
-        router.push({ name: 'league-home', params: { leagueId } });
+        router.push({ name: "league-home", params: { leagueId } });
       } catch (error) {
-        store.dispatch('pushNotification', {
-          type: 'error',
-          message: error?.message ?? 'Failed to join league. Try again later',
+        store.dispatch("pushNotification", {
+          type: "error",
+          message: error?.message ?? "Failed to join league. Try again later",
         });
       }
       return;
@@ -162,6 +152,7 @@ const JoinLeague = defineComponent({
     return { leagues, query, handleJoinClick, handleDetailsClick };
   },
   components: {
+    Avatar,
     SearchIcon,
   },
 });

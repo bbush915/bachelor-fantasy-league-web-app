@@ -12,8 +12,8 @@ import { defineComponent } from "vue";
 
 import LipstickSmear from "@/assets/lipstick-smear.svg";
 
-const HeaderLink = defineComponent({
-  name: "HeaderLink",
+const Link = defineComponent({
+  name: "Link",
 
   components: {
     LipstickSmear,
@@ -32,7 +32,7 @@ const HeaderLink = defineComponent({
   },
 });
 
-export default HeaderLink;
+export default Link;
 </script>
 
 <style lang="postcss" scoped>

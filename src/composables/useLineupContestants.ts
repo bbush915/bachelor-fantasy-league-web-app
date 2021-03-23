@@ -35,7 +35,7 @@ export function useLineupContestants(
 
   const { result } = useQuery<TResult>(
     gql`
-      query Lineup($leagueMemberId: String!, $seasonWeekId: String!) {
+      query Lineup($leagueMemberId: ID!, $seasonWeekId: ID!) {
         lineup(leagueMemberId: $leagueMemberId, seasonWeekId: $seasonWeekId) {
           id
           lineupContestants {

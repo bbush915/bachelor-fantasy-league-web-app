@@ -1,6 +1,13 @@
 <template>
   <div class="flex flex-col">
-    <h1 class="mb-10">League Home</h1>
+    <div class="flex justify-between mb-10 mr-40">
+      <h1>League Home</h1>
+      <router-link
+        class="btn-secondary"
+        :to="{ name: 'league-details', params: { leagueId: leagueContext.leagueId } }"
+        >League Details</router-link
+      >
+    </div>
 
     <div class="flex flex-col mx-40 space-y-8">
       <Lineup :leagueContext="leagueContext" />

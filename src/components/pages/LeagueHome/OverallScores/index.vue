@@ -24,7 +24,7 @@
     <OverallLeaderboard
       v-if="leagueContext.previousSeasonWeekId"
       :leagueContext="leagueContext"
-      :weekNumber="leagueContext.weekNumber - 1"
+      :selectedSeasonWeekId="leagueContext.previousSeasonWeekId"
       :condensed="true"
     />
   </div>

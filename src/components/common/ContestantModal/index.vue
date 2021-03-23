@@ -5,31 +5,31 @@
         <CloseIcon />
       </button>
 
-      <h1 class="absolute text-2xl top-8 left-8">Contestant Details</h1>
+      <h1 class="absolute top-8 left-8">Contestant Details</h1>
 
       <div class="flex items-center mt-20 mb-4">
-        <div class="w-64 h-64 mr-8 overflow-hidden rounded-full">
-          <img :src="contestant.headshotUrl" />
-        </div>
+        <Avatar class="w-64 h-64 mr-8" :src="contestant.headshotUrl" />
 
         <div class="flex flex-col">
-          <span class="mb-4 text-lg">{{ contestant.name }}</span>
+          <h2 class="mb-4">{{ contestant.name }}</h2>
 
-          <div class="flex flex-col space-y-1 text-sm font-thin">
-            <span>{{ contestant.age }}</span>
-            <span>{{ contestant.occupation }}</span>
-            <span>{{ contestant.hometown }}</span>
+          <div class="flex flex-col space-y-1">
+            <span class="tx-body">{{ contestant.age }}</span>
+            <span class="tx-body">{{ contestant.occupation }}</span>
+            <span class="tx-body">{{ contestant.hometown }}</span>
           </div>
         </div>
       </div>
 
-      <div class="max-w-2xl text-sm font-thin">
-        <p class="mb-4 leading-6">
+      <div class="max-w-2xl">
+        <p class="mb-4">
           {{ contestant.bio }}
         </p>
 
-        <ul class="space-y-2 font-thin">
-          <li v-for="(fact, index) in contestant.trivia" :key="index">- {{ fact }}</li>
+        <ul class="space-y-2">
+          <li v-for="(fact, index) in contestant.trivia" :key="index" class="txt-body">
+            - {{ fact }}
+          </li>
         </ul>
       </div>
     </div>
@@ -40,10 +40,16 @@
 import { defineComponent, PropType } from "vue";
 
 import CloseIcon from "@/assets/close.svg";
+import Avatar from "@/components/common/Avatar/index.vue";
 import { IContestant } from "@/composables";
 
 const ContestantModal = defineComponent({
   name: "ContestantModal",
+
+  components: {
+    Avatar,
+    CloseIcon,
+  },
 
   props: {
     contestant: {
@@ -55,10 +61,6 @@ const ContestantModal = defineComponent({
       type: Function,
       required: true,
     },
-  },
-
-  components: {
-    CloseIcon,
   },
 });
 

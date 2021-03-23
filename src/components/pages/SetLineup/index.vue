@@ -35,7 +35,7 @@
               selected: contestant.isSelected,
             }"
           >
-            <img :src="contestant.headshotUrl" />
+            <Avatar :src="contestant.headshotUrl" />
 
             <div v-if="contestant.isSelected" class="absolute bottom-0 w-14">
               <RoseIcon />
@@ -69,6 +69,7 @@ import { useStore } from "vuex";
 
 import InfoIcon from "@/assets/info.svg";
 import RoseIcon from "@/assets/rose.svg";
+import Avatar from "@/components/common/Avatar/index.vue";
 import ContestantModal from "@/components/common/ContestantModal/index.vue";
 import { IContestant, useContestantModal, useLineupContestants } from "@/composables";
 import { LeagueContext } from "@/types";
@@ -81,6 +82,7 @@ const SetLineup = defineComponent({
   name: "SetLineup",
 
   components: {
+    Avatar,
     ContestantModal,
     InfoIcon,
     RoseIcon,
@@ -108,7 +110,7 @@ const SetLineup = defineComponent({
 
     const { result } = useQuery<TResult>(
       gql`
-        query WeeklyContestants($seasonWeekId: String!) {
+        query WeeklyContestants($seasonWeekId: ID!) {
           weeklyContestants(seasonWeekId: $seasonWeekId) {
             id
             name

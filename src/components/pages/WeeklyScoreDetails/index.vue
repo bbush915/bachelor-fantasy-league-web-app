@@ -91,7 +91,7 @@ const WeeklyScoreDetails = defineComponent({
 export default WeeklyScoreDetails;
 </script>
 
-<style lang="postcss" scoped>
+<style scoped>
 select {
   background: transparent;
 }

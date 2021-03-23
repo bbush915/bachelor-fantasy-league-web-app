@@ -6,7 +6,7 @@
     <div class="relative flex flex-col mx-40 mb-80">
       <h1 class="my-8">How it works</h1>
 
-      <div class="mx-80">
+      <div class="self-center w-2/3">
         <h2 class="my-4">Joining or creating a league</h2>
 
         <p>

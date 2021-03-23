@@ -7,9 +7,7 @@
     >
       <span class="text-lg leading-8">{{ contestant.name }}</span>
 
-      <div class="w-64 h-64 overflow-hidden rounded-full">
-        <img :src="contestant.headshotUrl" />
-      </div>
+      <Avatar class="w-64 h-64" :src="contestant.headshotUrl" />
 
       <div class="flex flex-col mb-6 text-xs leading-5">
         <span>{{ contestant.age }}</span>
@@ -33,6 +31,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
+import Avatar from "@/components/common/Avatar/index.vue";
 import ContestantModal from "@/components/common/ContestantModal/index.vue";
 import { useContestantModal, useContestants } from "@/composables";
 
@@ -40,6 +39,7 @@ const Contestants = defineComponent({
   name: "Contestants",
 
   components: {
+    Avatar,
     ContestantModal,
   },
 

@@ -5,15 +5,33 @@ import { computed, reactive, Ref } from "vue";
 import { getOrdinal } from "@/utils";
 
 type TResult = {
-  weeklyScoreDetails: {
-    id: string;
-    user: {
+  league: {
+    leagueMembers: {
       id: string;
-      displayName: string;
-      avatarUrl: string;
-    };
-    weeklyScore: number;
-  }[];
+      isActive: boolean;
+      user: {
+        id: string;
+        displayName: string;
+        avatarUrl: string;
+      };
+      leagueMemberScore: {
+        leagueMemberId: string;
+        seasonWeekId: string;
+        weeklyScore?: number;
+        weeklyRank?: number;
+        cumulativeScore?: number;
+        cumulativeRank?: number;
+      };
+    }[];
+  };
+};
+
+type WeeklyLeaderboardEntry = {
+  leagueMemberId: string;
+  ordinal: string;
+  avatarUrl: string;
+  displayName: string;
+  score: string;
 };
 
 export function useWeeklyLeaderboard(leagueId: string, seasonWeekId: Ref<string | undefined>) {
@@ -21,15 +39,26 @@ export function useWeeklyLeaderboard(leagueId: string, seasonWeekId: Ref<string 
 
   const { result } = useQuery<TResult>(
     gql`
-      query WeeklyLeaderboard($leagueId: String!, $seasonWeekId: String!) {
-        weeklyScoreDetails(leagueId: $leagueId, seasonWeekId: $seasonWeekId) {
+      query WeeklyLeaderboard($leagueId: ID!, $seasonWeekId: ID!) {
+        league(id: $leagueId) {
           id
-          user {
+          leagueMembers {
             id
-            displayName
-            avatarUrl
+            isActive
+            user {
+              id
+              displayName
+              avatarUrl
+            }
+            leagueMemberScore(seasonWeekId: $seasonWeekId) {
+              leagueMemberId
+              seasonWeekId
+              weeklyScore
+              weeklyRank
+              cumulativeScore
+              cumulativeRank
+            }
           }
-          weeklyScore
         }
       }
     `,
@@ -39,34 +68,37 @@ export function useWeeklyLeaderboard(leagueId: string, seasonWeekId: Ref<string 
     })
   );
 
-  const leagueMembers = useResult(result, [] as TResult["weeklyScoreDetails"], (data) => {
-    const leagueMembers = data.weeklyScoreDetails;
-
-    const scores = leagueMembers
-      .map((leagueMember) => leagueMember.weeklyScore)
-      .sort((x, y) => y - x);
+  const leaderboardEntries = useResult(result, [] as WeeklyLeaderboardEntry[], (data) => {
+    const leagueMembers = data.league.leagueMembers.filter((x) => x.isActive);
 
     return leagueMembers
       .slice(0)
       .sort((x, y) => {
-        const scoreComparison = y.weeklyScore - x.weeklyScore;
+        const rankComparison =
+          (x.leagueMemberScore.weeklyRank ?? Number.MAX_VALUE) -
+          (y.leagueMemberScore.weeklyRank ?? Number.MAX_VALUE);
 
-        if (scoreComparison === 0) {
+        if (rankComparison === 0) {
           return x.user.displayName.localeCompare(y.user.displayName);
         } else {
-          return scoreComparison;
+          return rankComparison;
         }
       })
-      .map((leagueMember) => ({
-        id: leagueMember.id,
-        ordinal: getOrdinal(scores.findIndex((x) => x === leagueMember.weeklyScore) + 1),
-        avatarUrl: leagueMember.user.avatarUrl,
-        displayName: leagueMember.user.displayName,
-        score: leagueMember.weeklyScore,
-      }));
+      .map(
+        (leagueMember) =>
+          ({
+            leagueMemberId: leagueMember.id,
+            ordinal: leagueMember.leagueMemberScore.weeklyRank
+              ? getOrdinal(leagueMember.leagueMemberScore.weeklyRank)
+              : "-",
+            avatarUrl: leagueMember.user.avatarUrl,
+            displayName: leagueMember.user.displayName,
+            score: leagueMember.leagueMemberScore.weeklyScore ?? "-",
+          } as WeeklyLeaderboardEntry)
+      );
   });
 
   return {
-    leagueMembers,
+    leaderboardEntries,
   };
 }

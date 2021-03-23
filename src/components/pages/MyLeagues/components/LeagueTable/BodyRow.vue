@@ -12,7 +12,7 @@
       </span>
     </td>
 
-    <td class="text-center">{{ place }}</td>
+    <td class="text-center">{{ ordinal }}</td>
 
     <td>
       <div class="flex justify-center">
@@ -25,7 +25,11 @@
 
     <td>
       <div class="flex justify-center">
-        <router-link :to="`/leagues/${id}/set-lineup`">
+        <div v-if="isLocked" class="w-6 h-6">
+          <LockIcon />
+        </div>
+
+        <router-link v-else :to="`/leagues/${id}/set-lineup`">
           <div class="w-6 h-6">
             <EditIcon />
           </div>
@@ -65,19 +69,25 @@ const BodyRow = defineComponent({
       type: Object,
       required: true,
     },
+
+    isLocked: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   setup(props) {
     const { league } = toRefs(props);
 
     const { id, name, logoUrl, myLeagueMember } = league.value;
-    const { place, isLineupSet } = myLeagueMember;
+    const { isLineupSet, leagueMemberScore } = myLeagueMember;
+    const { cumulativeRank } = leagueMemberScore;
 
     return {
       id,
       name,
       logoUrl,
-      place: getOrdinal(place),
+      ordinal: cumulativeRank ? getOrdinal(cumulativeRank) : "-",
       isLineupSet,
     };
   },

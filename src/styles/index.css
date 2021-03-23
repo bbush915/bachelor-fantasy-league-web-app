@@ -24,7 +24,7 @@ p,
 }
 
 .input {
-  @apply px-3 font-thin border border-white rounded-xl;
+  @apply px-3 border border-white rounded-xl;
 
   background: transparent;
   min-height: 40px;
@@ -54,11 +54,11 @@ textarea {
   @apply absolute z-50 w-0 h-0 m-1 border-solid border-gray;
 }
 
-.tooltip[x-placement^='top'] {
+.tooltip[x-placement^="top"] {
   @apply mb-1;
 }
 
-.tooltip[x-placement^='top'] .tooltip-arrow {
+.tooltip[x-placement^="top"] .tooltip-arrow {
   border-width: 5px 5px 0 5px;
   border-left-color: transparent !important;
   border-right-color: transparent !important;

@@ -1,21 +1,25 @@
 import { createLogger, createStore } from "vuex";
 
+interface State {
+  auth: {
+    token: string | null;
+  };
+  notifications: Notification[];
+}
+
 type Notification = {
   type: "success" | "error";
   message: string;
   timestamp?: number;
 };
 
-interface State {
-  token: string | null;
-  notifications: Notification[];
-}
-
 export const getStore = () => {
   const store = createStore<State>({
     state() {
       return {
-        token: window.localStorage.getItem("token"),
+        auth: {
+          token: window.localStorage.getItem("token"),
+        },
         notifications: [],
       };
     },
@@ -23,12 +27,12 @@ export const getStore = () => {
     mutations: {
       login(state, token: string) {
         window.localStorage.setItem("token", token);
-        state.token = token;
+        state.auth.token = token;
       },
 
       logout(state) {
         window.localStorage.removeItem("token");
-        state.token = null;
+        state.auth.token = null;
       },
 
       addNotification(state, notification: Notification) {
