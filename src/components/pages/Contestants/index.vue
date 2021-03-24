@@ -7,10 +7,7 @@
     >
       <div class="flex flex-row justify-between">
         <span class="text-lg leading-8">{{ contestant.name }}</span>
-        <button v-if="contestant.isFavorite" @click="handleRemoveFavorite(contestant.id)">
-          <FavoriteIconFilled />
-        </button>
-        <button v-else><FavoriteIcon @click="handleAddFavorite(contestant.id)" /></button>
+        <FavoriteButton :contestantId="contestant.id" :isFavorite="contestant.isFavorite" />
       </div>
       <Avatar class="w-64 h-64" :src="contestant.headshotUrl" />
 
@@ -38,13 +35,9 @@ import { defineComponent } from "vue";
 
 import Avatar from "@/components/common/Avatar/index.vue";
 import ContestantModal from "@/components/common/ContestantModal/index.vue";
-import FavoriteIcon from "@/assets/favorite.svg";
-import FavoriteIconFilled from "@/assets/favorite-filled.svg";
+import FavoriteButton from "@/components/common/FavoriteButton/index.vue";
 
 import { useContestantModal, useContestants } from "@/composables";
-import { useStore } from "vuex";
-import { useMutation } from "@vue/apollo-composable";
-import gql from "graphql-tag";
 
 const Contestants = defineComponent({
   name: "Contestants",
@@ -52,13 +45,11 @@ const Contestants = defineComponent({
   components: {
     Avatar,
     ContestantModal,
-    FavoriteIcon,
-    FavoriteIconFilled,
+    FavoriteButton,
   },
 
   setup() {
     const { contestants } = useContestants();
-    const store = useStore();
 
     const {
       selectedContestant,
@@ -67,58 +58,12 @@ const Contestants = defineComponent({
       hideContestantModal,
     } = useContestantModal();
 
-    const { mutate: addFavorite } = useMutation(
-      gql`
-        mutation AddFavorite($input: UserFavoriteInput!) {
-          addFavorite(input: $input) {
-            id
-            isFavorite
-          }
-        }
-      `
-    );
-
-    const { mutate: removeFavorite } = useMutation(
-      gql`
-        mutation RemoveFavorite($input: UserFavoriteInput!) {
-          removeFavorite(input: $input) {
-            id
-            isFavorite
-          }
-        }
-      `
-    );
-
-    async function handleAddFavorite(contestantId: string) {
-      try {
-        await addFavorite({ input: { contestantId } });
-      } catch (e) {
-        store.dispatch("pushNotification", {
-          type: "error",
-          message: "Failed to save favorite. Try again later",
-        });
-      }
-    }
-
-    async function handleRemoveFavorite(contestantId: string) {
-      try {
-        await removeFavorite({ input: { contestantId } });
-      } catch (e) {
-        store.dispatch("pushNotification", {
-          type: "error",
-          message: "Failed to remove favorite. Try again later",
-        });
-      }
-    }
-
     return {
       contestants,
       selectedContestant,
       isContestantModalVisible,
       showContestantModal,
       hideContestantModal,
-      handleAddFavorite,
-      handleRemoveFavorite,
     };
   },
 });

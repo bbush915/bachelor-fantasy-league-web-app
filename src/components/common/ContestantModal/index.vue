@@ -11,8 +11,10 @@
         <Avatar class="w-64 h-64 mr-8" :src="contestant.headshotUrl" />
 
         <div class="flex flex-col">
-          <h2 class="mb-4">{{ contestant.name }}</h2>
-
+          <div class="flex flex-row justify-between">
+            <h2 class="mb-4">{{ contestant.name }}</h2>
+            <FavoriteButton :contestantId="contestant.id" :isFavorite="isFavorite" />
+          </div>
           <div class="flex flex-col space-y-1">
             <span class="tx-body">{{ contestant.age }}</span>
             <span class="tx-body">{{ contestant.occupation }}</span>
@@ -37,10 +39,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType, toRef, toRefs } from "vue";
 
 import CloseIcon from "@/assets/close.svg";
 import Avatar from "@/components/common/Avatar/index.vue";
+import FavoriteButton from "@/components/common/FavoriteButton/index.vue";
+
 import { IContestant } from "@/composables";
 
 const ContestantModal = defineComponent({
@@ -49,6 +53,7 @@ const ContestantModal = defineComponent({
   components: {
     Avatar,
     CloseIcon,
+    FavoriteButton,
   },
 
   props: {
@@ -61,6 +66,15 @@ const ContestantModal = defineComponent({
       type: Function,
       required: true,
     },
+  },
+
+  setup(props) {
+    const { contestant } = toRefs(props);
+    const isFavorite = toRef(contestant.value, "isFavorite");
+
+    return {
+      isFavorite,
+    };
   },
 });
 
