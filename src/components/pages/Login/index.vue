@@ -65,8 +65,8 @@ const Login = defineComponent({
       }),
     });
 
-    const { value: email } = useField("email");
-    const { value: password } = useField("password");
+    const { value: email } = useField<string | undefined>("email");
+    const { value: password } = useField<string | undefined>("password");
 
     const canSubmit = computed(() => meta.value.valid);
 
@@ -100,6 +100,13 @@ const Login = defineComponent({
         store.dispatch("pushNotification", {
           type: "error",
           message: "Invalid credentials. The email or password is incorrect.",
+        });
+      } else if (errors?.some((x) => x.extensions?.code === "UNVERIFIED_USER")) {
+        router.push({ name: "email-verification-sent", params: { email: email.value! } });
+
+        store.dispatch("pushNotification", {
+          type: "error",
+          message: "Your email address has not been verified.",
         });
       } else {
         store.dispatch("pushNotification", {

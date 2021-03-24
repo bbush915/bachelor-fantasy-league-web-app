@@ -3,17 +3,16 @@
     <h1 class="my-8">Join a League</h1>
 
     <div class="flex flex-col px-8 pt-6 pb-8 bg-gray-dark rounded-xl">
-      <h2 class="pb-2">Search</h2>
+      <h2 class="pb-4">Search</h2>
 
-      <label for="league-name" class="mb-2">League Name</label>
+      <label for="league-name">League Name</label>
 
       <div class="flex items-center w-1/2">
-        <input
+        <Input
           id="league-name"
           class="flex-grow mr-2 input"
           type="text"
-          v-model="searchQuery"
-          autocomplete="off"
+          v-model:value="searchQuery"
         />
 
         <button
@@ -67,7 +66,7 @@
                 </button>
 
                 <button
-                  v-if="!league.myLeagueMember"
+                  v-if="isAuthenticated && !league.myLeagueMember"
                   class="ml-4 btn-primary"
                   @click="handleJoinLeagueClick(league.id)"
                 >
@@ -91,6 +90,7 @@ import { useStore } from "vuex";
 
 import SearchIcon from "@/assets/search.svg";
 import Avatar from "@/components/common/Avatar/index.vue";
+import Input from "@/components/common/Input/index.vue";
 
 type TResult = {
   leagues: {
@@ -110,12 +110,15 @@ const JoinLeague = defineComponent({
 
   components: {
     Avatar,
+    Input,
     SearchIcon,
   },
 
   setup() {
     const router = useRouter();
     const store = useStore();
+
+    const isAuthenticated = computed(() => store.state.auth.token);
 
     const searchQuery = ref<string>();
     const isSearchEnabled = ref(false);
@@ -146,6 +149,7 @@ const JoinLeague = defineComponent({
       { query: searchQuery },
       reactive({
         enabled: isSearchEnabled,
+        errorPolicy: "all",
       })
     );
 
@@ -201,8 +205,9 @@ const JoinLeague = defineComponent({
       searchQuery,
       canSearch,
       handleSearchClick,
-      handleJoinLeagueClick,
       handleDetailsClick,
+      isAuthenticated,
+      handleJoinLeagueClick,
     };
   },
 });
