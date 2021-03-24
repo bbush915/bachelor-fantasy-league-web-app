@@ -14,7 +14,7 @@
         <Strikethrough class="w-24 title__strikethrough" />
       </div>
 
-      <router-link class="mb-6 btn-primary" to="/registration"> Sign up </router-link>
+      <router-link class="mb-6 btn-primary" :to="{ name: 'registration' }"> Sign up </router-link>
 
       <p class="mb-60">
         <span class="mr-2 font-extralight">Already have an account?</span>
