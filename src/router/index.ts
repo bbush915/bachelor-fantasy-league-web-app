@@ -11,12 +11,13 @@ import ForgotPassword from "@/components/pages/ForgotPassword/index.vue";
 import Home from "@/components/pages/Home/index.vue";
 import JoinLeague from "@/components/pages/JoinLeague/index.vue";
 import League from "@/components/pages/League/index.vue";
+import LeagueDetails from "@/components/pages/LeagueDetails/index.vue";
 import LeagueHome from "@/components/pages/LeagueHome/index.vue";
 import Login from "@/components/pages/Login/index.vue";
 import MyLeagues from "@/components/pages/MyLeagues/index.vue";
+import MyProfile from "@/components/pages/MyProfile/index.vue";
 import OverallScoreDetails from "@/components/pages/OverallScoreDetails/index.vue";
 import PasswordResetSent from "@/components/pages/PasswordResetSent/index.vue";
-import Profile from "@/components/pages/Profile/index.vue";
 import Registration from "@/components/pages/Registration/index.vue";
 import ResetPassword from "@/components/pages/ResetPassword/index.vue";
 import SetLineup from "@/components/pages/SetLineup/index.vue";
@@ -29,9 +30,76 @@ const routes: RouteRecordRaw[] = [
   { path: "/", name: "home", component: Home },
   { path: "/about", name: "about", component: About },
   { path: "/contestants", name: "contestants", component: Contestants },
+  {
+    path: "/create-league",
+    name: "create-league",
+    component: CreateLeague,
+    meta: { requireAuth: true },
+  },
   { path: "/forgot-password", name: "forgot-password", component: ForgotPassword },
   { path: "/join-league", name: "join-league", component: JoinLeague },
+  {
+    path: "/leagues/:leagueId",
+    component: League,
+    children: [
+      {
+        path: "",
+        name: "league-home",
+        component: LeagueHome,
+        meta: { requireAuth: true },
+      },
+      {
+        path: "contestant-scores",
+        name: "contestant-score-details",
+        component: ContestantScoreDetails,
+        meta: { requireAuth: true },
+      },
+      {
+        path: "details",
+        name: "league-details",
+        component: LeagueDetails,
+      },
+      {
+        path: "leaderboard",
+        name: "overall-score-details",
+        component: OverallScoreDetails,
+        meta: { requireAuth: true },
+      },
+      {
+        path: "set-lineup",
+        name: "set-lineup",
+        component: SetLineup,
+        meta: { requireAuth: true },
+      },
+      {
+        path: "weekly-scores",
+        name: "weekly-score-details",
+        component: WeeklyScoreDetails,
+        meta: { requireAuth: true },
+      },
+    ],
+  },
   { path: "/login", name: "login", component: Login },
+  { path: "/my-leagues", name: "my-leagues", component: MyLeagues, meta: { requireAuth: true } },
+  {
+    path: "/profile",
+    component: MyProfile,
+    children: [
+      {
+        path: "",
+        name: "my-profile",
+        component: ViewProfile,
+      },
+      {
+        path: "edit-profile",
+        name: "edit-profile",
+        component: EditProfile,
+      },
+    ],
+    meta: {
+      requireAuth: true,
+    },
+  },
   { path: "/registration", name: "registration", component: Registration },
   { path: "/reset-password", name: "reset-password", component: ResetPassword },
   {
@@ -51,70 +119,19 @@ const routes: RouteRecordRaw[] = [
     component: EmailVerificationSent,
     props: true,
   },
-];
-
-const authenticatedRoutes: RouteRecordRaw[] = [
-  {
-    path: "/profile",
-    component: Profile,
-    children: [
-      {
-        path: "",
-        name: "profile",
-        component: ViewProfile,
-      },
-      {
-        path: "edit-profile",
-        name: "edit-profile",
-        component: EditProfile,
-      },
-    ],
-  },
-  { path: "/create-league", name: "create-league", component: CreateLeague },
-  {
-    path: "/leagues/:leagueId",
-    component: League,
-    children: [
-      {
-        path: "",
-        name: "league-home",
-        component: LeagueHome,
-      },
-      {
-        path: "contestant-scores",
-        name: "contestant-score-details",
-        component: ContestantScoreDetails,
-      },
-      {
-        path: "leaderboard",
-        name: "overall-score-details",
-        component: OverallScoreDetails,
-      },
-      {
-        path: "set-lineup",
-        name: "set-lineup",
-        component: SetLineup,
-      },
-      {
-        path: "weekly-scores",
-        name: "weekly-score-details",
-        component: WeeklyScoreDetails,
-      },
-    ],
-  },
-  { path: "/my-leagues", name: "my-leagues", component: MyLeagues },
   {
     path: "/verification/success",
     name: "email-verification-success",
     component: EmailVerificationSuccess,
     props: true,
+    meta: { requireAuth: true },
   },
 ];
 
 export const getRouter = () => {
   const router = createRouter({
     history: createWebHistory(),
-    routes: [...routes, ...authenticatedRoutes],
+    routes,
 
     scrollBehavior() {
       return { top: 0 };
@@ -122,7 +139,7 @@ export const getRouter = () => {
   });
 
   router.beforeEach((to) => {
-    if (authenticatedRoutes.find((x) => x.name === to.name) && !isAuthenticated()) {
+    if (to.meta.requireAuth && !isAuthenticated()) {
       return { name: "login", query: { redirect: to.name as string } };
     }
   });

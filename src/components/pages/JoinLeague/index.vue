@@ -61,9 +61,12 @@
 
             <td>
               <div class="flex items-center">
-                <button class="btn-secondary" @click="handleDetailsClick(league.id)">
+                <router-link
+                  class="btn-secondary"
+                  :to="{ name: 'league-details', params: { leagueId: league.id } }"
+                >
                   Details
-                </button>
+                </router-link>
 
                 <button
                   v-if="isAuthenticated && !league.myLeagueMember"
@@ -170,10 +173,6 @@ const JoinLeague = defineComponent({
       `
     );
 
-    function handleDetailsClick(leagueId: string) {
-      router.push({ name: "league-details", params: { leagueId } });
-    }
-
     async function handleJoinLeagueClick(leagueId: string) {
       try {
         await joinLeague({
@@ -205,7 +204,6 @@ const JoinLeague = defineComponent({
       searchQuery,
       canSearch,
       handleSearchClick,
-      handleDetailsClick,
       isAuthenticated,
       handleJoinLeagueClick,
     };
