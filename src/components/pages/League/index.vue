@@ -2,11 +2,14 @@
   <div v-if="leagueContext" class="flex flex-col mx-40">
     <div class="mt-4 mb-2">
       <router-link
+        v-if="showHomeLink"
         class="underline txt-body text-pink"
         :to="{ name: 'league-home', params: { leagueId: leagueContext.leagueId } }"
       >
         {{ leagueContext.leagueName }}
       </router-link>
+
+      <span v-else class="txt-body text-pink">{{ leagueContext.leagueName }}</span>
     </div>
 
     <router-view :leagueContext="leagueContext" />
@@ -16,8 +19,9 @@
 <script lang="ts">
 import { useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 
 type TResult = {
   league: {
@@ -45,6 +49,9 @@ const League = defineComponent({
 
   setup() {
     const route = useRoute();
+    const store = useStore();
+
+    const showHomeLink = computed(() => route.name !== "league-home" && store.state.auth.token);
 
     const {
       params: { leagueId },
@@ -74,7 +81,8 @@ const League = defineComponent({
           }
         }
       `,
-      { id: leagueId }
+      { id: leagueId },
+      { errorPolicy: "all" }
     );
 
     const leagueContext = useResult(result, null, (data) => ({
@@ -85,11 +93,12 @@ const League = defineComponent({
       previousSeasonWeekId: data.league.season.previousSeasonWeek?.id,
       leagueId: data.league.id,
       leagueName: data.league.name,
-      leagueMemberId: data.league.myLeagueMember.id,
+      leagueMemberId: data.league.myLeagueMember?.id,
     }));
 
     return {
       leagueContext,
+      showHomeLink,
     };
   },
 });

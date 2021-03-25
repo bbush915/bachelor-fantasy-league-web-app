@@ -1,11 +1,12 @@
 import { ref } from "vue";
 import { useStore } from "vuex";
 
-export function useUpdateImage(initialImageUrl?: string) {
+export function useMutableImage(initialSource?: string) {
   const store = useStore();
-  const imageUrl = ref(initialImageUrl);
 
-  function handleImageChange(event: Event) {
+  const source = ref(initialSource);
+
+  function handleSourceChange(event: Event) {
     const target = event.target as HTMLInputElement;
 
     if (target.files?.item(0)) {
@@ -23,12 +24,12 @@ export function useUpdateImage(initialImageUrl?: string) {
       const fileReader = new FileReader();
 
       fileReader.onload = (e) => {
-        imageUrl.value = e.target?.result as string | undefined;
+        source.value = e.target?.result as string | undefined;
       };
 
       fileReader.readAsDataURL(target.files[0]);
     }
   }
 
-  return { imageUrl, handleImageChange };
+  return { source, handleSourceChange };
 }

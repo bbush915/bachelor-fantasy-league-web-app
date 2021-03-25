@@ -3,40 +3,52 @@
     <h1 class="my-8">Join a League</h1>
 
     <div class="flex flex-col px-8 pt-6 pb-8 bg-gray-dark rounded-xl">
-      <h2 class="pb-2">Search</h2>
+      <h2 class="pb-4">Search</h2>
 
-      <label for="league-name" class="mb-2">League Name</label>
+      <label for="league-name">League Name</label>
 
       <div class="flex items-center w-1/2">
-        <input id="league-name" class="flex-grow mr-2 input" type="text" v-model="query" />
+        <Input
+          id="league-name"
+          class="flex-grow mr-2 input"
+          type="text"
+          v-model:value="searchQuery"
+        />
 
-        <button class="flex items-center justify-center rounded-full w-9 h-9 bg-pink">
+        <button
+          class="flex items-center justify-center w-10 h-10 rounded-full search-button bg-pink"
+          :disabled="!canSearch"
+          @click="handleSearchClick"
+        >
           <SearchIcon />
         </button>
       </div>
 
-      <h2 class="mt-8">Search Results</h2>
+      <h2 class="mt-8">Results</h2>
 
-      <table class="table-fixed">
+      <table v-if="leagues.length > 0" class="w-full">
         <thead>
           <tr class="h-12">
-            <th class="w-1/3 text-left">League Name</th>
-            <th class="w-1/3 text-left">Commissioner</th>
+            <th class="text-left w-96">League</th>
+            <th class="text-left w-96">Commissioner</th>
             <th />
           </tr>
         </thead>
+
         <tbody>
           <tr v-for="league in leagues" :key="league.id">
             <td>
-              <div class="flex items-center my-2">
+              <div class="flex items-center my-2 space-x-4">
                 <div class="overflow-hidden w-14 h-14 rounded-xl">
                   <img :src="league.logoUrl" />
                 </div>
-                <span class="ml-4">
+
+                <span>
                   {{ league.name }}
                 </span>
               </div>
             </td>
+
             <td>
               <div class="flex items-center">
                 <Avatar class="w-14 h-14" :src="league.commissioner.user.avatarUrl" />
@@ -46,12 +58,21 @@
                 </span>
               </div>
             </td>
+
             <td>
               <div class="flex items-center">
-                <button class="btn-secondary" @click="handleDetailsClick(league.id)">
+                <router-link
+                  class="btn-secondary"
+                  :to="{ name: 'league-details', params: { leagueId: league.id } }"
+                >
                   Details
-                </button>
-                <button class="ml-4 btn-primary" @click="handleJoinClick(league.id)">
+                </router-link>
+
+                <button
+                  v-if="isAuthenticated && !league.myLeagueMember"
+                  class="ml-4 btn-primary"
+                  @click="handleJoinLeagueClick(league.id)"
+                >
                   Join League
                 </button>
               </div>
@@ -64,14 +85,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
+import gql from "graphql-tag";
+import { computed, defineComponent, reactive, ref, watch } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 import SearchIcon from "@/assets/search.svg";
 import Avatar from "@/components/common/Avatar/index.vue";
-import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+import Input from "@/components/common/Input/index.vue";
 
 type TResult = {
   leagues: {
@@ -88,10 +110,24 @@ type TResult = {
 
 const JoinLeague = defineComponent({
   name: "JoinLeague",
+
+  components: {
+    Avatar,
+    Input,
+    SearchIcon,
+  },
+
   setup() {
     const router = useRouter();
     const store = useStore();
-    const query = ref<string>();
+
+    const isAuthenticated = computed(() => store.state.auth.token);
+
+    const searchQuery = ref<string>();
+    const isSearchEnabled = ref(false);
+
+    const canSearch = computed(() => (searchQuery.value?.length ?? 0) > 0);
+
     const { result } = useQuery<TResult>(
       gql`
         query Leagues($query: String!) {
@@ -107,11 +143,26 @@ const JoinLeague = defineComponent({
                 avatarUrl
               }
             }
+            myLeagueMember {
+              id
+            }
           }
         }
       `,
-      { query: query }
+      { query: searchQuery },
+      reactive({
+        enabled: isSearchEnabled,
+        errorPolicy: "all",
+      })
     );
+
+    watch(
+      () => result.value,
+      () => (isSearchEnabled.value = false)
+    );
+
+    const leagues = useResult(result, [], (data) => data.leagues);
+
     const { mutate: joinLeague } = useMutation(
       gql`
         mutation JoinLeague($input: JoinLeagueInput!) {
@@ -121,13 +172,8 @@ const JoinLeague = defineComponent({
         }
       `
     );
-    const leagues = useResult(result, null, (data) => data.leagues);
 
-    async function handleDetailsClick(leagueId: string): Promise<void> {
-      router.push({ name: "league-details", params: { leagueId } });
-    }
-
-    async function handleJoinClick(leagueId: string): Promise<void> {
+    async function handleJoinLeagueClick(leagueId: string) {
       try {
         await joinLeague({
           input: {
@@ -147,19 +193,31 @@ const JoinLeague = defineComponent({
           message: error?.message ?? "Failed to join league. Try again later",
         });
       }
-      return;
     }
-    return { leagues, query, handleJoinClick, handleDetailsClick };
-  },
-  components: {
-    Avatar,
-    SearchIcon,
+
+    function handleSearchClick() {
+      isSearchEnabled.value = true;
+    }
+
+    return {
+      leagues,
+      searchQuery,
+      canSearch,
+      handleSearchClick,
+      isAuthenticated,
+      handleJoinLeagueClick,
+    };
   },
 });
 
 export default JoinLeague;
 </script>
+
 <style lang="postcss" scoped>
+.search-button:disabled {
+  opacity: 0.5;
+}
+
 th {
   @apply font-medium text-sm;
 }

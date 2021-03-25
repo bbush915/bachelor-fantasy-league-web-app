@@ -1,12 +1,13 @@
 <template>
-  <div class="flex flex-col mx-40">
-    <h1 class="my-8">League Details</h1>
+  <div class="flex flex-col">
+    <h1 class="mb-10">League Details</h1>
 
     <div v-if="league" class="flex flex-col px-8 pt-6 pb-8 mx-40 bg-gray-dark rounded-xl">
       <div class="flex justify-between">
         <h2 class="mb-4">{{ league.name }}</h2>
 
         <router-link
+          v-if="isCommissioner"
           class="flex items-center"
           :to="{
             name: 'set-lineup',
@@ -20,7 +21,7 @@
         </router-link>
       </div>
 
-      <div class="flex mb-8 space-x-4">
+      <div class="flex space-x-4">
         <div class="flex-1">
           <div class="w-64 h-64 overflow-hidden rounded-xl">
             <img :src="league.logoUrl" />
@@ -56,7 +57,7 @@
         </div>
       </div>
 
-      <div class="self-end">
+      <div v-if="isAuthenticated" class="self-end mt-8">
         <div v-if="league.myLeagueMember?.isActive" class="flex space-x-4">
           <button
             v-if="league.myLeagueMember.id !== commissioner.id"
@@ -65,6 +66,7 @@
           >
             Quit League
           </button>
+
           <button class="btn-primary">Invite Friends</button>
         </div>
 
@@ -123,6 +125,8 @@ const LeagueDetails = defineComponent({
     const router = useRouter();
     const store = useStore();
 
+    const isAuthenticated = computed(() => store.state.auth.token);
+
     const {
       params: { leagueId },
     } = route;
@@ -162,6 +166,7 @@ const LeagueDetails = defineComponent({
     });
 
     const commissioner = computed(() => league.value?.leagueMembers.find((x) => x.isCommissioner));
+    const isCommissioner = computed(() => league.value?.myLeagueMember?.isCommissioner);
 
     const leagueMembers = computed(
       () =>
@@ -212,7 +217,15 @@ const LeagueDetails = defineComponent({
       });
     }
 
-    return { league, commissioner, leagueMembers, handleJoinLeagueClick, handleQuitLeagueClick };
+    return {
+      league,
+      commissioner,
+      isAuthenticated,
+      isCommissioner,
+      leagueMembers,
+      handleJoinLeagueClick,
+      handleQuitLeagueClick,
+    };
   },
 });
 

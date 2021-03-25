@@ -10,19 +10,20 @@
       <Link v-for="link in links" :key="link.content" :to="link.to" :content="link.content" />
     </div>
 
-    <div v-if="isAuthenticated" class="flex flex-col items-end self-end">
-      <span class="mb-2 mr-16 txt-body">
+    <div v-if="isAuthenticated" class="relative flex flex-col justify-center">
+      <span class="mr-16 text-right txt-body">
         Welcome, <router-link class="text-pink" to="/profile">{{ displayName }}</router-link>
       </span>
 
-      <EpisodeCountdown class="pl-8 pr-16" />
+      <EpisodeCountdown class="absolute bottom-0 right-0 pl-8 pr-16" />
     </div>
+
     <div v-else class="flex items-center mr-12">
       <router-link class="mr-5 text-sm font-thin" to="/login">Log in</router-link>
 
       <router-link
         class="flex items-center justify-center w-32 text-sm rounded-full h-9 bg-pink text-gray-darkest"
-        to="/registration"
+        :to="{ name: 'registration' }"
       >
         Sign up
       </router-link>
@@ -42,10 +43,12 @@ import Link from "./components/Link/index.vue";
 
 const publicLinks = [
   { to: "/about", content: "How it works" },
+  { to: "/join-league", content: "Join a League" },
   { to: "/contestants", content: "Contestants" },
 ];
 
 const authenticatedLinks = [
+  { to: "/about", content: "How it works" },
   { to: "/my-leagues", content: "My Fantasy Leagues" },
   { to: "/join-league", content: "Join a League" },
   { to: "/create-league", content: "Create a League" },

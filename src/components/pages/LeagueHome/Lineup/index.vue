@@ -37,7 +37,7 @@
         name: 'set-lineup',
       }"
     >
-      <span class="mr-4 text-xs">Edit Lineup</span>
+      <span class="mr-3 text-xs">Edit Lineup</span>
 
       <div class="w-4 h-4">
         <EditIcon />

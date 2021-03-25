@@ -1,21 +1,34 @@
 <template>
-  <div class="flex justify-center">
+  <div>
     <GradientOverlay />
 
-    <div class="z-10 flex flex-col w-1/4 mt-10">
-      <h1 class="mb-6 text-xl text-center">Log in</h1>
+    <div class="relative flex flex-col items-center">
+      <h2 class="my-8">Log in</h2>
 
-      <label class="mb-2">Email</label>
-      <input class="mb-4 input" type="email" v-model="email" />
+      <form class="flex flex-col login-form" @submit="onSubmit">
+        <label for="email">Email</label>
 
-      <div class="flex items-end justify-between mb-2 font-thin">
-        <label>Password</label>
-        <router-link class="text-xs font-normal text-pink" to="/">Forgot password?</router-link>
-      </div>
+        <Input id="email" type="email" v-model:value="email" :error="errors.email" />
 
-      <input class="input mb-14" type="password" v-model="password" />
+        <div class="flex items-end justify-between mt-2">
+          <label for="password">Password</label>
 
-      <button class="self-center btn-primary" @click="handleSubmit">Log in</button>
+          <router-link class="text-pink txt-label" :to="{ name: 'forgot-password' }">
+            Forgot password?
+          </router-link>
+        </div>
+
+        <Input id="password" type="password" v-model:value="password" :error="errors.password" />
+
+        <button
+          class="self-center mt-8 btn-primary"
+          type="submit"
+          :disabled="!canSubmit"
+          @click="onSubmit"
+        >
+          Log in
+        </button>
+      </form>
     </div>
   </div>
 </template>
@@ -23,22 +36,39 @@
 <script lang="ts">
 import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
-import { defineComponent, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useField, useForm } from "vee-validate";
+import { computed, defineComponent } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
+import * as Yup from "yup";
 
 import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
+import Input from "@/components/common/Input/index.vue";
 
 const Login = defineComponent({
   name: "Login",
 
   components: {
     GradientOverlay,
+    Input,
   },
 
   setup() {
     const router = useRouter();
+    const route = useRoute();
     const store = useStore();
+
+    const { errors, handleSubmit, meta } = useForm({
+      validationSchema: Yup.object({
+        email: Yup.string().required("You must provide an email address."),
+        password: Yup.string().required("You must provide a password."),
+      }),
+    });
+
+    const { value: email } = useField<string | undefined>("email");
+    const { value: password } = useField<string | undefined>("password");
+
+    const canSubmit = computed(() => meta.value.valid);
 
     const { mutate: login } = useMutation(
       gql`
@@ -50,36 +80,48 @@ const Login = defineComponent({
       `
     );
 
-    const email = ref("");
-    const password = ref("");
-
-    async function handleSubmit() {
-      const { data } = await login(
-        { input: { email: email.value, password: password.value } },
-        { errorPolicy: "ignore" }
+    const onSubmit = handleSubmit(async (values) => {
+      const { data, errors } = await login(
+        { input: { email: values.email, password: values.password } },
+        { errorPolicy: "all" }
       );
 
       if (data) {
         store.commit("login", data.login.token);
 
+        const routeName = (route.query.redirect as string) ?? "my-leagues";
+        router.push({ name: routeName });
+
         store.dispatch("pushNotification", {
           type: "success",
           message: "Login successful!",
         });
-
-        router.push({ path: "/my-leagues" });
-      } else {
+      } else if (errors?.some((x) => x.extensions?.code === "INVALID_CREDENTIALS")) {
         store.dispatch("pushNotification", {
           type: "error",
           message: "Invalid credentials. The email or password is incorrect.",
         });
+      } else if (errors?.some((x) => x.extensions?.code === "UNVERIFIED_USER")) {
+        router.push({ name: "email-verification-sent", params: { email: email.value! } });
+
+        store.dispatch("pushNotification", {
+          type: "error",
+          message: "Your email address has not been verified.",
+        });
+      } else {
+        store.dispatch("pushNotification", {
+          type: "error",
+          message: "Failed to log in. Please try again later",
+        });
       }
-    }
+    });
 
     return {
       email,
       password,
-      handleSubmit,
+      errors,
+      canSubmit,
+      onSubmit,
     };
   },
 });
@@ -88,8 +130,7 @@ export default Login;
 </script>
 
 <style scoped>
-input[type="password"] {
-  font-family: Verdana, sans-serif;
-  letter-spacing: 0.125rem;
+.login-form {
+  width: 400px;
 }
 </style>

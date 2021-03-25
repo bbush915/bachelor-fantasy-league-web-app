@@ -98,7 +98,12 @@ const MyLeagues = defineComponent({
       reactive({ enabled: isQueryEnabled })
     );
 
-    const leagues = useResult(result, [] as TResult["myLeagues"], (data) => data.myLeagues);
+    const leagues = useResult(result, [] as TResult["myLeagues"], (data) =>
+      data.myLeagues
+        .slice(0)
+        .filter((x) => x.myLeagueMember.isActive)
+        .sort((x, y) => x.name.localeCompare(y.name))
+    );
 
     return {
       leagues,
