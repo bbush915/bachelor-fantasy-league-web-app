@@ -47,7 +47,10 @@
     </div>
 
     <div class="flex flex-col space-y-4">
-      <button class="w-52 btn-secondary" @click="handleChangePasswordClick">Change password</button>
+      <router-link class="w-52 btn-secondary" :to="{ name: 'change-password' }">
+        Change password
+      </router-link>
+
       <button class="w-52 btn-primary" @click="handleLogoutClick">Logout</button>
     </div>
   </div>
@@ -82,8 +85,6 @@ const ViewProfile = defineComponent({
 
     const { profile } = useProfile();
 
-    function handleChangePasswordClick() {}
-
     function handleLogoutClick() {
       store.commit("logout");
 
@@ -92,7 +93,6 @@ const ViewProfile = defineComponent({
 
     return {
       profile,
-      handleChangePasswordClick,
       handleLogoutClick,
     };
   },

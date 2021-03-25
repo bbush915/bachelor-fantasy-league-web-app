@@ -2,7 +2,7 @@
   <div v-if="profile" class="flex flex-col mx-40">
     <h1 class="my-8">My Profile</h1>
 
-    <router-view :profile="profile" />
+    <router-view />
   </div>
 </template>
 

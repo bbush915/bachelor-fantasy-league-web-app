@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
 import About from "@/components/pages/About/index.vue";
+import ChangePassword from "@/components/pages/ChangePassword/index.vue";
 import Contestants from "@/components/pages/Contestants/index.vue";
 import ContestantScoreDetails from "@/components/pages/ContestantScoreDetails/index.vue";
 import CreateLeague from "@/components/pages/CreateLeague/index.vue";
@@ -94,6 +95,11 @@ const routes: RouteRecordRaw[] = [
         path: "edit",
         name: "edit-profile",
         component: EditProfile,
+      },
+      {
+        path: "change-password",
+        name: "change-password",
+        component: ChangePassword,
       },
     ],
     meta: {
