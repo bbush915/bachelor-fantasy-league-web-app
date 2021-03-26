@@ -5,6 +5,7 @@ import Contestants from "@/components/pages/Contestants/index.vue";
 import ContestantScoreDetails from "@/components/pages/ContestantScoreDetails/index.vue";
 import CreateLeague from "@/components/pages/CreateLeague/index.vue";
 import EditProfile from "@/components/pages/EditProfile/index.vue";
+import EditLeague from "@/components/pages/EditLeague/index.vue";
 import EmailVerificationSent from "@/components/pages/EmailVerificationSent/index.vue";
 import EmailVerificationSuccess from "@/components/pages/EmailVerificationSuccess/index.vue";
 import ForgotPassword from "@/components/pages/ForgotPassword/index.vue";
@@ -58,6 +59,11 @@ const routes: RouteRecordRaw[] = [
         path: "details",
         name: "league-details",
         component: LeagueDetails,
+      },
+      {
+        path: "edit-league",
+        name: "edit-league",
+        component: EditLeague,
       },
       {
         path: "leaderboard",

@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <h2 class="mb-4">Email Preferences</h2>
+    <span class="mb-4 txt-body">Email Preferences</span>
 
     <div class="flex flex-col mb-4 space-y-2">
       <Checkbox

@@ -10,7 +10,7 @@
           v-if="isCommissioner"
           class="flex items-center"
           :to="{
-            name: 'set-lineup',
+            name: 'edit-league',
           }"
         >
           <span class="mr-3 text-sm">Edit League Details</span>
