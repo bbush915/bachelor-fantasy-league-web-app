@@ -46,10 +46,16 @@
 
     <div v-if="isLineupSet" class="flex flex-wrap justify-center mt-8">
       <div
-        v-for="{ id, name, headshotUrl } in lineupContestants"
+        v-for="{ id, name, headshotUrl, isFavorite } in lineupContestants"
         :key="id"
-        class="flex flex-col items-center m-2"
+        class="relative flex flex-col items-center m-2"
       >
+        <FavoriteIndicator
+          v-if="isFavorite"
+          class="absolute top-0 left-0 z-10 w-6 h-6"
+          :checked="isFavorite"
+        />
+
         <Avatar class="w-24 h-24 mb-2" :src="headshotUrl" />
 
         <span class="txt-body">{{ name }}</span>
@@ -65,7 +71,8 @@ import AlertIcon from "@/assets/alert.svg";
 import EditIcon from "@/assets/edit.svg";
 import LockIcon from "@/assets/lock.svg";
 import Avatar from "@/components/common/Avatar/index.vue";
-import { useCurrentSeasonWeek, useLineupContestants } from "@/composables";
+import FavoriteIndicator from "@/components/common/FavoriteIndicator/index.vue";
+import { useCurrentSeasonWeek, useLineupContestants, useUserFavorites } from "@/composables";
 import { LeagueContext } from "@/types";
 
 const Lineup = defineComponent({
@@ -75,6 +82,7 @@ const Lineup = defineComponent({
     AlertIcon,
     Avatar,
     EditIcon,
+    FavoriteIndicator,
     LockIcon,
   },
 
@@ -89,13 +97,24 @@ const Lineup = defineComponent({
     const { leagueContext } = toRefs(props);
     const { leagueMemberId, currentSeasonWeekId } = leagueContext.value;
 
-    const { lineupContestants } = useLineupContestants(
+    const { lineupContestants: lineupContestants_ } = useLineupContestants(
       ref(leagueMemberId),
       ref(currentSeasonWeekId),
       "no-cache"
     );
 
-    const isLineupSet = computed(() => lineupContestants.value.length > 0);
+    const { userFavorites } = useUserFavorites();
+
+    const lineupContestants = computed(() =>
+      lineupContestants_.value.map((lineupContestant) => ({
+        ...lineupContestant,
+        isFavorite: userFavorites.value.some(
+          (userFavorite) => userFavorite.contestantId === lineupContestant.contestantId
+        ),
+      }))
+    );
+
+    const isLineupSet = computed(() => lineupContestants_.value.length > 0);
 
     const { currentSeasonWeek } = useCurrentSeasonWeek();
 

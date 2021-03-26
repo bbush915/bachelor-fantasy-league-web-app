@@ -86,6 +86,7 @@ import { useStore } from "vuex";
 import EditIcon from "@/assets/edit.svg";
 import Avatar from "@/components/common/Avatar/index.vue";
 import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
+import { useAuthentication } from "@/composables";
 
 type TResult = {
   league: {
@@ -125,7 +126,7 @@ const LeagueDetails = defineComponent({
     const router = useRouter();
     const store = useStore();
 
-    const isAuthenticated = computed(() => store.state.auth.token);
+    const { isAuthenticated } = useAuthentication();
 
     const {
       params: { leagueId },

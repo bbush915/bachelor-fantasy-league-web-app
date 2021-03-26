@@ -1,3 +1,4 @@
+export * from "./useAuthentication";
 export * from "./useContestantModal";
 export * from "./useContestants";
 export * from "./useCurrentSeasonWeek";
@@ -7,4 +8,5 @@ export * from "./useOverallLeaderboard";
 export * from "./useProfile";
 export * from "./useSeasonWeekContestants";
 export * from "./useSeasonWeeks";
+export * from "./useUserFavorites";
 export * from "./useWeeklyLeaderboard";

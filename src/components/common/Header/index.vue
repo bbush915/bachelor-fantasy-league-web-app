@@ -35,9 +35,9 @@
 import { useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { computed, defineComponent, watch } from "vue";
-import { useStore } from "vuex";
 
 import Logo from "@/assets/logo.svg";
+import { useAuthentication } from "@/composables";
 import EpisodeCountdown from "./components/EpisodeCountdown/index.vue";
 import Link from "./components/Link/index.vue";
 
@@ -65,9 +65,8 @@ const Header = defineComponent({
   },
 
   setup() {
-    const store = useStore();
+    const { isAuthenticated } = useAuthentication();
 
-    const isAuthenticated = computed(() => !!store.state.auth.token);
     const links = computed(() => (isAuthenticated.value ? authenticatedLinks : publicLinks));
 
     const { result, refetch } = useQuery(

@@ -14,7 +14,6 @@ export interface IContestant {
   hometown: string;
   bio: string;
   trivia: string[];
-  isFavorite: boolean;
 }
 
 export function useContestants() {
@@ -30,7 +29,6 @@ export function useContestants() {
           hometown
           bio
           trivia
-          isFavorite
         }
       }
     `,
