@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
 import About from "@/components/pages/About/index.vue";
+import ChangePassword from "@/components/pages/ChangePassword/index.vue";
 import Contestants from "@/components/pages/Contestants/index.vue";
 import ContestantScoreDetails from "@/components/pages/ContestantScoreDetails/index.vue";
 import CreateLeague from "@/components/pages/CreateLeague/index.vue";
@@ -16,9 +17,9 @@ import LeagueDetails from "@/components/pages/LeagueDetails/index.vue";
 import LeagueHome from "@/components/pages/LeagueHome/index.vue";
 import Login from "@/components/pages/Login/index.vue";
 import MyLeagues from "@/components/pages/MyLeagues/index.vue";
-import MyProfile from "@/components/pages/MyProfile/index.vue";
 import OverallScoreDetails from "@/components/pages/OverallScoreDetails/index.vue";
 import PasswordResetSent from "@/components/pages/PasswordResetSent/index.vue";
+import Profile from "@/components/pages/Profile/index.vue";
 import Registration from "@/components/pages/Registration/index.vue";
 import ResetPassword from "@/components/pages/ResetPassword/index.vue";
 import SetLineup from "@/components/pages/SetLineup/index.vue";
@@ -89,17 +90,22 @@ const routes: RouteRecordRaw[] = [
   { path: "/my-leagues", name: "my-leagues", component: MyLeagues, meta: { requireAuth: true } },
   {
     path: "/profile",
-    component: MyProfile,
+    component: Profile,
     children: [
       {
         path: "",
-        name: "my-profile",
+        name: "view-profile",
         component: ViewProfile,
       },
       {
-        path: "edit-profile",
+        path: "edit",
         name: "edit-profile",
         component: EditProfile,
+      },
+      {
+        path: "change-password",
+        name: "change-password",
+        component: ChangePassword,
       },
     ],
     meta: {

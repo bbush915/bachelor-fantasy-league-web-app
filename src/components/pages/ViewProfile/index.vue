@@ -4,7 +4,7 @@
 
     <div class="absolute top-8 right-8">
       <router-link class="flex items-center" :to="{ name: 'edit-profile' }">
-        <span class="mr-3 text-xs">Edit Profile</span>
+        <span class="mr-3 text-xs">Edit profile</span>
 
         <div class="w-4 h-4 mb-0.5">
           <EditIcon />
@@ -13,15 +13,15 @@
     </div>
 
     <div class="flex items-center mb-8">
-      <Avatar class="w-48 h-48 mr-20" :src="profileContext.avatarUrl" />
+      <Avatar class="w-48 h-48 mr-20" :src="profile.avatarUrl" />
+    </div>
 
-      <div class="flex flex-col">
-        <label class="mb-1">Display name</label>
-        <span class="mb-4 txt-body">{{ profileContext.displayName }}</span>
+    <div class="flex flex-col mb-8">
+      <label class="mb-1">Display name</label>
+      <span class="mb-4 txt-body">{{ profile.displayName }}</span>
 
-        <label class="mb-1">Email</label>
-        <span class="mb-4 txt-body">{{ profileContext.email }}</span>
-      </div>
+      <label class="mb-1">Email</label>
+      <span class="txt-body">{{ profile.email }}</span>
     </div>
 
     <span class="mb-4 txt-body">Email Preferences</span>
@@ -43,57 +43,53 @@
       />
     </div>
 
-    <div class="flex self-end space-x-4">
-      <button class="w-52 btn-secondary">Change password</button>
+    <div class="flex flex-col space-y-4">
+      <router-link class="w-52 btn-secondary" :to="{ name: 'change-password' }">
+        Change password
+      </router-link>
+
       <button class="w-52 btn-primary" @click="handleLogoutClick">Logout</button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from "vue";
+import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
+import CheckIcon from "@/assets/check.svg";
+import CloseIcon from "@/assets/close.svg";
 import EditIcon from "@/assets/edit.svg";
 import Avatar from "@/components/common/Avatar/index.vue";
-import Checkbox from "@/components/common/Checkbox/index.vue";
 import Input from "@/components/common/Input/index.vue";
-import { ProfileContext } from "@/types";
+import { useProfile } from "@/composables";
 
 const ViewProfile = defineComponent({
   name: "ViewProfile",
 
   components: {
     Avatar,
-    Checkbox,
+    CheckIcon,
+    CloseIcon,
     EditIcon,
     Input,
-  },
-
-  props: {
-    profileContext: {
-      type: Object as PropType<ProfileContext>,
-      required: true,
-    },
   },
 
   setup() {
     const router = useRouter();
     const store = useStore();
 
-    const setLineupReminder = ref(false);
-    const scoringRecaps = ref(false);
+    const { profile } = useProfile();
 
     function handleLogoutClick() {
       store.commit("logout");
 
-      router.push("/");
+      router.push({ name: "home" });
     }
 
     return {
-      setLineupReminder,
-      scoringRecaps,
+      profile,
       handleLogoutClick,
     };
   },

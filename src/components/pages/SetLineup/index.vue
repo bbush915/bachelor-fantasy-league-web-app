@@ -24,6 +24,12 @@
           :key="contestant.id"
           class="relative flex flex-col items-center p-2 mx-1 my-3"
         >
+          <FavoriteIndicator
+            v-if="userFavorites.some((x) => x.contestantId === contestant.id)"
+            class="absolute z-10 w-6 h-6 top-2 left-2"
+            :checked="userFavorites.some((x) => x.contestantId === contestant.id)"
+          />
+
           <button class="absolute top-0 right-0 w-4 h-4" @click="showContestantModal(contestant)">
             <InfoIcon />
           </button>
@@ -71,7 +77,13 @@ import InfoIcon from "@/assets/info.svg";
 import RoseIcon from "@/assets/rose.svg";
 import Avatar from "@/components/common/Avatar/index.vue";
 import ContestantModal from "@/components/common/ContestantModal/index.vue";
-import { IContestant, useContestantModal, useLineupContestants } from "@/composables";
+import FavoriteIndicator from "@/components/common/FavoriteIndicator/index.vue";
+import {
+  IContestant,
+  useContestantModal,
+  useLineupContestants,
+  useUserFavorites,
+} from "@/composables";
 import { LeagueContext } from "@/types";
 
 type TResult = {
@@ -84,6 +96,7 @@ const SetLineup = defineComponent({
   components: {
     Avatar,
     ContestantModal,
+    FavoriteIndicator,
     InfoIcon,
     RoseIcon,
   },
@@ -133,6 +146,8 @@ const SetLineup = defineComponent({
       (data) => data.weeklyContestants
     );
 
+    const { userFavorites } = useUserFavorites();
+
     const { lineupContestants } = useLineupContestants(
       ref(leagueMemberId),
       ref(currentSeasonWeekId),
@@ -164,14 +179,14 @@ const SetLineup = defineComponent({
       `
     );
 
-    const contestants = computed(() =>
-      weeklyContestants.value.map((contestant) => ({
+    const contestants = computed(() => {
+      return weeklyContestants.value.map((contestant) => ({
         ...contestant,
         isSelected: lineupContestants.value.some(
           (lineupContestant) => lineupContestant.contestantId === contestant.id
         ),
-      }))
-    );
+      }));
+    });
 
     const rosesRemaining = ref(lineupSpotsAvailable - lineupContestants.value.length);
 
@@ -220,6 +235,7 @@ const SetLineup = defineComponent({
 
     return {
       contestants,
+      userFavorites,
       selectedContestant,
       isContestantModalVisible,
       showContestantModal,

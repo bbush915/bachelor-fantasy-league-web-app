@@ -1,80 +1,160 @@
 <template>
-  <div
-    v-if="user"
-    class="relative flex flex-col px-8 pt-4 pb-16 mt-8 ml-40 rounded-3xl bg-gray-dark"
-  >
+  <div class="relative flex flex-col w-2/3 px-8 pt-6 pb-8 mx-auto bg-gray-dark rounded-3xl">
     <h2 class="mb-4">Edit Details</h2>
 
-    <div class="flex items-center">
-      <div class="flex flex-col">
-        <label class="mb-2 text-xs font-thin">Display name</label>
-        <input class="mb-4 input" type="text" v-model="displayName" />
+    <form class="flex flex-col" @submit="onSubmit">
+      <label class="mb-2">Profile Image</label>
 
-        <label class="mb-2 text-xs font-thin">Email</label>
-        <input class="mb-4 input" type="email" v-model="email" />
+      <div class="relative w-48 h-48 mb-8 overflow-hidden rounded-xl bg-gray">
+        <input
+          class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+          type="file"
+          @change="handleAvatarUrlChange"
+        />
 
-        <label class="mb-2">Upload Profile Image</label>
-        <div class="relative w-48 h-48 mb-4 overflow-hidden rounded-xl bg-gray">
-          <input
-            class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-            type="file"
-            @change="handleImageChange"
-          />
-          <img :src="avatarUrl" />
-        </div>
-        <label class="mb-2">Email Preferences</label>
-        <div class="flex items-center mb-2">
-          <input id="is-public" type="checkbox" v-model="user.sendLineupReminders" />
-          <label class="ml-2 txt-body" for="is-public"> Reminders to set lineup</label>
-        </div>
-        <div class="flex items-center mb-2">
-          <input id="is-public" type="checkbox" v-model="user.sendScoreRecaps" />
-          <label class="ml-2 txt-body" for="is-public"> Score recaps</label>
-        </div>
-        <div class="flex items-center mb-2">
-          <input id="is-public" type="checkbox" v-model="user.unsubscribe" />
-          <label class="ml-2 txt-body" for="is-public"> Unsubscribe from all emails</label>
-        </div>
+        <img :src="avatarUrl" />
       </div>
-    </div>
-    <div class="flex self-end">
-      <router-link class="mr-4 btn-secondary" :to="{ name: 'profile' }"> Cancel </router-link>
-      <button class="btn-primary" @click="handleSaveClick">Save</button>
-    </div>
+
+      <div class="flex flex-col w-1/2">
+        <label class="mt-2" for="display-name">Display name</label>
+
+        <Input
+          id="display-name"
+          type="text"
+          v-model:value="displayName"
+          :error="errors.displayName"
+        />
+
+        <label class="mt-2" for="email">Email</label>
+
+        <Input id="email" type="email" v-model:value="email" :error="errors.email" />
+      </div>
+
+      <label class="mt-8 mb-2">Email Preferences</label>
+
+      <Checkbox
+        class="mb-1"
+        id="lineup-reminders"
+        label="Receive weekly reminders to set your lineup"
+        v-model:checked="sendLineupReminders"
+      />
+
+      <Checkbox
+        id="scoring-recaps"
+        label="Receive weekly scoring recaps"
+        v-model:checked="sendScoringRecaps"
+      />
+
+      <Checkbox
+        class="mt-4"
+        id="unsubscribe"
+        label="Unsubscribe from all emails"
+        v-model:checked="unsubscribe"
+      />
+
+      <div class="flex self-end mt-8">
+        <router-link class="mr-4 btn-secondary" :to="{ name: 'view-profile' }">
+          Cancel
+        </router-link>
+
+        <button class="btn-primary" type="submit" :disabled="!canSubmit" @click="onSubmit">
+          Save
+        </button>
+      </div>
+    </form>
   </div>
 </template>
 
 <script lang="ts">
-import { useUpdateImage } from "@/composables";
-import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
+import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
-import { defineComponent, ref, watch } from "vue";
+import { useField, useForm } from "vee-validate";
+import { computed, defineComponent, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-
 import { useStore } from "vuex";
+import * as Yup from "yup";
+
+import Checkbox from "@/components/common/Checkbox/index.vue";
+import Input from "@/components/common/Input/index.vue";
+import { useMutableImage, useProfile } from "@/composables";
 
 const EditProfile = defineComponent({
   name: "EditProfile",
+
+  components: {
+    Checkbox,
+    Input,
+  },
 
   setup() {
     const router = useRouter();
     const store = useStore();
 
-    const { result } = useQuery(
-      gql`
-        query Me {
-          me {
-            id
-            email
-            displayName
-            avatarUrl
-            # sendLineupReminders
-            # sendScoreRecaps
-            # unsubscribe
-          }
-        }
-      `
+    const { profile } = useProfile();
+
+    const { errors, handleSubmit, meta, setFieldError, setFieldValue } = useForm({
+      initialValues: {
+        avatarUrl: profile.value?.avatarUrl,
+        displayName: profile.value?.displayName,
+        email: profile.value?.email,
+        sendLineupReminders: profile.value?.sendLineupReminders,
+        sendScoringRecaps: profile.value?.sendScoringRecaps,
+      },
+
+      validationSchema: Yup.object({
+        avatarUrl: Yup.string().nullable(),
+
+        displayName: Yup.string().required("You must provide a display name."),
+
+        email: Yup.string()
+          .email("Invalid email address")
+          .required("You must provide an email address."),
+
+        sendLineupReminders: Yup.boolean(),
+
+        sendScoringRecaps: Yup.boolean(),
+      }),
+    });
+
+    const { source: avatarUrl, handleSourceChange: handleAvatarUrlChange } = useMutableImage(
+      profile.value?.avatarUrl
     );
+
+    const { value: _avatarUrl } = useField("avatarUrl");
+    const { value: displayName } = useField("displayName");
+    const { value: email } = useField("email");
+    const { value: sendLineupReminders } = useField("sendLineupReminders");
+    const { value: sendScoringRecaps } = useField("sendScoringRecaps");
+
+    const unsubscribe = ref(false);
+
+    watch(
+      () => avatarUrl.value,
+      () => {
+        setFieldValue("avatarUrl", avatarUrl.value);
+      }
+    );
+
+    watch(
+      () => [sendLineupReminders.value, sendScoringRecaps.value],
+      () => {
+        if (sendLineupReminders.value || sendScoringRecaps.value) {
+          unsubscribe.value = false;
+        }
+      }
+    );
+
+    watch(
+      () => unsubscribe.value,
+      () => {
+        if (unsubscribe.value) {
+          setFieldValue("sendLineupReminders", false);
+          setFieldValue("sendScoringRecaps", false);
+        }
+      }
+    );
+
+    const canSubmit = computed(() => meta.value.valid);
 
     const { mutate: updateProfile } = useMutation(
       gql`
@@ -84,56 +164,57 @@ const EditProfile = defineComponent({
             email
             displayName
             avatarUrl
+            sendLineupReminders
+            sendScoringRecaps
           }
         }
       `
     );
 
-    const displayName = ref<string>();
-    const email = ref<string>();
-    const { imageUrl: avatarUrl, handleImageChange } = useUpdateImage();
-    const user = useResult(result, null, (data) => data.me);
-
-    watch(
-      () => user.value,
-      () => {
-        displayName.value = user.value.displayName;
-        email.value = user.value.email;
-        avatarUrl.value = user.value.avatarUrl;
-      }
-    );
-
-    async function handleSaveClick(): Promise<void> {
-      try {
-        await updateProfile({
+    const onSubmit = handleSubmit(async (values) => {
+      const { data, errors } = await updateProfile(
+        {
           input: {
+            displayName: values.displayName,
+            email: values.email,
             avatarUrl: avatarUrl.value,
-            displayName: displayName.value,
-            email: email.value,
+            sendLineupReminders: sendLineupReminders.value,
+            sendScoringRecaps: sendScoringRecaps.value,
           },
-        });
+        },
+        { errorPolicy: "all" }
+      );
+
+      if (data) {
+        router.push({ name: "view-profile" });
 
         store.dispatch("pushNotification", {
           type: "success",
-          message: "Profile saved successfuly!",
+          message: "Profile updated successfully!",
         });
+      } else {
+        if (errors?.some((x) => x.extensions?.code === "EMAIL_ALREADY_EXISTS")) {
+          setFieldError("email", "An account with that email address already exists.");
+        }
 
-        router.push({ name: "profile" });
-      } catch (error) {
         store.dispatch("pushNotification", {
           type: "error",
-          message: "Failed to save profile. Try again later",
+          message: "Failed to update profile.",
         });
       }
-    }
+    });
 
     return {
-      user,
-      email,
       avatarUrl,
+      handleAvatarUrlChange,
       displayName,
-      handleSaveClick,
-      handleImageChange,
+      email,
+      sendLineupReminders,
+      sendScoringRecaps,
+      unsubscribe,
+      errors,
+      canSubmit,
+      onSubmit,
     };
   },
 });

@@ -49,7 +49,7 @@ import { computed, defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
-import { useUpdateImage } from "@/composables";
+import { useMutableImage } from "@/composables";
 
 const CreateLeague = defineComponent({
   name: "CreateLeague",
@@ -58,7 +58,7 @@ const CreateLeague = defineComponent({
     const router = useRouter();
     const store = useStore();
 
-    const { imageUrl: logo, handleImageChange: handleLogoChange } = useUpdateImage();
+    const { source: logo, handleSourceChange: handleLogoChange } = useMutableImage();
 
     const { mutate: createLeague } = useMutation(
       gql`

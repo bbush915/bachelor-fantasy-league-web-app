@@ -94,6 +94,7 @@ import { useStore } from "vuex";
 import SearchIcon from "@/assets/search.svg";
 import Avatar from "@/components/common/Avatar/index.vue";
 import Input from "@/components/common/Input/index.vue";
+import { useAuthentication } from "@/composables";
 
 type TResult = {
   leagues: {
@@ -121,7 +122,7 @@ const JoinLeague = defineComponent({
     const router = useRouter();
     const store = useStore();
 
-    const isAuthenticated = computed(() => store.state.auth.token);
+    const { isAuthenticated } = useAuthentication();
 
     const searchQuery = ref<string>();
     const isSearchEnabled = ref(false);
