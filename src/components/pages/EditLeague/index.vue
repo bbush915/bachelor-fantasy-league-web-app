@@ -23,7 +23,7 @@
             type="file"
             @change="handleLogoChange"
           />
-          <img :src="logo" />
+          <img :src="logoUrl" />
         </div>
 
         <div class="flex items-center mb-2">
@@ -37,7 +37,12 @@
         </div>
 
         <div class="flex self-end space-x-4">
-          <router-link class="btn-secondary" :to="{ name: 'my-leagues' }"> Cancel </router-link>
+          <router-link
+            class="btn-secondary"
+            :to="{ name: 'league-details', params: { leagueId: leagueId } }"
+          >
+            Cancel
+          </router-link>
 
           <button type="submit" class="self-end btn-primary" @click="onSubmit">Save</button>
         </div>
@@ -54,7 +59,7 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import * as Yup from "yup";
 
-import { useUpdateImage } from "@/composables";
+import { useMutableImage } from "@/composables";
 import { useField, useForm } from "vee-validate";
 import Input from "@/components/common/Input/index.vue";
 import { LeagueContext } from "@/types";
@@ -94,6 +99,7 @@ const EditLeague = defineComponent({
 
     const { errors, handleSubmit, meta, setFieldError, setFieldValue } = useForm({
       validationSchema: Yup.object({
+        logoUrl: Yup.string().nullable(),
         name: Yup.string().required("Please enter a name."),
         description: Yup.string().required("Please enter a description."),
         isPublic: Yup.boolean(),
@@ -109,19 +115,30 @@ const EditLeague = defineComponent({
         }
 
         setFieldValue("name", league.value.name);
-        setFieldValue("description", league.value.name);
+        setFieldValue("description", league.value.description);
         setFieldValue("isPublic", league.value.isPublic);
         setFieldValue("isShareable", league.value.isShareable);
+        setFieldValue("logoUrl", league.value.logoUrl);
+        logoUrl.value = league.value.logoUrl;
       }
     );
 
     const { value: name } = useField("name");
     const { value: description } = useField("description");
+    const { value: _logoUrl } = useField("logoUrl");
     const { value: isPublic } = useField("isPublic");
     const { value: isShareable } = useField("isShareable");
 
-    const { imageUrl: logo, handleImageChange: handleLogoChange } = useUpdateImage();
+    const { source: logoUrl, handleSourceChange: handleLogoChange } = useMutableImage(
+      league.value?.logoUrl
+    );
 
+    watch(
+      () => logoUrl.value,
+      () => {
+        setFieldValue("logoUrl", logoUrl.value);
+      }
+    );
     const { mutate: updateLeague } = useMutation(
       gql`
         mutation UpdateLeague($input: UpdateLeagueInput!) {
@@ -141,9 +158,10 @@ const EditLeague = defineComponent({
       const { data, errors } = await updateLeague(
         {
           input: {
+            id: league.value.id,
             name: name.value,
             description: description.value,
-            logo: logo.value,
+            logo: logoUrl.value,
             isPublic: isPublic.value,
             isShareable: isShareable.value,
           },
@@ -152,7 +170,7 @@ const EditLeague = defineComponent({
       );
 
       if (data) {
-        router.push({ name: "league-home", params: { leagueId: data.editLeague.id } });
+        router.push({ name: "league-home", params: { leagueId: league.value.id } });
 
         store.dispatch("pushNotification", {
           type: "success",
@@ -170,9 +188,10 @@ const EditLeague = defineComponent({
     });
     return {
       league,
+      leagueId,
       name,
       description,
-      logo,
+      logoUrl,
       isPublic,
       isShareable,
       handleLogoChange,

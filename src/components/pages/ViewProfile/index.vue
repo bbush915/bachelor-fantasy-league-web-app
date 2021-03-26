@@ -24,23 +24,26 @@
       <span class="txt-body">{{ profile.email }}</span>
     </div>
 
-    <span class="mb-4 txt-body">Email Preferences</span>
+    <div class="flex flex-col mb-8">
+      <label class="mb-2">Email Preferences</label>
 
-    <div class="flex flex-col mb-4 space-y-2">
-      <Checkbox
-        class="pointer-events-none"
-        id="lineup-reminders"
-        label="Receive weekly reminders to set your lineup"
-        v-model:checked="setLineupReminder"
-        :disabled="true"
-      />
+      <div class="flex items-center mb-1">
+        <div class="w-5 h-5 mr-2">
+          <CheckIcon v-if="profile.sendLineupReminders" />
+          <CloseIcon v-else />
+        </div>
 
-      <Checkbox
-        id="scoring-recaps"
-        label="Receive weekly scoring recaps"
-        v-model:checked="scoringRecaps"
-        :disabled="true"
-      />
+        <span class="mt-0.5 txt-label"> Receive weekly reminders to set your lineup </span>
+      </div>
+
+      <div class="flex items-center">
+        <div class="w-5 h-5 mr-2">
+          <CheckIcon v-if="profile.sendScoringRecaps" />
+          <CloseIcon v-else />
+        </div>
+
+        <span class="mt-0.5 txt-label"> Receive weekly scoring recaps </span>
+      </div>
     </div>
 
     <div class="flex flex-col space-y-4">

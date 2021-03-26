@@ -1,5 +1,14 @@
 <template>
+  <textarea
+    v-if="type === 'textarea'"
+    class="px-4 py-2 my-2 border border-white outline-none rounded-xl"
+    v-bind="$attrs"
+    :class="{ error }"
+    :value="value"
+    @input="$emit('update:value', $event.target.value)"
+  />
   <input
+    v-else
     class="px-4 py-2 my-2 border border-white outline-none rounded-xl"
     v-bind="$attrs"
     :class="{ error }"
@@ -26,6 +35,11 @@ const Input = defineComponent({
       type: String,
       required: false,
     },
+
+    type: {
+      type: String,
+      required: false,
+    },
   },
 });
 
@@ -33,7 +47,8 @@ export default Input;
 </script>
 
 <style lang="postcss" scoped>
-input {
+input,
+textarea {
   background: transparent;
 
   &.error {
