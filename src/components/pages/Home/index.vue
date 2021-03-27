@@ -42,7 +42,7 @@ import Logo from "@/assets/logo.svg";
 import Strikethrough from "@/assets/strikethrough.svg";
 import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
 import SteamOverlay from "@/components/common/SteamOverlay/index.vue";
-import PetalLink from "./PetalLink.vue";
+import PetalLink from "./components/PetalLink/index.vue";
 
 const links = [
   { to: "/about", content: "How it works" },

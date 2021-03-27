@@ -81,7 +81,7 @@ const BodyRow = defineComponent({
       name: contestant.name,
       normalRose: rose ? `+${weekNumber.value}` : "-",
       specialRose: specialRose ? "+5" : "-",
-      groupDate: groupDate ? "+5" : "-",
+      groupDate: groupDate ? "+1" : "-",
       oneOnOneDate: oneOnOneDate ? "+10" : "-",
       twoOnOneDate: twoOnOneDate ? "-5" : "-",
       sentHome: sentHome ? "-10" : "-",

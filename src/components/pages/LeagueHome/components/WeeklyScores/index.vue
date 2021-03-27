@@ -1,6 +1,6 @@
 <template>
   <div class="relative py-8 bg-gray-dark rounded-xl">
-    <h2 class="pl-8 mb-8">Week {{ Math.max(leagueContext.weekNumber - 1, 1) }} Scores</h2>
+    <h2 class="pl-8 mb-8">Week {{ weekNumber }} Scores</h2>
 
     <router-link
       v-if="leagueContext.previousSeasonWeekId"
@@ -22,7 +22,7 @@
     <WeeklyLeaderboard
       v-if="leagueContext.previousSeasonWeekId"
       :leagueContext="leagueContext"
-      :selectedSeasonWeekId="leagueContext.previousSeasonWeekId"
+      :selectedSeasonWeekId="seasonWeekId"
       :selectedLeagueMemberId="leagueContext.leagueMemberId"
       :condensed="true"
     />
@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { computed, defineComponent, PropType, toRefs } from "vue";
 
 import MoreIcon from "@/assets/more.svg";
 import PlaceholderIcon from "@/assets/placeholder.svg";
@@ -51,6 +51,32 @@ const WeeklyScores = defineComponent({
       type: Object as PropType<LeagueContext>,
       required: true,
     },
+  },
+
+  setup(props) {
+    const { leagueContext } = toRefs(props);
+
+    const {
+      previousSeasonWeekId,
+      currentSeasonWeekId,
+      weekNumber: weekNumber_,
+      isComplete,
+    } = leagueContext.value;
+
+    const weekNumber = computed(() => {
+      if (isComplete) {
+        return weekNumber_;
+      }
+
+      return Math.max(weekNumber_ - 1, 1);
+    });
+
+    const seasonWeekId = computed(() => (isComplete ? currentSeasonWeekId : previousSeasonWeekId));
+
+    return {
+      weekNumber,
+      seasonWeekId,
+    };
   },
 });
 

@@ -1,18 +1,17 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col mb-8">
     <div class="flex justify-between mb-10 mr-40">
       <h1>League Home</h1>
 
-      <router-link
-        class="btn-secondary"
-        :to="{ name: 'league-details', params: { leagueId: leagueContext.leagueId } }"
-      >
+      <router-link class="btn-secondary" :to="{ name: 'league-details' }">
         League Details
       </router-link>
     </div>
 
     <div class="flex flex-col mx-40 space-y-8">
-      <Lineup :leagueContext="leagueContext" />
+      <FinalStandings v-if="leagueContext.isComplete" :leagueContext="leagueContext" />
+      <Lineup v-else :leagueContext="leagueContext" />
+
       <OverallScores :leagueContext="leagueContext" />
 
       <div class="flex space-x-8">
@@ -31,16 +30,18 @@
 import { defineComponent, PropType } from "vue";
 
 import { LeagueContext } from "@/types";
-import ContestantScores from "./ContestantScores/index.vue";
-import Lineup from "./Lineup/index.vue";
-import OverallScores from "./OverallScores/index.vue";
-import WeeklyScores from "./WeeklyScores/index.vue";
+import ContestantScores from "./components/ContestantScores/index.vue";
+import FinalStandings from "./components/FinalStandings/index.vue";
+import Lineup from "./components/Lineup/index.vue";
+import OverallScores from "./components/OverallScores/index.vue";
+import WeeklyScores from "./components/WeeklyScores/index.vue";
 
 const LeagueHome = defineComponent({
   name: "LeagueHome",
 
   components: {
     ContestantScores,
+    FinalStandings,
     Lineup,
     OverallScores,
     WeeklyScores,

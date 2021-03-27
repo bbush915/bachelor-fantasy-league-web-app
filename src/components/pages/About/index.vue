@@ -40,7 +40,7 @@
           Additional bonus points will be awarded for:
           <br />
           <br />
-          - Contestant is chosen for a group date (+5 points)
+          - Contestant is chosen for a group date (+1 points)
           <br />
           - Contestant is chosen for a 1 on 1 date (+10 points)
           <br />

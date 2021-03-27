@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col mb-8">
     <div class="flex items-center justify-between w-full mb-10">
       <h1>Weekly Score Details</h1>
 
@@ -63,21 +63,21 @@ const WeeklyScoreDetails = defineComponent({
 
   setup(props) {
     const { leagueContext } = toRefs(props);
-    const { leagueMemberId, seasonId, weekNumber } = leagueContext.value;
+    const { leagueMemberId, seasonId, weekNumber, isComplete } = leagueContext.value;
 
     const { seasonWeeks } = useSeasonWeeks(seasonId);
 
-    const filteredSeasonWeeks = computed(() =>
-      seasonWeeks.value.filter((x) => x.weekNumber < weekNumber)
-    );
+    const selectedWeekNumber = ref(weekNumber - (isComplete ? 0 : 1));
 
-    const selectedWeekNumber = ref(weekNumber - 1);
+    const selectedLeagueMemberId = ref(leagueMemberId);
+
+    const filteredSeasonWeeks = computed(
+      () => seasonWeeks.value?.filter((x) => x.weekNumber < weekNumber + (isComplete ? 1 : 0)) ?? []
+    );
 
     const selectedSeasonWeekId = computed(
       () => filteredSeasonWeeks.value.find((x) => x.weekNumber === selectedWeekNumber.value)?.id
     );
-
-    const selectedLeagueMemberId = ref(leagueMemberId);
 
     return {
       seasonWeeks: filteredSeasonWeeks,

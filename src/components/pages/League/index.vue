@@ -21,7 +21,8 @@ import { useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { computed, defineComponent } from "vue";
 import { useRoute } from "vue-router";
-import { useStore } from "vuex";
+
+import { useAuthentication } from "@/composables";
 
 type TResult = {
   league: {
@@ -30,6 +31,7 @@ type TResult = {
     season: {
       id: string;
       currentWeekNumber: number;
+      isComplete: boolean;
       currentSeasonWeek: {
         id: string;
         lineupSpotsAvailable: number;
@@ -49,9 +51,9 @@ const League = defineComponent({
 
   setup() {
     const route = useRoute();
-    const store = useStore();
+    const { isAuthenticated } = useAuthentication();
 
-    const showHomeLink = computed(() => route.name !== "league-home" && store.state.auth.token);
+    const showHomeLink = computed(() => isAuthenticated && route.name !== "league-home");
 
     const {
       params: { leagueId },
@@ -66,6 +68,7 @@ const League = defineComponent({
             season {
               id
               currentWeekNumber
+              isComplete
               currentSeasonWeek {
                 id
                 lineupSpotsAvailable
@@ -86,14 +89,15 @@ const League = defineComponent({
     );
 
     const leagueContext = useResult(result, null, (data) => ({
-      seasonId: data.league.season.id,
-      weekNumber: data.league.season.currentWeekNumber,
-      currentSeasonWeekId: data.league.season.currentSeasonWeek.id,
-      lineupSpotsAvailable: data.league.season.currentSeasonWeek.lineupSpotsAvailable,
-      previousSeasonWeekId: data.league.season.previousSeasonWeek?.id,
       leagueId: data.league.id,
       leagueName: data.league.name,
       leagueMemberId: data.league.myLeagueMember?.id,
+      seasonId: data.league.season.id,
+      weekNumber: data.league.season.currentWeekNumber,
+      isComplete: data.league.season.isComplete,
+      currentSeasonWeekId: data.league.season.currentSeasonWeek.id,
+      lineupSpotsAvailable: data.league.season.currentSeasonWeek.lineupSpotsAvailable,
+      previousSeasonWeekId: data.league.season.previousSeasonWeek?.id,
     }));
 
     return {
