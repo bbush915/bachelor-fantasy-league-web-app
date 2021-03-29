@@ -1,6 +1,6 @@
 <template>
   <div class="relative py-8 bg-gray-dark rounded-xl">
-    <h2 class="pl-8 mb-8">Top Week {{ Math.max(leagueContext.weekNumber - 1, 1) }} Contestants</h2>
+    <h2 class="pl-8 mb-8">Top Week {{ weekNumber }} Contestants</h2>
 
     <router-link
       v-if="leagueContext.previousSeasonWeekId"
@@ -71,9 +71,25 @@ const ContestantScores = defineComponent({
 
   setup(props) {
     const { leagueContext } = toRefs(props);
-    const { previousSeasonWeekId } = leagueContext.value;
 
-    const { seasonWeekContestants } = useSeasonWeekContestants(ref(previousSeasonWeekId));
+    const {
+      previousSeasonWeekId,
+      currentSeasonWeekId,
+      weekNumber: weekNumber_,
+      isComplete,
+    } = leagueContext.value;
+
+    const { seasonWeekContestants } = useSeasonWeekContestants(
+      ref(isComplete ? currentSeasonWeekId : previousSeasonWeekId)
+    );
+
+    const weekNumber = computed(() => {
+      if (isComplete) {
+        return weekNumber_;
+      }
+
+      return Math.max(weekNumber_ - 1, 1);
+    });
 
     const contestants = computed(() => {
       const scores = seasonWeekContestants.value
@@ -102,6 +118,7 @@ const ContestantScores = defineComponent({
     });
 
     return {
+      weekNumber,
       contestants,
     };
   },

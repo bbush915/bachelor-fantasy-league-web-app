@@ -12,10 +12,10 @@ export function useMutableImage(initialSource?: string) {
     if (target.files?.item(0)) {
       const file = target.files[0];
 
-      if (!file.type.startsWith("image/") || file.size > 5 * 1024 * 1024) {
+      if (!file.type.startsWith("image/") || file.size > 1 * 1024 * 1024) {
         store.dispatch("pushNotification", {
           type: "error",
-          message: "Must upload an image (PNG, JPG) that is less than 5 MB",
+          message: "Must upload an image (PNG, JPG) that is less than 1 MB",
         });
 
         return;

@@ -24,14 +24,14 @@
     <OverallLeaderboard
       v-if="leagueContext.previousSeasonWeekId"
       :leagueContext="leagueContext"
-      :selectedSeasonWeekId="leagueContext.previousSeasonWeekId"
+      :selectedSeasonWeekId="seasonWeekId"
       :condensed="true"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { computed, defineComponent, PropType, toRefs } from "vue";
 
 import MoreIcon from "@/assets/more.svg";
 import PlaceholderIcon from "@/assets/placeholder.svg";
@@ -52,6 +52,17 @@ const OverallScores = defineComponent({
       type: Object as PropType<LeagueContext>,
       required: true,
     },
+  },
+
+  setup(props) {
+    const { leagueContext } = toRefs(props);
+    const { previousSeasonWeekId, currentSeasonWeekId, isComplete } = leagueContext.value;
+
+    const seasonWeekId = computed(() => (isComplete ? currentSeasonWeekId : previousSeasonWeekId));
+
+    return {
+      seasonWeekId,
+    };
   },
 });
 
