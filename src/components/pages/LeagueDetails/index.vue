@@ -61,7 +61,7 @@
           <button
             v-if="league.myLeagueMember.id !== commissioner.id"
             class="btn-secondary"
-            @click="handleQuitLeagueClick"
+            @click="showConfirmationModal"
           >
             Quit League
           </button>
@@ -72,6 +72,12 @@
         <button v-else class="btn-primary" @click="handleJoinLeagueClick">Join League</button>
       </div>
     </div>
+    <ConfirmationModal
+      v-if="isModalVisible"
+      :onConfirm="handleQuitLeagueClick"
+      :onClose="hideConfirmationModal"
+      :message="'Are you sure you want to quit this league?'"
+    />
   </div>
 </template>
 
@@ -85,7 +91,8 @@ import { useStore } from "vuex";
 import EditIcon from "@/assets/edit.svg";
 import Avatar from "@/components/common/Avatar/index.vue";
 import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
-import { useAuthentication } from "@/composables";
+import { useAuthentication, useConfirmationModal } from "@/composables";
+import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
 
 type TResult = {
   league: {
@@ -118,6 +125,7 @@ const LeagueDetails = defineComponent({
     Avatar,
     EditIcon,
     ScrollContainer,
+    ConfirmationModal,
   },
 
   setup() {
@@ -165,6 +173,7 @@ const LeagueDetails = defineComponent({
       return data.league;
     });
 
+    const { isModalVisible, showConfirmationModal, hideConfirmationModal } = useConfirmationModal();
     const commissioner = computed(() => league.value?.leagueMembers.find((x) => x.isCommissioner));
     const isCommissioner = computed(() => league.value?.myLeagueMember?.isCommissioner);
 
@@ -225,6 +234,9 @@ const LeagueDetails = defineComponent({
       leagueMembers,
       handleJoinLeagueClick,
       handleQuitLeagueClick,
+      isModalVisible,
+      showConfirmationModal,
+      hideConfirmationModal,
     };
   },
 });

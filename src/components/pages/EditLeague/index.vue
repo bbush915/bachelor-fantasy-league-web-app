@@ -6,7 +6,7 @@
       <div class="flex justify-between mb-4">
         <h2>League Details</h2>
 
-        <button v-if="isCommissioner" class="flex items-center" @click="showModal()">
+        <button v-if="isCommissioner" class="flex items-center" @click="showConfirmationModal()">
           <span class="mr-1 text-sm">Delete League</span>
 
           <div class="w-5 h-5 mb-2">
@@ -60,7 +60,7 @@
     </div>
     <ConfirmationModal
       v-if="isModalVisible"
-      :onClose="hideModal"
+      :onClose="hideConfirmationModal"
       :onConfirm="handleDelete"
       :message="'Are you sure you want to permanently delete this league? This cannot be undone.'"
     />
@@ -75,7 +75,7 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import * as Yup from "yup";
 
-import { useMutableImage } from "@/composables";
+import { useConfirmationModal, useMutableImage } from "@/composables";
 import { useField, useForm } from "vee-validate";
 import Input from "@/components/common/Input/index.vue";
 import { LeagueContext } from "@/types";
@@ -120,15 +120,8 @@ const EditLeague = defineComponent({
 
     const league = useResult(result, null, (data) => data.league);
     const isCommissioner = computed(() => league.value?.myLeagueMember?.isCommissioner);
-    const isModalVisible = ref(false);
+    const { isModalVisible, showConfirmationModal, hideConfirmationModal } = useConfirmationModal();
 
-    function showModal() {
-      isModalVisible.value = true;
-    }
-
-    function hideModal() {
-      isModalVisible.value = false;
-    }
     const { errors, handleSubmit, meta, setFieldError, setFieldValue } = useForm({
       validationSchema: Yup.object({
         logoUrl: Yup.string().nullable(),
@@ -257,8 +250,8 @@ const EditLeague = defineComponent({
       onSubmit,
       errors,
       isCommissioner,
-      showModal,
-      hideModal,
+      showConfirmationModal,
+      hideConfirmationModal,
       isModalVisible,
       handleDelete,
     };
