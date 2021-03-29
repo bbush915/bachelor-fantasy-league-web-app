@@ -3,9 +3,8 @@
     <h1 class="mb-10">League Details</h1>
 
     <div v-if="league" class="flex flex-col px-8 pt-6 pb-8 mx-40 bg-gray-dark rounded-xl">
-      <div class="flex justify-between">
-        <h2 class="mb-4">{{ league.name }}</h2>
-
+      <div class="flex justify-between mb-4">
+        <h2>{{ league.name }}</h2>
         <router-link
           v-if="isCommissioner"
           class="flex items-center"

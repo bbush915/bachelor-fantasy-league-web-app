@@ -3,7 +3,17 @@
     <h1 class="my-8">Edit League</h1>
 
     <div class="flex flex-col px-8 pt-6 pb-8 mx-40 bg-gray-dark rounded-xl">
-      <h2 class="mb-4">League Details</h2>
+      <div class="flex justify-between mb-4">
+        <h2>League Details</h2>
+
+        <button v-if="isCommissioner" class="flex items-center" @click="showModal()">
+          <span class="mr-1 text-sm">Delete League</span>
+
+          <div class="w-5 h-5 mb-2">
+            <DeleteIcon />
+          </div>
+        </button>
+      </div>
       <form class="flex flex-col" @submit="onSubmit">
         <label class="mb-2">League Name</label>
         <Input id="name" class="w-1/2" type="text" v-model:value="name" :error="errors.name" />
@@ -48,13 +58,19 @@
         </div>
       </form>
     </div>
+    <ConfirmationModal
+      v-if="isModalVisible"
+      :onClose="hideModal"
+      :onConfirm="handleDelete"
+      :message="'Are you sure you want to permanently delete this league? This cannot be undone.'"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
-import { defineComponent, PropType, toRefs, watch } from "vue";
+import { computed, defineComponent, PropType, ref, toRefs, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import * as Yup from "yup";
@@ -63,10 +79,12 @@ import { useMutableImage } from "@/composables";
 import { useField, useForm } from "vee-validate";
 import Input from "@/components/common/Input/index.vue";
 import { LeagueContext } from "@/types";
+import DeleteIcon from "@/assets/delete.svg";
+import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
 
 const EditLeague = defineComponent({
   name: "EditLeague",
-  components: { Input },
+  components: { Input, DeleteIcon, ConfirmationModal },
   props: {
     leagueContext: {
       type: Object as PropType<LeagueContext>,
@@ -89,6 +107,11 @@ const EditLeague = defineComponent({
             logoUrl
             isPublic
             isShareable
+            myLeagueMember {
+              id
+              isActive
+              isCommissioner
+            }
           }
         }
       `,
@@ -96,7 +119,16 @@ const EditLeague = defineComponent({
     );
 
     const league = useResult(result, null, (data) => data.league);
+    const isCommissioner = computed(() => league.value?.myLeagueMember?.isCommissioner);
+    const isModalVisible = ref(false);
 
+    function showModal() {
+      isModalVisible.value = true;
+    }
+
+    function hideModal() {
+      isModalVisible.value = false;
+    }
     const { errors, handleSubmit, meta, setFieldError, setFieldValue } = useForm({
       validationSchema: Yup.object({
         logoUrl: Yup.string().nullable(),
@@ -154,6 +186,33 @@ const EditLeague = defineComponent({
       `
     );
 
+    const { mutate: deleteLeague } = useMutation(
+      gql`
+        mutation DeleteLeague($input: DeleteLeagueInput!) {
+          deleteLeague(input: $input) {
+            success
+          }
+        }
+      `
+    );
+
+    const handleDelete = async () => {
+      const { data, errors } = await deleteLeague({ input: { id: league.value.id } });
+      if (data) {
+        router.push({ name: "my-leagues" });
+
+        store.dispatch("pushNotification", {
+          type: "success",
+          message: "League deleted successfully!",
+        });
+      } else {
+        store.dispatch("pushNotification", {
+          type: "error",
+          message: "Failed to delete league.",
+        });
+      }
+    };
+
     const onSubmit = handleSubmit(async (values) => {
       const { data, errors } = await updateLeague(
         {
@@ -197,6 +256,11 @@ const EditLeague = defineComponent({
       handleLogoChange,
       onSubmit,
       errors,
+      isCommissioner,
+      showModal,
+      hideModal,
+      isModalVisible,
+      handleDelete,
     };
   },
 });

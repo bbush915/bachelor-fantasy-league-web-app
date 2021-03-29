@@ -21,8 +21,8 @@
           </p>
 
           <div class="flex flex-col items-center">
-            <router-link class="mb-6 btn-primary" to="/join-league">Join a League</router-link>
-            <router-link class="btn-primary" to="/create-league">Create a League</router-link>
+            <router-link class="mb-6 w-52 btn-primary" to="/join-league">Join a League</router-link>
+            <router-link class="w-52 btn-primary" to="/create-league">Create a League</router-link>
           </div>
         </div>
       </div>

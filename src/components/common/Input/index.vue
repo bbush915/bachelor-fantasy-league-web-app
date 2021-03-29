@@ -11,6 +11,7 @@
     v-else
     class="px-4 py-2 my-2 border border-white outline-none rounded-xl"
     v-bind="$attrs"
+    :type="type"
     :class="{ error }"
     :value="value"
     @input="$emit('update:value', $event.target.value)"
