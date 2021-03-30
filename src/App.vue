@@ -5,9 +5,16 @@
 
     <ScrollContainer
       class="scroll-container"
-      :style="{ 'max-height': `calc(100vh - ${showHeader ? '88px' : '0px'})` }"
+      :style="{
+        'max-height': `calc(100vh - ${showHeader ? '88px' : '0px'})`,
+      }"
     >
-      <router-view />
+      <router-view
+        :style="{
+          'min-height': `calc(100vh - ${showHeader ? '88px' : '0px'})`,
+        }"
+      />
+      <Footer v-if="showHeader" />
     </ScrollContainer>
   </div>
 </template>
@@ -17,6 +24,7 @@ import { computed, defineComponent } from "vue";
 import { useRoute } from "vue-router";
 
 import Header from "@/components/common/Header/index.vue";
+import Footer from "@/components/common/Footer/index.vue";
 import Notifications from "@/components/common/Notifications/index.vue";
 import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
 
@@ -25,6 +33,7 @@ export default defineComponent({
 
   components: {
     Header,
+    Footer,
     Notifications,
     ScrollContainer,
   },
