@@ -66,7 +66,7 @@
             Quit League
           </button>
 
-          <button class="btn-primary">Invite Friends</button>
+          <button class="btn-primary" @click="handleCopyShareLink">Copy Invite Link</button>
         </div>
 
         <button v-else class="btn-primary" @click="handleJoinLeagueClick">Join League</button>
@@ -217,6 +217,14 @@ const LeagueDetails = defineComponent({
       });
     }
 
+    async function handleCopyShareLink() {
+      await navigator.clipboard.writeText(window.location.href);
+      store.dispatch("pushNotification", {
+        type: "success",
+        message: "Copied invite link to clipboard!",
+      });
+    }
+
     return {
       league,
       commissioner,
@@ -225,6 +233,7 @@ const LeagueDetails = defineComponent({
       leagueMembers,
       handleJoinLeagueClick,
       handleQuitLeagueClick,
+      handleCopyShareLink,
     };
   },
 });
