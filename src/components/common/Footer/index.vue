@@ -1,6 +1,10 @@
 <template>
   <footer class="bg-gray-dark">
     <div class="flex flex-col items-center py-5 mt-5 txt-label w-100">
+      <div>
+        DISCLAIMER: Bachelor Fantasy League is not owned by, affiliated with, or operated under ABC.
+        ABC owns all rights to contestant photos, footage, and other related assets.
+      </div>
       <div>Copyright 2021 by Bachelor Fantasy League</div>
       <div>
         Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from
