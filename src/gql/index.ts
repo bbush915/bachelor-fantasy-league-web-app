@@ -14,7 +14,7 @@ const authLink = setContext((_, { headers }) => {
 
 export const getApolloClient = () => {
   const httpLink = createHttpLink({
-    uri: process.env.REACT_APP_API_URL,
+    uri: import.meta.env.VITE_API_URL as string,
   });
 
   const cache = new InMemoryCache({
