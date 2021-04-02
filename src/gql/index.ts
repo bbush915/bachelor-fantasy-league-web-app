@@ -14,7 +14,7 @@ const authLink = setContext((_, { headers }) => {
 
 export const getApolloClient = () => {
   const httpLink = createHttpLink({
-    uri: "http://localhost:4000/graphql",
+    uri: process.env.REACT_APP_API_URL,
   });
 
   const cache = new InMemoryCache({
