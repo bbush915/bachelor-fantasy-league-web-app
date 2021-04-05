@@ -75,6 +75,8 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import * as Yup from "yup";
 
+import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
+import Avatar from "@/components/common/Avatar/index.vue";
 import { useConfirmationModal, useMutableImage } from "@/composables";
 import { useField, useForm } from "vee-validate";
 import Input from "@/components/common/Input/index.vue";
@@ -84,7 +86,7 @@ import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
 
 const EditLeague = defineComponent({
   name: "EditLeague",
-  components: { Input, DeleteIcon, ConfirmationModal },
+  components: { Avatar, Input, DeleteIcon, ConfirmationModal, ScrollContainer },
   props: {
     leagueContext: {
       type: Object as PropType<LeagueContext>,
@@ -107,6 +109,16 @@ const EditLeague = defineComponent({
             logoUrl
             isPublic
             isShareable
+            leagueMembers {
+              id
+              isActive
+              isCommissioner
+              user {
+                id
+                displayName
+                avatarUrl
+              }
+            }
             myLeagueMember {
               id
               isActive
@@ -153,7 +165,12 @@ const EditLeague = defineComponent({
     const { value: _logoUrl } = useField("logoUrl");
     const { value: isPublic } = useField("isPublic");
     const { value: isShareable } = useField("isShareable");
-
+    const leagueMembers = computed(
+      () =>
+        league.value?.leagueMembers
+          .filter((x) => x.isActive)
+          .sort((x, y) => x.user.displayName.localeCompare(y.user.displayName)) ?? []
+    );
     const { source: logoUrl, handleSourceChange: handleLogoChange } = useMutableImage(
       league.value?.logoUrl
     );
@@ -254,6 +271,7 @@ const EditLeague = defineComponent({
       hideConfirmationModal,
       isModalVisible,
       handleDelete,
+      leagueMembers,
     };
   },
 });
