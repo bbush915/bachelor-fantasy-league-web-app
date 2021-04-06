@@ -1,4 +1,5 @@
 export * from "./useAuthentication";
+export * from "./useConfirmationModal";
 export * from "./useContestantModal";
 export * from "./useContestants";
 export * from "./useCurrentSeasonWeek";

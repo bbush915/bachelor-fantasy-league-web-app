@@ -7,6 +7,7 @@ import ContestantScoreDetails from "@/components/pages/ContestantScoreDetails/in
 import CreateLeague from "@/components/pages/CreateLeague/index.vue";
 import EditProfile from "@/components/pages/EditProfile/index.vue";
 import EditLeague from "@/components/pages/EditLeague/index.vue";
+import EditLeagueMembers from "@/components/pages/EditLeagueMembers/index.vue";
 import EmailVerificationSent from "@/components/pages/EmailVerificationSent/index.vue";
 import EmailVerificationSuccess from "@/components/pages/EmailVerificationSuccess/index.vue";
 import ForgotPassword from "@/components/pages/ForgotPassword/index.vue";
@@ -27,6 +28,7 @@ import VerifyEmail from "@/components/pages/VerifyEmail/index.vue";
 import ViewProfile from "@/components/pages/ViewProfile/index.vue";
 import WeeklyScoreDetails from "@/components/pages/WeeklyScoreDetails/index.vue";
 import { isAuthenticated } from "@/utils/authentication";
+import { validateLeagueAccessibility, validateLeagueMembership } from "./guards";
 
 const routes: RouteRecordRaw[] = [
   { path: "/", name: "home", component: Home },
@@ -41,25 +43,25 @@ const routes: RouteRecordRaw[] = [
   { path: "/forgot-password", name: "forgot-password", component: ForgotPassword },
   { path: "/join-league", name: "join-league", component: JoinLeague },
   {
+    path: "/leagues/:leagueId/details",
+    name: "league-details",
+    component: LeagueDetails,
+    beforeEnter: validateLeagueAccessibility,
+  },
+  {
     path: "/leagues/:leagueId",
     component: League,
+    meta: { requireAuth: true },
     children: [
       {
         path: "",
         name: "league-home",
         component: LeagueHome,
-        meta: { requireAuth: true },
       },
       {
         path: "contestant-scores",
         name: "contestant-score-details",
         component: ContestantScoreDetails,
-        meta: { requireAuth: true },
-      },
-      {
-        path: "details",
-        name: "league-details",
-        component: LeagueDetails,
       },
       {
         path: "edit-league",
@@ -67,24 +69,27 @@ const routes: RouteRecordRaw[] = [
         component: EditLeague,
       },
       {
+        path: "edit-league-members",
+        name: "edit-league-members",
+        component: EditLeagueMembers,
+      },
+      {
         path: "leaderboard",
         name: "overall-score-details",
         component: OverallScoreDetails,
-        meta: { requireAuth: true },
       },
       {
         path: "set-lineup",
         name: "set-lineup",
         component: SetLineup,
-        meta: { requireAuth: true },
       },
       {
         path: "weekly-scores",
         name: "weekly-score-details",
         component: WeeklyScoreDetails,
-        meta: { requireAuth: true },
       },
     ],
+    beforeEnter: validateLeagueMembership,
   },
   { path: "/login", name: "login", component: Login },
   { path: "/my-leagues", name: "my-leagues", component: MyLeagues, meta: { requireAuth: true } },
@@ -144,10 +149,6 @@ export const getRouter = () => {
   const router = createRouter({
     history: createWebHistory(),
     routes,
-
-    scrollBehavior() {
-      return { top: 0 };
-    },
   });
 
   router.beforeEach((to) => {

@@ -14,15 +14,21 @@
         <Strikethrough class="w-24 title__strikethrough" />
       </div>
 
-      <router-link class="mb-6 btn-primary" :to="{ name: 'registration' }"> Sign up </router-link>
+      <div v-if="!isAuthenticated">
+        <router-link class="mb-6 btn-primary" :to="{ name: 'registration' }">Sign up</router-link>
+        <p>
+          <span class="mr-2 font-extralight">Already have an account?</span>
 
-      <p class="mb-60">
-        <span class="mr-2 font-extralight">Already have an account?</span>
+          <router-link class="underline text-pink" to="/login">Log in.</router-link>
+        </p>
+      </div>
+      <div v-else>
+        <router-link class="mb-6 btn-primary" :to="{ name: 'my-leagues' }">
+          My Fantasy Leagues
+        </router-link>
+      </div>
 
-        <router-link class="underline text-pink" to="/login">Log in.</router-link>
-      </p>
-
-      <div class="mb-40 space-y-4">
+      <div class="mb-40 space-y-4 mt-60">
         <PetalLink
           v-for="(link, index) in links"
           :key="index"
@@ -42,6 +48,7 @@ import Logo from "@/assets/logo.svg";
 import Strikethrough from "@/assets/strikethrough.svg";
 import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
 import SteamOverlay from "@/components/common/SteamOverlay/index.vue";
+import { useAuthentication } from "@/composables";
 import PetalLink from "./components/PetalLink/index.vue";
 
 const links = [
@@ -62,7 +69,10 @@ const Home = defineComponent({
   },
 
   setup() {
+    const { isAuthenticated } = useAuthentication();
+
     return {
+      isAuthenticated,
       links,
     };
   },
