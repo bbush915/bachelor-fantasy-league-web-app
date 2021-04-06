@@ -5,7 +5,9 @@
     <div class="flex flex-col px-8 py-6 mx-40 bg-gray-dark rounded-xl">
       <h2 class="mb-8">Current Season</h2>
 
-      <div class="flex flex-col">
+      <Loading v-if="loading" />
+
+      <div v-else class="flex flex-col">
         <div v-if="leagues.length > 0">
           <LeagueTable class="w-full" :leagues="leagues" :isLocked="isLocked" />
         </div>
@@ -37,6 +39,7 @@ import { computed, defineComponent, reactive } from "vue";
 
 import RoseIcon from "@/assets/rose.svg";
 import { useCurrentSeasonWeek } from "@/composables";
+import Loading from "@/components/common/Loading/index.vue";
 import LeagueTable from "./components/LeagueTable/index.vue";
 
 type TResult = {
@@ -57,6 +60,7 @@ const MyLeagues = defineComponent({
 
   components: {
     LeagueTable,
+    Loading,
     RoseIcon,
   },
 
@@ -71,7 +75,7 @@ const MyLeagues = defineComponent({
         new Date(currentSeasonWeek.value.episodeAirDate) < new Date()
     );
 
-    const { result } = useQuery<TResult>(
+    const { result, loading } = useQuery<TResult>(
       gql`
         query MyLeagues($seasonWeekId: ID!) {
           myLeagues {
@@ -107,6 +111,7 @@ const MyLeagues = defineComponent({
 
     return {
       leagues,
+      loading,
       isLocked,
     };
   },

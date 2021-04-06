@@ -48,8 +48,8 @@ const publicLinks = [
 ];
 
 const authenticatedLinks = [
-  { to: "/about", content: "How it works" },
   { to: "/my-leagues", content: "My Fantasy Leagues" },
+  { to: "/about", content: "How it works" },
   { to: "/join-league", content: "Join a League" },
   { to: "/create-league", content: "Create a League" },
   { to: "/contestants", content: "Contestants" },
