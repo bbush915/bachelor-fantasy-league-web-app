@@ -87,7 +87,7 @@ const EditLeagueMembers = defineComponent({
     const { leagueContext } = toRefs(props);
     const { leagueId } = leagueContext.value;
 
-    const { result } = useQuery(
+    const { result, refetch } = useQuery(
       gql`
         query LeagueDetails($id: ID!) {
           league(id: $id) {
@@ -127,7 +127,6 @@ const EditLeagueMembers = defineComponent({
         mutation RemoveLeagueMember($input: RemoveLeagueMemberInput!) {
           removeLeagueMember(input: $input) {
             id
-            isActive
           }
         }
       `
@@ -141,6 +140,7 @@ const EditLeagueMembers = defineComponent({
           type: "success",
           message: "League member removed successfully!",
         });
+        refetch();
       } else {
         store.dispatch("pushNotification", {
           type: "error",

@@ -1,6 +1,11 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col mx-40">
+    <div class="mt-4 mb-2">
+      <span class="txt-body text-pink">{{ league?.name }}</span>
+    </div>
+
     <h1 class="mb-10">League Details</h1>
+
     <div class="flex flex-row">
       <div v-if="league" class="flex flex-col w-1/2 px-8 pt-6 pb-8 mr-10 bg-gray-dark rounded-xl">
         <div class="flex justify-between mb-4">
@@ -39,15 +44,17 @@
             <p>{{ league.description }}</p>
             <div v-if="isAuthenticated" class="self-end mt-8">
               <div v-if="league.myLeagueMember?.isActive" class="flex space-x-4">
-                <button
-                  v-if="league.myLeagueMember.id !== commissioner.id"
-                  class="btn-secondary"
-                  @click="showConfirmationModal"
-                >
+                <button v-if="!isCommissioner" class="btn-secondary" @click="showConfirmationModal">
                   Quit League
                 </button>
 
-                <button class="btn-primary">Copy Invite Link</button>
+                <button
+                  v-if="isCommissioner || league.isShareable"
+                  class="btn-primary"
+                  @click="copyShareableLink"
+                >
+                  Copy Invite Link
+                </button>
               </div>
 
               <button v-else class="btn-primary" @click="handleJoinLeagueClick">Join League</button>
@@ -90,13 +97,13 @@
       v-if="isModalVisible"
       :onConfirm="handleQuitLeagueClick"
       :onClose="hideConfirmationModal"
-      :message="'Are you sure you want to quit this league?'"
+      message="Are you sure you want to quit this league?"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
+import { useApolloClient, useMutation, useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { computed, defineComponent } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -114,6 +121,8 @@ type TResult = {
     name: string;
     description: string;
     logoUrl: string;
+    isPublic: boolean;
+    isShareable: boolean;
     leagueMembers: {
       id: string;
       isActive: boolean;
@@ -129,6 +138,7 @@ type TResult = {
       isActive: boolean;
       isCommissioner: boolean;
     };
+    inviteLink: string;
   };
 };
 
@@ -161,6 +171,9 @@ const LeagueDetails = defineComponent({
             name
             description
             logoUrl
+            isPublic
+            isShareable
+            inviteLink
             leagueMembers {
               id
               isActive
@@ -183,11 +196,10 @@ const LeagueDetails = defineComponent({
       { errorPolicy: "all" }
     );
 
-    const league = useResult(result, null, (data) => {
-      return data.league;
-    });
+    const league = useResult(result, null, (data) => data.league);
 
     const { isModalVisible, showConfirmationModal, hideConfirmationModal } = useConfirmationModal();
+
     const commissioner = computed(() => league.value?.leagueMembers.find((x) => x.isCommissioner));
     const isCommissioner = computed(() => league.value?.myLeagueMember?.isCommissioner);
 
@@ -240,6 +252,19 @@ const LeagueDetails = defineComponent({
       });
     }
 
+    function copyShareableLink() {
+      if (!league.value) {
+        return;
+      }
+
+      navigator.clipboard.writeText(league.value.inviteLink);
+
+      store.dispatch("pushNotification", {
+        type: "success",
+        message: "Copied link to clipboard!",
+      });
+    }
+
     return {
       league,
       commissioner,
@@ -251,6 +276,7 @@ const LeagueDetails = defineComponent({
       isModalVisible,
       showConfirmationModal,
       hideConfirmationModal,
+      copyShareableLink,
     };
   },
 });
