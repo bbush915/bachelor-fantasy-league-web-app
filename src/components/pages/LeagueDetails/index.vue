@@ -103,7 +103,7 @@
 </template>
 
 <script lang="ts">
-  import { useApolloClient, useMutation, useQuery, useResult } from "@vue/apollo-composable";
+  import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
   import gql from "graphql-tag";
   import { computed, defineComponent } from "vue";
   import { useRoute, useRouter } from "vue-router";
@@ -147,15 +147,15 @@
 
     components: {
       Avatar,
+      ConfirmationModal,
       EditIcon,
       ScrollContainer,
-      ConfirmationModal,
     },
 
     setup() {
+      const store = useStore();
       const route = useRoute();
       const router = useRouter();
-      const store = useStore();
 
       const { isAuthenticated } = useAuthentication();
 

@@ -53,7 +53,7 @@
 
   const links = [
     { to: "/about", content: "How it works" },
-    { to: "/join-league", content: "Join a League" },
+    { to: "/find-league", content: "Find a League" },
     { to: "/contestants", content: "Contestants" },
   ];
 

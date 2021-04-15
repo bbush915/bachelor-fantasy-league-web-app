@@ -1,15 +1,9 @@
 <template>
   <form class="flex flex-col" @submit="onSubmit">
-    <label for="email">Email</label>
-    <Input id="email" type="email" v-model:value="email" :error="errors.email" />
-
-    <label class="mt-2" for="display-name">Display name</label>
-    <Input id="display-name" type="text" v-model:value="displayName" :error="errors.displayName" />
-
-    <label class="mt-2" for="password">Password</label>
+    <label for="password">New password</label>
     <Input id="password" type="password" v-model:value="password" :error="errors.password" />
 
-    <label class="mt-2" for="password-confirmation">Re-enter password</label>
+    <label class="mt-2" for="password-confirmation">Re-enter new password</label>
     <Input
       id="password-confirmation"
       type="password"
@@ -23,7 +17,7 @@
       :disabled="!canSubmit"
       @click="onSubmit"
     >
-      Sign up
+      Save
     </button>
   </form>
 </template>
@@ -33,16 +27,18 @@
   import gql from "graphql-tag";
   import { useField, useForm } from "vee-validate";
   import { computed, defineComponent } from "vue";
-  import { useRouter } from "vue-router";
+  import { useRoute, useRouter } from "vue-router";
   import { useStore } from "vuex";
   import { object, ref, string } from "yup";
 
   import Input from "@/components/common/Input/index.vue";
 
-  type TRegisterResult = { register: { id: string } };
-  type TRegisterVariables = { input: { email: string; displayName: string; password: string } };
+  type TResetPasswordResult = { resetPassword: { success: boolean } };
+  type TResetPasswordVariables = { input: { token: string; password: string } };
 
-  const RegistrationForm = defineComponent({
+  const ResetPasswordForm = defineComponent({
+    name: "ResetPasswordForm",
+
     components: {
       Input,
     },
@@ -50,76 +46,61 @@
     setup() {
       const store = useStore();
       const router = useRouter();
+      const route = useRoute();
 
-      const { mutate: register } = useMutation<TRegisterResult, TRegisterVariables>(
+      const { token } = route.query;
+
+      const { mutate: resetPassword } = useMutation<TResetPasswordResult, TResetPasswordVariables>(
         gql`
-          mutation Register($input: RegisterInput!) {
-            register(input: $input) {
-              id
+          mutation ResetPassword($input: ResetPasswordInput!) {
+            resetPassword(input: $input) {
+              success
             }
           }
         `
       );
 
-      const { errors, handleSubmit, meta, setFieldError } = useForm({
+      const { errors, handleSubmit, meta } = useForm({
         validationSchema: object({
-          email: string()
-            .email("Invalid email address")
-            .required("You must provide an email address."),
-
-          displayName: string().required("You must provide a display name."),
-
           password: string()
             .min(8, "Password must be at least 8 characters long.")
-            .required("You must provide a password."),
+            .required("You must provide a new password."),
 
           passwordConfirmation: string()
             .oneOf([ref("password")], "Passwords do not match.")
-            .required("You must confirm the password."),
+            .required("You must confirm the new password."),
         }),
       });
 
-      const { value: email } = useField<string | undefined>("email");
-      const { value: displayName } = useField<string | undefined>("displayName");
       const { value: password } = useField<string | undefined>("password");
       const { value: passwordConfirmation } = useField<string | undefined>("passwordConfirmation");
 
       const canSubmit = computed(() => meta.value.valid);
 
       const onSubmit = handleSubmit(async (values) => {
-        const { data, errors } = await register({
+        const { data } = await resetPassword({
           input: {
-            email: values.email!,
-            displayName: values.displayName!,
+            token: token as string,
             password: values.password!,
           },
         });
 
         if (data) {
-          router.push({
-            name: "email-verification-sent",
-            params: { email: values.email! },
-          });
+          router.push({ name: "login" });
 
           store.dispatch("pushNotification", {
             type: "success",
-            message: "Account created successfully!",
+            message: "Reset password successfully!",
           });
         } else {
-          if (errors?.some((x) => x.extensions?.code === "EMAIL_ALREADY_EXISTS")) {
-            setFieldError("email", "An account with that email address already exists.");
-          }
-
           store.dispatch("pushNotification", {
             type: "error",
-            message: "Failed to create account.",
+            message: "Failed to reset password. Please try again later",
           });
         }
       });
 
       return {
-        email,
-        displayName,
         password,
         passwordConfirmation,
         errors,
@@ -129,5 +110,5 @@
     },
   });
 
-  export default RegistrationForm;
+  export default ResetPasswordForm;
 </script>

@@ -2,7 +2,7 @@
   <div>
     <GradientOverlay />
 
-    <div class="relative flex flex-col items-center">
+    <section class="relative flex flex-col items-center">
       <h2 class="my-8">Check your email</h2>
 
       <EmailIcon />
@@ -12,7 +12,7 @@
         <br />
         <span class="text-pink">{{ email }}</span>
       </p>
-    </div>
+    </section>
   </div>
 </template>
 

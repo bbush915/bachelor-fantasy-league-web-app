@@ -2,7 +2,7 @@
   <div>
     <GradientOverlay />
 
-    <div class="relative flex flex-col items-center">
+    <section class="relative flex flex-col items-center">
       <h2 class="my-8">Verify email address</h2>
 
       <EmailIcon />
@@ -13,10 +13,8 @@
         <span class="text-pink">{{ email }}</span>
       </p>
 
-      <button class="self-center mt-8 btn-primary" @click="handleResendClick">
-        Resend confirmation
-      </button>
-    </div>
+      <button class="mt-8 btn-secondary" @click="onResendClick">Resend confirmation</button>
+    </section>
   </div>
 </template>
 
@@ -28,6 +26,9 @@
 
   import EmailIcon from "@/assets/email.svg";
   import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
+
+  type TSendVerificationEmailResult = { sendVerificationEmail: { success: boolean } };
+  type TSendVerificationEmailVariables = { email: string };
 
   const EmailVerificationSent = defineComponent({
     name: "EmailVerificationSent",
@@ -47,7 +48,10 @@
     setup(props) {
       const store = useStore();
 
-      const { mutate: sendVerificationEmail } = useMutation(
+      const { mutate: sendVerificationEmail } = useMutation<
+        TSendVerificationEmailResult,
+        TSendVerificationEmailVariables
+      >(
         gql`
           mutation SendVerificationEmail($email: String!) {
             sendVerificationEmail(email: $email) {
@@ -57,7 +61,7 @@
         `
       );
 
-      async function handleResendClick() {
+      async function onResendClick() {
         const { data } = await sendVerificationEmail({ email: props.email });
 
         if (data?.sendVerificationEmail?.success) {
@@ -68,13 +72,13 @@
         } else {
           store.dispatch("pushNotification", {
             type: "error",
-            message: "Failed to resend confirmation email.",
+            message: "Failed to resend confirmation email. Please try again later",
           });
         }
       }
 
       return {
-        handleResendClick,
+        onResendClick,
       };
     },
   });

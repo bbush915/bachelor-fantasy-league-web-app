@@ -2,6 +2,8 @@ import { useApolloClient } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { NavigationGuard, RouteLocationNormalized } from "vue-router";
 
+import { getToken } from "@/utils/authentication";
+
 export const validateLeagueMembership: NavigationGuard = async (to) => {
   const { client } = useApolloClient();
 
@@ -30,15 +32,24 @@ export const validateLeagueAccessibility: NavigationGuard = async (to: RouteLoca
 
   const { data } = await client.query({
     query: gql`
-      query ValidateLeagueAccessibility($leagueId: ID!, $token: String) {
-        validateLeagueAccessibility(leagueId: $leagueId, token: $token) {
+      query ValidateLeagueAccessibility(
+        $leagueId: ID!
+        $authenticationToken: String
+        $accessToken: String
+      ) {
+        validateLeagueAccessibility(
+          leagueId: $leagueId
+          authenticationToken: $authenticationToken
+          accessToken: $accessToken
+        ) {
           success
         }
       }
     `,
     variables: {
       leagueId: to.params.leagueId,
-      token: to.query.token,
+      authenticationToken: getToken(),
+      accessToken: to.query.token,
     },
   });
 

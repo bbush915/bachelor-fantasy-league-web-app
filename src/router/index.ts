@@ -10,9 +10,9 @@ import EditLeague from "@/components/pages/EditLeague/index.vue";
 import EditLeagueMembers from "@/components/pages/EditLeagueMembers/index.vue";
 import EmailVerificationSent from "@/components/pages/EmailVerificationSent/index.vue";
 import EmailVerificationSuccess from "@/components/pages/EmailVerificationSuccess/index.vue";
+import FindLeague from "@/components/pages/FindLeague/index.vue";
 import ForgotPassword from "@/components/pages/ForgotPassword/index.vue";
 import Home from "@/components/pages/Home/index.vue";
-import JoinLeague from "@/components/pages/JoinLeague/index.vue";
 import League from "@/components/pages/League/index.vue";
 import LeagueDetails from "@/components/pages/LeagueDetails/index.vue";
 import LeagueHome from "@/components/pages/LeagueHome/index.vue";
@@ -40,12 +40,12 @@ const routes: RouteRecordRaw[] = [
     component: CreateLeague,
     meta: { requireAuth: true },
   },
+  { path: "/find-league", name: "find-league", component: FindLeague },
   {
     path: "/forgot-password",
     name: "forgot-password",
     component: ForgotPassword,
   },
-  { path: "/join-league", name: "join-league", component: JoinLeague },
   {
     path: "/leagues/:leagueId/details",
     name: "league-details",

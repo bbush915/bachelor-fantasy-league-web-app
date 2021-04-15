@@ -2,7 +2,7 @@
   <div>
     <GradientOverlay />
 
-    <div class="relative flex flex-col items-center">
+    <section class="relative flex flex-col items-center">
       <h2 class="my-8">Email address verified!</h2>
 
       <EmailIcon />
@@ -14,7 +14,7 @@
       <router-link class="mt-8 btn-primary" :to="{ name: 'my-leagues' }">
         Go to My Leagues
       </router-link>
-    </div>
+    </section>
   </div>
 </template>
 

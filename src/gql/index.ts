@@ -30,6 +30,7 @@ export const getApolloClient = () => {
     cache,
     defaultOptions: {
       watchQuery: {
+        errorPolicy: "all",
         fetchPolicy: "no-cache",
       },
       mutate: {

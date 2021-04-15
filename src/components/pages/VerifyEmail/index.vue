@@ -7,17 +7,22 @@
   import { useRoute, useRouter } from "vue-router";
   import { useStore } from "vuex";
 
+  type TVerifyEmailResult = { verify: { token: string; email: string } };
+  type TVerifyEmailVariables = { input: { token: string } };
+
   const VerifyEmail = defineComponent({
     name: "VerifyEmail",
 
     setup() {
+      const store = useStore();
       const router = useRouter();
       const route = useRoute();
-      const store = useStore();
 
-      const { mutate: verifyEmail } = useMutation(
+      const { token } = route.query;
+
+      const { mutate: verifyEmail } = useMutation<TVerifyEmailResult, TVerifyEmailVariables>(
         gql`
-          mutation VerifyUser($input: VerifyInput!) {
+          mutation VerifyEmail($input: VerifyInput!) {
             verify(input: $input) {
               token
               email
@@ -28,7 +33,7 @@
 
       onMounted(async () => {
         const { data } = await verifyEmail({
-          input: { token: route.query.token },
+          input: { token: token as string },
         });
 
         if (data) {
@@ -46,7 +51,7 @@
         } else {
           store.dispatch("pushNotification", {
             type: "error",
-            message: "Failed to verify email. Try again later",
+            message: "Failed to verify email. Please try again later",
           });
         }
       });

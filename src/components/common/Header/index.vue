@@ -44,14 +44,14 @@
 
   const publicLinks = [
     { to: "/about", content: "How it works" },
-    { to: "/join-league", content: "Join a League" },
+    { to: "/find-league", content: "Find a League" },
     { to: "/contestants", content: "Contestants" },
   ];
 
   const authenticatedLinks = [
     { to: "/my-leagues", content: "My Fantasy Leagues" },
     { to: "/about", content: "How it works" },
-    { to: "/join-league", content: "Join a League" },
+    { to: "/find-league", content: "Find a League" },
     { to: "/create-league", content: "Create a League" },
     { to: "/contestants", content: "Contestants" },
   ];

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap justify-center py-3">
+  <div class="flex flex-wrap justify-center p-3">
     <div
       v-for="contestant in contestants"
       :key="contestant.id"
@@ -15,9 +15,9 @@
         @click="toggleUserFavorite(contestant.id)"
       />
 
-      <Avatar class="w-64 h-64" :src="contestant.headshotUrl" />
+      <Avatar class="w-64 h-64 mb-2" :src="contestant.headshotUrl" />
 
-      <div class="flex flex-col mb-6 text-xs leading-5">
+      <div class="flex flex-col mb-6 space-y-1 text-xs">
         <span>{{ contestant.age }}</span>
         <span>{{ contestant.occupation }}</span>
         <span>{{ contestant.hometown }}</span>

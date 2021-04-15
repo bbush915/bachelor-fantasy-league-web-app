@@ -2,10 +2,11 @@
   <div>
     <GradientOverlay />
 
-    <div class="relative mx-auto registration__content">
+    <section class="relative mx-auto registration__content">
       <h2 class="my-8 text-center">Sign up</h2>
+
       <RegistrationForm />
-    </div>
+    </section>
   </div>
 </template>
 

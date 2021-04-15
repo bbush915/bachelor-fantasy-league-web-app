@@ -7,21 +7,21 @@
     </span>
 
     <span class="text-center">
-      Copyright &copy; 2021 by Bachelor Fantasy League. All Rights Reserved.
+      Copyright &copy; 2021 by Bachelor Fantasy League. All rights reserved.
     </span>
 
     <span class="absolute text-right right-8">
       Icons made by
-      <a href="https://www.freepik.com" title="Freepik">Freepik</a>
+      <a class="underline" href="https://www.freepik.com">Freepik</a>
       from
-      <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+      <a class="underline" href="https://www.flaticon.com/">www.flaticon.com</a>
+
       <br />
+
       Icons made by
-      <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">
-        Pixel perfect
-      </a>
+      <a class="underline" href="https://www.flaticon.com/authors/pixel-perfect">Pixel perfect</a>
       from
-      <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+      <a class="underline" href="https://www.flaticon.com/">www.flaticon.com</a>
     </span>
   </footer>
 </template>
