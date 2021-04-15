@@ -33,89 +33,89 @@
 </template>
 
 <script lang="ts">
-import { useQuery, useResult } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { computed, defineComponent, reactive } from "vue";
+  import { useQuery, useResult } from "@vue/apollo-composable";
+  import gql from "graphql-tag";
+  import { computed, defineComponent, reactive } from "vue";
 
-import RoseIcon from "@/assets/rose.svg";
-import { useCurrentSeasonWeek } from "@/composables";
-import Loading from "@/components/common/Loading/index.vue";
-import LeagueTable from "./components/LeagueTable/index.vue";
+  import RoseIcon from "@/assets/rose.svg";
+  import { useCurrentSeasonWeek } from "@/composables";
+  import Loading from "@/components/common/Loading/index.vue";
+  import LeagueTable from "./components/LeagueTable/index.vue";
 
-type TResult = {
-  myLeagues: {
-    id: string;
-    name: string;
-    logoUrl: string;
-    myLeagueMember: {
+  type TResult = {
+    myLeagues: {
       id: string;
-      isActive: boolean;
-      isLineupSet: boolean;
-    };
-  }[];
-};
+      name: string;
+      logoUrl: string;
+      myLeagueMember: {
+        id: string;
+        isActive: boolean;
+        isLineupSet: boolean;
+      };
+    }[];
+  };
 
-const MyLeagues = defineComponent({
-  name: "MyLeagues",
+  const MyLeagues = defineComponent({
+    name: "MyLeagues",
 
-  components: {
-    LeagueTable,
-    Loading,
-    RoseIcon,
-  },
+    components: {
+      LeagueTable,
+      Loading,
+      RoseIcon,
+    },
 
-  setup() {
-    const { currentSeasonWeek } = useCurrentSeasonWeek();
+    setup() {
+      const { currentSeasonWeek } = useCurrentSeasonWeek();
 
-    const currentSeasonWeekId = computed(() => currentSeasonWeek.value?.id);
-    const isQueryEnabled = computed(() => !!currentSeasonWeekId.value);
-    const isLocked = computed(
-      () =>
-        currentSeasonWeek.value?.episodeAirDate &&
-        new Date(currentSeasonWeek.value.episodeAirDate) < new Date()
-    );
+      const currentSeasonWeekId = computed(() => currentSeasonWeek.value?.id);
+      const isQueryEnabled = computed(() => !!currentSeasonWeekId.value);
+      const isLocked = computed(
+        () =>
+          currentSeasonWeek.value?.episodeAirDate &&
+          new Date(currentSeasonWeek.value.episodeAirDate) < new Date()
+      );
 
-    const { result, loading } = useQuery<TResult>(
-      gql`
-        query MyLeagues($seasonWeekId: ID!) {
-          myLeagues {
-            id
-            name
-            logoUrl
-            myLeagueMember {
+      const { result, loading } = useQuery<TResult>(
+        gql`
+          query MyLeagues($seasonWeekId: ID!) {
+            myLeagues {
               id
-              isActive
-              isLineupSet
-              leagueMemberScore(seasonWeekId: $seasonWeekId) {
-                leagueMemberId
-                seasonWeekId
-                weeklyScore
-                weeklyRank
-                cumulativeScore
-                cumulativeRank
+              name
+              logoUrl
+              myLeagueMember {
+                id
+                isActive
+                isLineupSet
+                leagueMemberScore(seasonWeekId: $seasonWeekId) {
+                  leagueMemberId
+                  seasonWeekId
+                  weeklyScore
+                  weeklyRank
+                  cumulativeScore
+                  cumulativeRank
+                }
               }
             }
           }
-        }
-      `,
-      { seasonWeekId: currentSeasonWeekId },
-      reactive({ enabled: isQueryEnabled })
-    );
+        `,
+        { seasonWeekId: currentSeasonWeekId },
+        reactive({ enabled: isQueryEnabled })
+      );
 
-    const leagues = useResult(result, [] as TResult["myLeagues"], (data) =>
-      data.myLeagues
-        .slice(0)
-        .filter((x) => x.myLeagueMember.isActive)
-        .sort((x, y) => x.name.localeCompare(y.name))
-    );
+      const leagues = useResult(result, [] as TResult["myLeagues"], (data) =>
+        data.myLeagues
+          .slice(0)
+          .filter((x) => x.myLeagueMember.isActive)
+          .sort((x, y) => x.name.localeCompare(y.name))
+      );
 
-    return {
-      leagues,
-      loading,
-      isLocked,
-    };
-  },
-});
+      return {
+        leagues,
+        loading,
+        isLocked,
+      };
+    },
+  });
 
-export default MyLeagues;
+  export default MyLeagues;
 </script>

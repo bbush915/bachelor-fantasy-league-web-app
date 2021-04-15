@@ -19,26 +19,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+  import { defineComponent } from "vue";
 
-import EmailIcon from "@/assets/email.svg";
-import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
+  import EmailIcon from "@/assets/email.svg";
+  import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
 
-const EmailVerificationSuccess = defineComponent({
-  name: "EmailVerificationSuccess",
+  const EmailVerificationSuccess = defineComponent({
+    name: "EmailVerificationSuccess",
 
-  components: {
-    EmailIcon,
-    GradientOverlay,
-  },
-
-  props: {
-    email: {
-      type: String,
-      required: true,
+    components: {
+      EmailIcon,
+      GradientOverlay,
     },
-  },
-});
 
-export default EmailVerificationSuccess;
+    props: {
+      email: {
+        type: String,
+        required: true,
+      },
+    },
+  });
+
+  export default EmailVerificationSuccess;
 </script>

@@ -66,158 +66,158 @@
 </template>
 
 <script lang="ts">
-import { useMutation } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { useField, useForm } from "vee-validate";
-import { computed, defineComponent, ref, watch } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
-import * as Yup from "yup";
+  import { useMutation } from "@vue/apollo-composable";
+  import gql from "graphql-tag";
+  import { useField, useForm } from "vee-validate";
+  import { computed, defineComponent, ref, watch } from "vue";
+  import { useRouter } from "vue-router";
+  import { useStore } from "vuex";
+  import * as Yup from "yup";
 
-import Checkbox from "@/components/common/Checkbox/index.vue";
-import Input from "@/components/common/Input/index.vue";
-import { useMutableImage, useProfile } from "@/composables";
+  import Checkbox from "@/components/common/Checkbox/index.vue";
+  import Input from "@/components/common/Input/index.vue";
+  import { useMutableImage, useProfile } from "@/composables";
 
-const EditProfile = defineComponent({
-  name: "EditProfile",
+  const EditProfile = defineComponent({
+    name: "EditProfile",
 
-  components: {
-    Checkbox,
-    Input,
-  },
+    components: {
+      Checkbox,
+      Input,
+    },
 
-  setup() {
-    const router = useRouter();
-    const store = useStore();
+    setup() {
+      const router = useRouter();
+      const store = useStore();
 
-    const { profile } = useProfile();
+      const { profile } = useProfile();
 
-    const { errors, handleSubmit, meta, setFieldError, setFieldValue } = useForm({
-      initialValues: {
-        avatarUrl: profile.value?.avatarUrl,
-        displayName: profile.value?.displayName,
-        email: profile.value?.email,
-        sendLineupReminders: profile.value?.sendLineupReminders,
-        sendScoringRecaps: profile.value?.sendScoringRecaps,
-      },
-
-      validationSchema: Yup.object({
-        avatarUrl: Yup.string().nullable(),
-
-        displayName: Yup.string().required("You must provide a display name."),
-
-        email: Yup.string()
-          .email("Invalid email address")
-          .required("You must provide an email address."),
-
-        sendLineupReminders: Yup.boolean(),
-
-        sendScoringRecaps: Yup.boolean(),
-      }),
-    });
-
-    const { source: avatarUrl, handleSourceChange: handleAvatarUrlChange } = useMutableImage(
-      profile.value?.avatarUrl
-    );
-
-    const { value: _avatarUrl } = useField("avatarUrl");
-    const { value: displayName } = useField("displayName");
-    const { value: email } = useField("email");
-    const { value: sendLineupReminders } = useField("sendLineupReminders");
-    const { value: sendScoringRecaps } = useField("sendScoringRecaps");
-
-    const unsubscribe = ref(false);
-
-    watch(
-      () => avatarUrl.value,
-      () => {
-        setFieldValue("avatarUrl", avatarUrl.value);
-      }
-    );
-
-    watch(
-      () => [sendLineupReminders.value, sendScoringRecaps.value],
-      () => {
-        if (sendLineupReminders.value || sendScoringRecaps.value) {
-          unsubscribe.value = false;
-        }
-      }
-    );
-
-    watch(
-      () => unsubscribe.value,
-      () => {
-        if (unsubscribe.value) {
-          setFieldValue("sendLineupReminders", false);
-          setFieldValue("sendScoringRecaps", false);
-        }
-      }
-    );
-
-    const canSubmit = computed(() => meta.value.valid);
-
-    const { mutate: updateProfile } = useMutation(
-      gql`
-        mutation UpdateProfile($input: UpdateProfileInput!) {
-          updateProfile(input: $input) {
-            id
-            email
-            displayName
-            avatarUrl
-            sendLineupReminders
-            sendScoringRecaps
-          }
-        }
-      `
-    );
-
-    const onSubmit = handleSubmit(async (values) => {
-      const { data, errors } = await updateProfile(
-        {
-          input: {
-            displayName: values.displayName,
-            email: values.email,
-            avatarUrl: avatarUrl.value,
-            sendLineupReminders: sendLineupReminders.value,
-            sendScoringRecaps: sendScoringRecaps.value,
-          },
+      const { errors, handleSubmit, meta, setFieldError, setFieldValue } = useForm({
+        initialValues: {
+          avatarUrl: profile.value?.avatarUrl,
+          displayName: profile.value?.displayName,
+          email: profile.value?.email,
+          sendLineupReminders: profile.value?.sendLineupReminders,
+          sendScoringRecaps: profile.value?.sendScoringRecaps,
         },
-        { errorPolicy: "all" }
+
+        validationSchema: Yup.object({
+          avatarUrl: Yup.string().nullable(),
+
+          displayName: Yup.string().required("You must provide a display name."),
+
+          email: Yup.string()
+            .email("Invalid email address")
+            .required("You must provide an email address."),
+
+          sendLineupReminders: Yup.boolean(),
+
+          sendScoringRecaps: Yup.boolean(),
+        }),
+      });
+
+      const { source: avatarUrl, handleSourceChange: handleAvatarUrlChange } = useMutableImage(
+        profile.value?.avatarUrl
       );
 
-      if (data) {
-        router.push({ name: "view-profile" });
+      const { value: _avatarUrl } = useField("avatarUrl");
+      const { value: displayName } = useField("displayName");
+      const { value: email } = useField("email");
+      const { value: sendLineupReminders } = useField("sendLineupReminders");
+      const { value: sendScoringRecaps } = useField("sendScoringRecaps");
 
-        store.dispatch("pushNotification", {
-          type: "success",
-          message: "Profile updated successfully!",
-        });
-      } else {
-        if (errors?.some((x) => x.extensions?.code === "EMAIL_ALREADY_EXISTS")) {
-          setFieldError("email", "An account with that email address already exists.");
+      const unsubscribe = ref(false);
+
+      watch(
+        () => avatarUrl.value,
+        () => {
+          setFieldValue("avatarUrl", avatarUrl.value);
         }
+      );
 
-        store.dispatch("pushNotification", {
-          type: "error",
-          message: "Failed to update profile.",
-        });
-      }
-    });
+      watch(
+        () => [sendLineupReminders.value, sendScoringRecaps.value],
+        () => {
+          if (sendLineupReminders.value || sendScoringRecaps.value) {
+            unsubscribe.value = false;
+          }
+        }
+      );
 
-    return {
-      avatarUrl,
-      handleAvatarUrlChange,
-      displayName,
-      email,
-      sendLineupReminders,
-      sendScoringRecaps,
-      unsubscribe,
-      errors,
-      canSubmit,
-      onSubmit,
-    };
-  },
-});
+      watch(
+        () => unsubscribe.value,
+        () => {
+          if (unsubscribe.value) {
+            setFieldValue("sendLineupReminders", false);
+            setFieldValue("sendScoringRecaps", false);
+          }
+        }
+      );
 
-export default EditProfile;
+      const canSubmit = computed(() => meta.value.valid);
+
+      const { mutate: updateProfile } = useMutation(
+        gql`
+          mutation UpdateProfile($input: UpdateProfileInput!) {
+            updateProfile(input: $input) {
+              id
+              email
+              displayName
+              avatarUrl
+              sendLineupReminders
+              sendScoringRecaps
+            }
+          }
+        `
+      );
+
+      const onSubmit = handleSubmit(async (values) => {
+        const { data, errors } = await updateProfile(
+          {
+            input: {
+              displayName: values.displayName,
+              email: values.email,
+              avatarUrl: avatarUrl.value,
+              sendLineupReminders: sendLineupReminders.value,
+              sendScoringRecaps: sendScoringRecaps.value,
+            },
+          },
+          { errorPolicy: "all" }
+        );
+
+        if (data) {
+          router.push({ name: "view-profile" });
+
+          store.dispatch("pushNotification", {
+            type: "success",
+            message: "Profile updated successfully!",
+          });
+        } else {
+          if (errors?.some((x) => x.extensions?.code === "EMAIL_ALREADY_EXISTS")) {
+            setFieldError("email", "An account with that email address already exists.");
+          }
+
+          store.dispatch("pushNotification", {
+            type: "error",
+            message: "Failed to update profile.",
+          });
+        }
+      });
+
+      return {
+        avatarUrl,
+        handleAvatarUrlChange,
+        displayName,
+        email,
+        sendLineupReminders,
+        sendScoringRecaps,
+        unsubscribe,
+        errors,
+        canSubmit,
+        onSubmit,
+      };
+    },
+  });
+
+  export default EditProfile;
 </script>

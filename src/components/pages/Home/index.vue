@@ -42,49 +42,49 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+  import { defineComponent } from "vue";
 
-import Logo from "@/assets/logo.svg";
-import Strikethrough from "@/assets/strikethrough.svg";
-import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
-import SteamOverlay from "@/components/common/SteamOverlay/index.vue";
-import { useAuthentication } from "@/composables";
-import PetalLink from "./components/PetalLink/index.vue";
+  import Logo from "@/assets/logo.svg";
+  import Strikethrough from "@/assets/strikethrough.svg";
+  import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
+  import SteamOverlay from "@/components/common/SteamOverlay/index.vue";
+  import { useAuthentication } from "@/composables";
+  import PetalLink from "./components/PetalLink/index.vue";
 
-const links = [
-  { to: "/about", content: "How it works" },
-  { to: "/join-league", content: "Join a League" },
-  { to: "/contestants", content: "Contestants" },
-];
+  const links = [
+    { to: "/about", content: "How it works" },
+    { to: "/join-league", content: "Join a League" },
+    { to: "/contestants", content: "Contestants" },
+  ];
 
-const Home = defineComponent({
-  name: "Home",
+  const Home = defineComponent({
+    name: "Home",
 
-  components: {
-    GradientOverlay,
-    Logo,
-    PetalLink,
-    SteamOverlay,
-    Strikethrough,
-  },
+    components: {
+      GradientOverlay,
+      Logo,
+      PetalLink,
+      SteamOverlay,
+      Strikethrough,
+    },
 
-  setup() {
-    const { isAuthenticated } = useAuthentication();
+    setup() {
+      const { isAuthenticated } = useAuthentication();
 
-    return {
-      isAuthenticated,
-      links,
-    };
-  },
-});
+      return {
+        isAuthenticated,
+        links,
+      };
+    },
+  });
 
-export default Home;
+  export default Home;
 </script>
 
 <style scoped>
-.title__strikethrough {
-  position: absolute;
-  bottom: 54px;
-  right: 48px;
-}
+  .title__strikethrough {
+    position: absolute;
+    bottom: 54px;
+    right: 48px;
+  }
 </style>

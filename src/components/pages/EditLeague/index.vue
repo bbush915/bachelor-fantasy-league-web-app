@@ -68,213 +68,222 @@
 </template>
 
 <script lang="ts">
-import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { computed, defineComponent, PropType, ref, toRefs, watch } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
-import * as Yup from "yup";
+  import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
+  import gql from "graphql-tag";
+  import { computed, defineComponent, PropType, ref, toRefs, watch } from "vue";
+  import { useRouter } from "vue-router";
+  import { useStore } from "vuex";
+  import * as Yup from "yup";
 
-import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
-import Avatar from "@/components/common/Avatar/index.vue";
-import { useConfirmationModal, useMutableImage } from "@/composables";
-import { useField, useForm } from "vee-validate";
-import Input from "@/components/common/Input/index.vue";
-import { LeagueContext } from "@/types";
-import DeleteIcon from "@/assets/delete.svg";
-import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
+  import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
+  import Avatar from "@/components/common/Avatar/index.vue";
+  import { useConfirmationModal, useMutableImage } from "@/composables";
+  import { useField, useForm } from "vee-validate";
+  import Input from "@/components/common/Input/index.vue";
+  import { LeagueContext } from "@/types";
+  import DeleteIcon from "@/assets/delete.svg";
+  import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
 
-const EditLeague = defineComponent({
-  name: "EditLeague",
-  components: { Avatar, Input, DeleteIcon, ConfirmationModal, ScrollContainer },
-  props: {
-    leagueContext: {
-      type: Object as PropType<LeagueContext>,
-      required: true,
+  const EditLeague = defineComponent({
+    name: "EditLeague",
+    components: { Avatar, Input, DeleteIcon, ConfirmationModal, ScrollContainer },
+    props: {
+      leagueContext: {
+        type: Object as PropType<LeagueContext>,
+        required: true,
+      },
     },
-  },
-  setup(props) {
-    const { leagueContext } = toRefs(props);
-    const { leagueId } = leagueContext.value;
-    const router = useRouter();
-    const store = useStore();
+    setup(props) {
+      const { leagueContext } = toRefs(props);
+      const { leagueId } = leagueContext.value;
+      const router = useRouter();
+      const store = useStore();
 
-    const { result } = useQuery(
-      gql`
-        query LeagueDetails($id: ID!) {
-          league(id: $id) {
-            id
-            name
-            description
-            logoUrl
-            isPublic
-            isShareable
-            leagueMembers {
+      const { result } = useQuery(
+        gql`
+          query LeagueDetails($id: ID!) {
+            league(id: $id) {
               id
-              isActive
-              isCommissioner
-              user {
+              name
+              description
+              logoUrl
+              isPublic
+              isShareable
+              leagueMembers {
                 id
-                displayName
-                avatarUrl
+                isActive
+                isCommissioner
+                user {
+                  id
+                  displayName
+                  avatarUrl
+                }
+              }
+              myLeagueMember {
+                id
+                isActive
+                isCommissioner
               }
             }
-            myLeagueMember {
-              id
-              isActive
-              isCommissioner
-            }
           }
-        }
-      `,
-      { id: leagueId }
-    );
-
-    const league = useResult(result, null, (data) => data.league);
-    const isCommissioner = computed(() => league.value?.myLeagueMember?.isCommissioner);
-    const { isModalVisible, showConfirmationModal, hideConfirmationModal } = useConfirmationModal();
-
-    const { errors, handleSubmit, meta, setFieldError, setFieldValue } = useForm({
-      validationSchema: Yup.object({
-        logoUrl: Yup.string().nullable(),
-        name: Yup.string().required("Please enter a name."),
-        description: Yup.string().required("Please enter a description."),
-        isPublic: Yup.boolean(),
-        isShareable: Yup.boolean(),
-      }),
-    });
-
-    watch(
-      () => league.value,
-      () => {
-        if (!league.value) {
-          return;
-        }
-
-        setFieldValue("name", league.value.name);
-        setFieldValue("description", league.value.description);
-        setFieldValue("isPublic", league.value.isPublic);
-        setFieldValue("isShareable", league.value.isShareable);
-        setFieldValue("logoUrl", league.value.logoUrl);
-        logoUrl.value = league.value.logoUrl;
-      }
-    );
-
-    const { value: name } = useField("name");
-    const { value: description } = useField("description");
-    const { value: _logoUrl } = useField("logoUrl");
-    const { value: isPublic } = useField("isPublic");
-    const { value: isShareable } = useField("isShareable");
-    const leagueMembers = computed(
-      () =>
-        league.value?.leagueMembers
-          .filter((x) => x.isActive)
-          .sort((x, y) => x.user.displayName.localeCompare(y.user.displayName)) ?? []
-    );
-    const { source: logoUrl, handleSourceChange: handleLogoChange } = useMutableImage(
-      league.value?.logoUrl
-    );
-
-    watch(
-      () => logoUrl.value,
-      () => {
-        setFieldValue("logoUrl", logoUrl.value);
-      }
-    );
-    const { mutate: updateLeague } = useMutation(
-      gql`
-        mutation UpdateLeague($input: UpdateLeagueInput!) {
-          updateLeague(input: $input) {
-            id
-            name
-            description
-            logoUrl
-            isPublic
-            isShareable
-          }
-        }
-      `
-    );
-
-    const { mutate: deleteLeague } = useMutation(
-      gql`
-        mutation DeleteLeague($input: DeleteLeagueInput!) {
-          deleteLeague(input: $input) {
-            success
-          }
-        }
-      `
-    );
-
-    const handleDelete = async () => {
-      const { data, errors } = await deleteLeague({ input: { id: league.value.id } });
-      if (data) {
-        router.push({ name: "my-leagues" });
-
-        store.dispatch("pushNotification", {
-          type: "success",
-          message: "League deleted successfully!",
-        });
-      } else {
-        store.dispatch("pushNotification", {
-          type: "error",
-          message: "Failed to delete league.",
-        });
-      }
-    };
-
-    const onSubmit = handleSubmit(async (values) => {
-      const { data, errors } = await updateLeague(
-        {
-          input: {
-            id: league.value.id,
-            name: name.value,
-            description: description.value,
-            logo: logoUrl.value,
-            isPublic: isPublic.value,
-            isShareable: isShareable.value,
-          },
-        },
-        { errorPolicy: "all" }
+        `,
+        { id: leagueId }
       );
 
-      if (data) {
-        router.push({ name: "league-home", params: { leagueId: league.value.id } });
+      const league = useResult(result, null, (data) => data.league);
+      const isCommissioner = computed(() => league.value?.myLeagueMember?.isCommissioner);
+      const {
+        isModalVisible,
+        showConfirmationModal,
+        hideConfirmationModal,
+      } = useConfirmationModal();
 
-        store.dispatch("pushNotification", {
-          type: "success",
-          message: "League updated successfully!",
-        });
-      } else {
-        if (errors?.some((x) => x.extensions?.code === "LEAGUE_ALREADY_EXISTS")) {
-          setFieldError("name", "A league with that name already exists.");
+      const { errors, handleSubmit, meta, setFieldError, setFieldValue } = useForm({
+        validationSchema: Yup.object({
+          logoUrl: Yup.string().nullable(),
+          name: Yup.string().required("Please enter a name."),
+          description: Yup.string().required("Please enter a description."),
+          isPublic: Yup.boolean(),
+          isShareable: Yup.boolean(),
+        }),
+      });
+
+      watch(
+        () => league.value,
+        () => {
+          if (!league.value) {
+            return;
+          }
+
+          setFieldValue("name", league.value.name);
+          setFieldValue("description", league.value.description);
+          setFieldValue("isPublic", league.value.isPublic);
+          setFieldValue("isShareable", league.value.isShareable);
+          setFieldValue("logoUrl", league.value.logoUrl);
+          logoUrl.value = league.value.logoUrl;
         }
-        store.dispatch("pushNotification", {
-          type: "error",
-          message: "Failed to update league.",
-        });
-      }
-    });
-    return {
-      league,
-      leagueId,
-      name,
-      description,
-      logoUrl,
-      isPublic,
-      isShareable,
-      handleLogoChange,
-      onSubmit,
-      errors,
-      isCommissioner,
-      showConfirmationModal,
-      hideConfirmationModal,
-      isModalVisible,
-      handleDelete,
-      leagueMembers,
-    };
-  },
-});
+      );
 
-export default EditLeague;
+      const { value: name } = useField("name");
+      const { value: description } = useField("description");
+      const { value: _logoUrl } = useField("logoUrl");
+      const { value: isPublic } = useField("isPublic");
+      const { value: isShareable } = useField("isShareable");
+      const leagueMembers = computed(
+        () =>
+          league.value?.leagueMembers
+            .filter((x) => x.isActive)
+            .sort((x, y) => x.user.displayName.localeCompare(y.user.displayName)) ?? []
+      );
+      const { source: logoUrl, handleSourceChange: handleLogoChange } = useMutableImage(
+        league.value?.logoUrl
+      );
+
+      watch(
+        () => logoUrl.value,
+        () => {
+          setFieldValue("logoUrl", logoUrl.value);
+        }
+      );
+      const { mutate: updateLeague } = useMutation(
+        gql`
+          mutation UpdateLeague($input: UpdateLeagueInput!) {
+            updateLeague(input: $input) {
+              id
+              name
+              description
+              logoUrl
+              isPublic
+              isShareable
+            }
+          }
+        `
+      );
+
+      const { mutate: deleteLeague } = useMutation(
+        gql`
+          mutation DeleteLeague($input: DeleteLeagueInput!) {
+            deleteLeague(input: $input) {
+              success
+            }
+          }
+        `
+      );
+
+      const handleDelete = async () => {
+        const { data, errors } = await deleteLeague({
+          input: { id: league.value.id },
+        });
+        if (data) {
+          router.push({ name: "my-leagues" });
+
+          store.dispatch("pushNotification", {
+            type: "success",
+            message: "League deleted successfully!",
+          });
+        } else {
+          store.dispatch("pushNotification", {
+            type: "error",
+            message: "Failed to delete league.",
+          });
+        }
+      };
+
+      const onSubmit = handleSubmit(async (values) => {
+        const { data, errors } = await updateLeague(
+          {
+            input: {
+              id: league.value.id,
+              name: name.value,
+              description: description.value,
+              logo: logoUrl.value,
+              isPublic: isPublic.value,
+              isShareable: isShareable.value,
+            },
+          },
+          { errorPolicy: "all" }
+        );
+
+        if (data) {
+          router.push({
+            name: "league-home",
+            params: { leagueId: league.value.id },
+          });
+
+          store.dispatch("pushNotification", {
+            type: "success",
+            message: "League updated successfully!",
+          });
+        } else {
+          if (errors?.some((x) => x.extensions?.code === "LEAGUE_ALREADY_EXISTS")) {
+            setFieldError("name", "A league with that name already exists.");
+          }
+          store.dispatch("pushNotification", {
+            type: "error",
+            message: "Failed to update league.",
+          });
+        }
+      });
+      return {
+        league,
+        leagueId,
+        name,
+        description,
+        logoUrl,
+        isPublic,
+        isShareable,
+        handleLogoChange,
+        onSubmit,
+        errors,
+        isCommissioner,
+        showConfirmationModal,
+        hideConfirmationModal,
+        isModalVisible,
+        handleDelete,
+        leagueMembers,
+      };
+    },
+  });
+
+  export default EditLeague;
 </script>

@@ -46,52 +46,52 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from "vue";
+  import { defineComponent, toRefs } from "vue";
 
-import ActionRequiredIcon from "@/assets/action-required.svg";
-import EditIcon from "@/assets/edit.svg";
-import LockIcon from "@/assets/lock.svg";
-import OkIcon from "@/assets/ok.svg";
-import { getOrdinal } from "@/utils";
+  import ActionRequiredIcon from "@/assets/action-required.svg";
+  import EditIcon from "@/assets/edit.svg";
+  import LockIcon from "@/assets/lock.svg";
+  import OkIcon from "@/assets/ok.svg";
+  import { getOrdinal } from "@/utils";
 
-const BodyRow = defineComponent({
-  name: "BodyRow",
+  const BodyRow = defineComponent({
+    name: "BodyRow",
 
-  components: {
-    ActionRequiredIcon,
-    EditIcon,
-    LockIcon,
-    OkIcon,
-  },
-
-  props: {
-    league: {
-      type: Object,
-      required: true,
+    components: {
+      ActionRequiredIcon,
+      EditIcon,
+      LockIcon,
+      OkIcon,
     },
 
-    isLocked: {
-      type: Boolean,
-      required: true,
+    props: {
+      league: {
+        type: Object,
+        required: true,
+      },
+
+      isLocked: {
+        type: Boolean,
+        required: true,
+      },
     },
-  },
 
-  setup(props) {
-    const { league } = toRefs(props);
+    setup(props) {
+      const { league } = toRefs(props);
 
-    const { id, name, logoUrl, myLeagueMember } = league.value;
-    const { isLineupSet, leagueMemberScore } = myLeagueMember;
-    const { cumulativeRank } = leagueMemberScore;
+      const { id, name, logoUrl, myLeagueMember } = league.value;
+      const { isLineupSet, leagueMemberScore } = myLeagueMember;
+      const { cumulativeRank } = leagueMemberScore;
 
-    return {
-      id,
-      name,
-      logoUrl,
-      ordinal: cumulativeRank ? getOrdinal(cumulativeRank) : "-",
-      isLineupSet,
-    };
-  },
-});
+      return {
+        id,
+        name,
+        logoUrl,
+        ordinal: cumulativeRank ? getOrdinal(cumulativeRank) : "-",
+        isLineupSet,
+      };
+    },
+  });
 
-export default BodyRow;
+  export default BodyRow;
 </script>

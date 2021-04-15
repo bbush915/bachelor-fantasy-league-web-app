@@ -1,29 +1,48 @@
 <template>
-  <footer class="bg-gray-dark">
-    <div class="flex flex-col items-center py-5 mt-5 txt-label w-100">
-      <div>
-        DISCLAIMER: Bachelor Fantasy League is not owned by, affiliated with, or operated under ABC.
-        ABC owns all rights to contestant photos, footage, and other related assets.
-      </div>
-      <div>Copyright 2021 by Bachelor Fantasy League</div>
-      <div>
-        Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from
-        <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
-      </div>
-      <div>
-        Icons made by
-        <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect"
-          >Pixel perfect</a
-        >
-        from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
-      </div>
-    </div>
+  <footer class="relative z-10 flex items-center justify-center py-6 bg-gray-dark">
+    <span class="absolute text-left left-8">
+      Bachelor Fantasy League is not owned by, affiliated with, or operated under ABC.
+      <br />
+      ABC owns all rights to contestant photos, footage, and other related assets.
+    </span>
+
+    <span class="text-center">
+      Copyright &copy; 2021 by Bachelor Fantasy League. All Rights Reserved.
+    </span>
+
+    <span class="absolute text-right right-8">
+      Icons made by
+      <a href="https://www.freepik.com" title="Freepik">Freepik</a>
+      from
+      <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+      <br />
+      Icons made by
+      <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">
+        Pixel perfect
+      </a>
+      from
+      <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+    </span>
   </footer>
 </template>
+
 <script lang="ts">
-import { defineComponent } from "vue";
-const Footer = defineComponent({
-  name: "Footer",
-});
-export default Footer;
+  import { defineComponent } from "vue";
+
+  const Footer = defineComponent({
+    name: "Footer",
+  });
+
+  export default Footer;
 </script>
+
+<style scoped>
+  footer {
+    box-shadow: 0 0 6px black;
+  }
+
+  footer > span {
+    font-size: 10px;
+    line-height: 150%;
+  }
+</style>

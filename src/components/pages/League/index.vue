@@ -4,7 +4,10 @@
       <router-link
         v-if="showHomeLink"
         class="underline txt-body text-pink"
-        :to="{ name: 'league-home', params: { leagueId: leagueContext.leagueId } }"
+        :to="{
+          name: 'league-home',
+          params: { leagueId: leagueContext.leagueId },
+        }"
       >
         {{ leagueContext.leagueName }}
       </router-link>
@@ -17,95 +20,95 @@
 </template>
 
 <script lang="ts">
-import { useQuery, useResult } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { computed, defineComponent } from "vue";
-import { useRoute } from "vue-router";
+  import { useQuery, useResult } from "@vue/apollo-composable";
+  import gql from "graphql-tag";
+  import { computed, defineComponent } from "vue";
+  import { useRoute } from "vue-router";
 
-import { useAuthentication } from "@/composables";
+  import { useAuthentication } from "@/composables";
 
-type TResult = {
-  league: {
-    id: string;
-    name: string;
-    season: {
+  type TResult = {
+    league: {
       id: string;
-      currentWeekNumber: number;
-      isComplete: boolean;
-      currentSeasonWeek: {
+      name: string;
+      season: {
         id: string;
-        lineupSpotsAvailable: number;
+        currentWeekNumber: number;
+        isComplete: boolean;
+        currentSeasonWeek: {
+          id: string;
+          lineupSpotsAvailable: number;
+        };
+        previousSeasonWeek: {
+          id: string;
+        };
       };
-      previousSeasonWeek: {
+      myLeagueMember: {
         id: string;
       };
-    };
-    myLeagueMember: {
-      id: string;
     };
   };
-};
 
-const League = defineComponent({
-  name: "League",
+  const League = defineComponent({
+    name: "League",
 
-  setup() {
-    const route = useRoute();
-    const { isAuthenticated } = useAuthentication();
+    setup() {
+      const route = useRoute();
+      const { isAuthenticated } = useAuthentication();
 
-    const showHomeLink = computed(() => isAuthenticated && route.name !== "league-home");
+      const showHomeLink = computed(() => isAuthenticated && route.name !== "league-home");
 
-    const {
-      params: { leagueId },
-    } = route;
+      const {
+        params: { leagueId },
+      } = route;
 
-    const { result } = useQuery<TResult>(
-      gql`
-        query League($id: ID!) {
-          league(id: $id) {
-            id
-            name
-            season {
+      const { result } = useQuery<TResult>(
+        gql`
+          query League($id: ID!) {
+            league(id: $id) {
               id
-              currentWeekNumber
-              isComplete
-              currentSeasonWeek {
+              name
+              season {
                 id
-                lineupSpotsAvailable
+                currentWeekNumber
+                isComplete
+                currentSeasonWeek {
+                  id
+                  lineupSpotsAvailable
+                }
+                previousSeasonWeek {
+                  id
+                  weekNumber
+                }
               }
-              previousSeasonWeek {
+              myLeagueMember {
                 id
-                weekNumber
               }
-            }
-            myLeagueMember {
-              id
             }
           }
-        }
-      `,
-      { id: leagueId },
-      { errorPolicy: "all" }
-    );
+        `,
+        { id: leagueId },
+        { errorPolicy: "all" }
+      );
 
-    const leagueContext = useResult(result, null, (data) => ({
-      leagueId: data.league.id,
-      leagueName: data.league.name,
-      leagueMemberId: data.league.myLeagueMember?.id,
-      seasonId: data.league.season.id,
-      weekNumber: data.league.season.currentWeekNumber,
-      isComplete: data.league.season.isComplete,
-      currentSeasonWeekId: data.league.season.currentSeasonWeek.id,
-      lineupSpotsAvailable: data.league.season.currentSeasonWeek.lineupSpotsAvailable,
-      previousSeasonWeekId: data.league.season.previousSeasonWeek?.id,
-    }));
+      const leagueContext = useResult(result, null, (data) => ({
+        leagueId: data.league.id,
+        leagueName: data.league.name,
+        leagueMemberId: data.league.myLeagueMember?.id,
+        seasonId: data.league.season.id,
+        weekNumber: data.league.season.currentWeekNumber,
+        isComplete: data.league.season.isComplete,
+        currentSeasonWeekId: data.league.season.currentSeasonWeek.id,
+        lineupSpotsAvailable: data.league.season.currentSeasonWeek.lineupSpotsAvailable,
+        previousSeasonWeekId: data.league.season.previousSeasonWeek?.id,
+      }));
 
-    return {
-      leagueContext,
-      showHomeLink,
-    };
-  },
-});
+      return {
+        leagueContext,
+        showHomeLink,
+      };
+    },
+  });
 
-export default League;
+  export default League;
 </script>

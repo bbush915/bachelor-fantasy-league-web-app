@@ -22,39 +22,39 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+  import { defineComponent } from "vue";
 
-import CheckIcon from "@/assets/check.svg";
+  import CheckIcon from "@/assets/check.svg";
 
-const Checkbox = defineComponent({
-  name: "Checkbox",
+  const Checkbox = defineComponent({
+    name: "Checkbox",
 
-  components: {
-    CheckIcon,
-  },
-
-  inheritAttrs: false,
-
-  props: {
-    checked: {
-      type: Boolean,
-      required: true,
+    components: {
+      CheckIcon,
     },
 
-    label: {
-      type: String,
-      required: true,
-    },
-  },
-});
+    inheritAttrs: false,
 
-export default Checkbox;
+    props: {
+      checked: {
+        type: Boolean,
+        required: true,
+      },
+
+      label: {
+        type: String,
+        required: true,
+      },
+    },
+  });
+
+  export default Checkbox;
 </script>
 
 <style lang="postcss" scoped>
-.checkbox {
-  &:focus {
-    box-shadow: 0 0 0 2px #ffaab4;
+  .checkbox {
+    &:focus {
+      box-shadow: 0 0 0 2px #ffaab4;
+    }
   }
-}
 </style>

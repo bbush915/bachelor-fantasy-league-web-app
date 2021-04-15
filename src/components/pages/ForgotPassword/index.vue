@@ -23,69 +23,72 @@
 </template>
 
 <script lang="ts">
-import { useMutation } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { computed, defineComponent, ref } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+  import { useMutation } from "@vue/apollo-composable";
+  import gql from "graphql-tag";
+  import { computed, defineComponent, ref } from "vue";
+  import { useRouter } from "vue-router";
+  import { useStore } from "vuex";
 
-import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
-import Input from "@/components/common/Input/index.vue";
+  import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
+  import Input from "@/components/common/Input/index.vue";
 
-const ForgotPassword = defineComponent({
-  name: "ForgotPassword",
+  const ForgotPassword = defineComponent({
+    name: "ForgotPassword",
 
-  components: {
-    GradientOverlay,
-    Input,
-  },
+    components: {
+      GradientOverlay,
+      Input,
+    },
 
-  setup() {
-    const router = useRouter();
-    const store = useStore();
+    setup() {
+      const router = useRouter();
+      const store = useStore();
 
-    const email = ref<string>();
+      const email = ref<string>();
 
-    const canSubmit = computed(() => !!email.value);
+      const canSubmit = computed(() => !!email.value);
 
-    const { mutate: sendPasswordResetEmail } = useMutation(
-      gql`
-        mutation SendPasswordResetEmail($email: String!) {
-          sendPasswordResetEmail(email: $email) {
-            success
+      const { mutate: sendPasswordResetEmail } = useMutation(
+        gql`
+          mutation SendPasswordResetEmail($email: String!) {
+            sendPasswordResetEmail(email: $email) {
+              success
+            }
           }
-        }
-      `
-    );
+        `
+      );
 
-    async function onSubmit() {
-      const { data } = await sendPasswordResetEmail({
-        email: email.value,
-      });
-
-      if (data) {
-        router.push({ name: "password-reset-sent", params: { email: email.value! } });
-      } else {
-        store.dispatch("pushNotification", {
-          type: "error",
-          message: "Failed to send password reset. Please try again later",
+      async function onSubmit() {
+        const { data } = await sendPasswordResetEmail({
+          email: email.value,
         });
+
+        if (data) {
+          router.push({
+            name: "password-reset-sent",
+            params: { email: email.value! },
+          });
+        } else {
+          store.dispatch("pushNotification", {
+            type: "error",
+            message: "Failed to send password reset. Please try again later",
+          });
+        }
       }
-    }
 
-    return {
-      email,
-      canSubmit,
-      onSubmit,
-    };
-  },
-});
+      return {
+        email,
+        canSubmit,
+        onSubmit,
+      };
+    },
+  });
 
-export default ForgotPassword;
+  export default ForgotPassword;
 </script>
 
 <style scoped>
-.forgot-password-form {
-  width: 400px;
-}
+  .forgot-password-form {
+    width: 400px;
+  }
 </style>

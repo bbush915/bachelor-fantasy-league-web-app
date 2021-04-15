@@ -21,43 +21,43 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+  import { defineComponent } from "vue";
 
-const Input = defineComponent({
-  name: "Input",
+  const Input = defineComponent({
+    name: "Input",
 
-  props: {
-    value: {
-      type: String,
-      required: false,
+    props: {
+      value: {
+        type: String,
+        required: false,
+      },
+
+      error: {
+        type: String,
+        required: false,
+      },
+
+      type: {
+        type: String,
+        required: false,
+      },
     },
+  });
 
-    error: {
-      type: String,
-      required: false,
-    },
-
-    type: {
-      type: String,
-      required: false,
-    },
-  },
-});
-
-export default Input;
+  export default Input;
 </script>
 
 <style lang="postcss" scoped>
-input,
-textarea {
-  background: transparent;
+  input,
+  textarea {
+    background: transparent;
 
-  &.error {
-    @apply border-pink-dark;
-  }
+    &.error {
+      @apply border-pink-dark;
+    }
 
-  &:focus {
-    box-shadow: 0 0 0 2px #ffaab4;
+    &:focus {
+      box-shadow: 0 0 0 2px #ffaab4;
+    }
   }
-}
 </style>

@@ -18,35 +18,35 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+  import { defineComponent } from "vue";
 
-import Avatar from "@/components/common/Avatar/index.vue";
-import BronzeMedal from "@/assets/bronze-medal.svg";
-import GoldMedal from "@/assets/gold-medal.svg";
-import SilverMedal from "@/assets/silver-medal.svg";
+  import Avatar from "@/components/common/Avatar/index.vue";
+  import BronzeMedal from "@/assets/bronze-medal.svg";
+  import GoldMedal from "@/assets/gold-medal.svg";
+  import SilverMedal from "@/assets/silver-medal.svg";
 
-const Podium = defineComponent({
-  name: "Podium",
+  const Podium = defineComponent({
+    name: "Podium",
 
-  components: {
-    Avatar,
-    BronzeMedal,
-    GoldMedal,
-    SilverMedal,
-  },
-
-  props: {
-    place: {
-      type: Number,
-      required: true,
+    components: {
+      Avatar,
+      BronzeMedal,
+      GoldMedal,
+      SilverMedal,
     },
 
-    leaderboardEntry: {
-      type: Object,
-      required: true,
-    },
-  },
-});
+    props: {
+      place: {
+        type: Number,
+        required: true,
+      },
 
-export default Podium;
+      leaderboardEntry: {
+        type: Object,
+        required: true,
+      },
+    },
+  });
+
+  export default Podium;
 </script>

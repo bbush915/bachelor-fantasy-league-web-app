@@ -27,33 +27,33 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+  import { defineComponent, PropType } from "vue";
 
-import { LeagueContext } from "@/types";
-import ContestantScores from "./components/ContestantScores/index.vue";
-import FinalStandings from "./components/FinalStandings/index.vue";
-import Lineup from "./components/Lineup/index.vue";
-import OverallScores from "./components/OverallScores/index.vue";
-import WeeklyScores from "./components/WeeklyScores/index.vue";
+  import { LeagueContext } from "@/types";
+  import ContestantScores from "./components/ContestantScores/index.vue";
+  import FinalStandings from "./components/FinalStandings/index.vue";
+  import Lineup from "./components/Lineup/index.vue";
+  import OverallScores from "./components/OverallScores/index.vue";
+  import WeeklyScores from "./components/WeeklyScores/index.vue";
 
-const LeagueHome = defineComponent({
-  name: "LeagueHome",
+  const LeagueHome = defineComponent({
+    name: "LeagueHome",
 
-  components: {
-    ContestantScores,
-    FinalStandings,
-    Lineup,
-    OverallScores,
-    WeeklyScores,
-  },
-
-  props: {
-    leagueContext: {
-      type: Object as PropType<LeagueContext>,
-      required: true,
+    components: {
+      ContestantScores,
+      FinalStandings,
+      Lineup,
+      OverallScores,
+      WeeklyScores,
     },
-  },
-});
 
-export default LeagueHome;
+    props: {
+      leagueContext: {
+        type: Object as PropType<LeagueContext>,
+        required: true,
+      },
+    },
+  });
+
+  export default LeagueHome;
 </script>

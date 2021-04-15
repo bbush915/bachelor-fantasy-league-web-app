@@ -11,43 +11,43 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, toRefs } from "vue";
+  import { computed, defineComponent, toRefs } from "vue";
 
-import BodyRow from "./BodyRow.vue";
-import HeaderRow from "./HeaderRow.vue";
+  import BodyRow from "./BodyRow.vue";
+  import HeaderRow from "./HeaderRow.vue";
 
-const LeagueTable = defineComponent({
-  name: "LeagueTable",
+  const LeagueTable = defineComponent({
+    name: "LeagueTable",
 
-  components: {
-    BodyRow,
-    HeaderRow,
-  },
-
-  props: {
-    leagues: {
-      type: Array,
-      required: true,
+    components: {
+      BodyRow,
+      HeaderRow,
     },
 
-    isLocked: {
-      type: Boolean,
-      required: true,
+    props: {
+      leagues: {
+        type: Array,
+        required: true,
+      },
+
+      isLocked: {
+        type: Boolean,
+        required: true,
+      },
     },
-  },
 
-  setup(props) {
-    const { leagues } = toRefs(props);
+    setup(props) {
+      const { leagues } = toRefs(props);
 
-    const filteredLeagues = computed(() =>
-      leagues.value.filter((x: any) => x.myLeagueMember.isActive)
-    );
+      const filteredLeagues = computed(() =>
+        leagues.value.filter((x: any) => x.myLeagueMember.isActive)
+      );
 
-    return {
-      leagues: filteredLeagues,
-    };
-  },
-});
+      return {
+        leagues: filteredLeagues,
+      };
+    },
+  });
 
-export default LeagueTable;
+  export default LeagueTable;
 </script>

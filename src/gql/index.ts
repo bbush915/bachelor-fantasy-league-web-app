@@ -32,6 +32,9 @@ export const getApolloClient = () => {
       watchQuery: {
         fetchPolicy: "no-cache",
       },
+      mutate: {
+        errorPolicy: "all",
+      },
     },
   });
 

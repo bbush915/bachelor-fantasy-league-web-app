@@ -37,128 +37,130 @@
 </template>
 
 <script lang="ts">
-import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { computed, defineComponent, PropType, ref, toRefs } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useStore } from "vuex";
+  import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
+  import gql from "graphql-tag";
+  import { computed, defineComponent, PropType, ref, toRefs } from "vue";
+  import { useRoute, useRouter } from "vue-router";
+  import { useStore } from "vuex";
 
-import EditIcon from "@/assets/edit.svg";
-import Avatar from "@/components/common/Avatar/index.vue";
-import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
-import { useAuthentication, useConfirmationModal } from "@/composables";
-import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
-import { LeagueContext } from "@/types";
+  import EditIcon from "@/assets/edit.svg";
+  import Avatar from "@/components/common/Avatar/index.vue";
+  import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
+  import { useAuthentication, useConfirmationModal } from "@/composables";
+  import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
+  import { LeagueContext } from "@/types";
 
-const EditLeagueMembers = defineComponent({
-  name: "EditLeagueMembers",
+  const EditLeagueMembers = defineComponent({
+    name: "EditLeagueMembers",
 
-  components: {
-    Avatar,
-    EditIcon,
-    ScrollContainer,
-    ConfirmationModal,
-  },
-  props: {
-    leagueContext: {
-      type: Object as PropType<LeagueContext>,
-      required: true,
+    components: {
+      Avatar,
+      EditIcon,
+      ScrollContainer,
+      ConfirmationModal,
     },
-  },
-  setup(props) {
-    const router = useRouter();
-    const store = useStore();
-    const {
-      isModalVisible,
-      showConfirmationModal: showConfirmationModal_,
-      hideConfirmationModal: hideConfirmationModal_,
-    } = useConfirmationModal();
-    const selectedLeagueMember = ref<any | null>(null);
+    props: {
+      leagueContext: {
+        type: Object as PropType<LeagueContext>,
+        required: true,
+      },
+    },
+    setup(props) {
+      const router = useRouter();
+      const store = useStore();
+      const {
+        isModalVisible,
+        showConfirmationModal: showConfirmationModal_,
+        hideConfirmationModal: hideConfirmationModal_,
+      } = useConfirmationModal();
+      const selectedLeagueMember = ref<any | null>(null);
 
-    function showConfirmationModal(leagueMember: any) {
-      selectedLeagueMember.value = leagueMember;
-      showConfirmationModal_();
-    }
+      function showConfirmationModal(leagueMember: any) {
+        selectedLeagueMember.value = leagueMember;
+        showConfirmationModal_();
+      }
 
-    function hideConfirmationModal() {
-      selectedLeagueMember.value = null;
-      hideConfirmationModal_();
-    }
-    const { leagueContext } = toRefs(props);
-    const { leagueId } = leagueContext.value;
+      function hideConfirmationModal() {
+        selectedLeagueMember.value = null;
+        hideConfirmationModal_();
+      }
+      const { leagueContext } = toRefs(props);
+      const { leagueId } = leagueContext.value;
 
-    const { result, refetch } = useQuery(
-      gql`
-        query LeagueDetails($id: ID!) {
-          league(id: $id) {
-            id
-            leagueMembers {
+      const { result, refetch } = useQuery(
+        gql`
+          query LeagueDetails($id: ID!) {
+            league(id: $id) {
               id
-              isActive
-              isCommissioner
-              user {
+              leagueMembers {
                 id
-                displayName
-                avatarUrl
+                isActive
+                isCommissioner
+                user {
+                  id
+                  displayName
+                  avatarUrl
+                }
+              }
+              myLeagueMember {
+                id
+                isActive
+                isCommissioner
               }
             }
-            myLeagueMember {
+          }
+        `,
+        { id: leagueId },
+        { fetchPolicy: "cache-first" }
+      );
+      const leagueMembers = computed(
+        () =>
+          league.value?.leagueMembers
+            .filter((x) => x.isActive)
+            .sort((x, y) => x.user.displayName.localeCompare(y.user.displayName)) ?? []
+      );
+
+      const league = useResult(result, null, (data) => data.league);
+
+      const { mutate: removeLeagueMember } = useMutation(
+        gql`
+          mutation RemoveLeagueMember($input: RemoveLeagueMemberInput!) {
+            removeLeagueMember(input: $input) {
               id
-              isActive
-              isCommissioner
             }
           }
-        }
-      `,
-      { id: leagueId },
-      { fetchPolicy: "cache-first" }
-    );
-    const leagueMembers = computed(
-      () =>
-        league.value?.leagueMembers
-          .filter((x) => x.isActive)
-          .sort((x, y) => x.user.displayName.localeCompare(y.user.displayName)) ?? []
-    );
+        `
+      );
 
-    const league = useResult(result, null, (data) => data.league);
-
-    const { mutate: removeLeagueMember } = useMutation(
-      gql`
-        mutation RemoveLeagueMember($input: RemoveLeagueMemberInput!) {
-          removeLeagueMember(input: $input) {
-            id
-          }
-        }
-      `
-    );
-
-    const handleRemoveClick = async (leagueMemberId: string) => {
-      const { data, errors } = await removeLeagueMember({ input: { leagueMemberId } });
-      hideConfirmationModal_();
-      if (data) {
-        store.dispatch("pushNotification", {
-          type: "success",
-          message: "League member removed successfully!",
+      const handleRemoveClick = async (leagueMemberId: string) => {
+        const { data, errors } = await removeLeagueMember({
+          input: { leagueMemberId },
         });
-        refetch();
-      } else {
-        store.dispatch("pushNotification", {
-          type: "error",
-          message: "Failed to remove league member.",
-        });
-      }
-    };
-    return {
-      league,
-      leagueId,
-      leagueMembers,
-      handleRemoveClick,
-      isModalVisible,
-      showConfirmationModal,
-      hideConfirmationModal,
-      selectedLeagueMember,
-    };
-  },
-});
-export default EditLeagueMembers;
+        hideConfirmationModal_();
+        if (data) {
+          store.dispatch("pushNotification", {
+            type: "success",
+            message: "League member removed successfully!",
+          });
+          refetch();
+        } else {
+          store.dispatch("pushNotification", {
+            type: "error",
+            message: "Failed to remove league member.",
+          });
+        }
+      };
+      return {
+        league,
+        leagueId,
+        leagueMembers,
+        handleRemoveClick,
+        isModalVisible,
+        showConfirmationModal,
+        hideConfirmationModal,
+        selectedLeagueMember,
+      };
+    },
+  });
+  export default EditLeagueMembers;
 </script>

@@ -43,23 +43,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+  import { defineComponent } from "vue";
 
-import InfoIcon from "@/assets/info.svg";
+  import InfoIcon from "@/assets/info.svg";
 
-const HeaderRow = defineComponent({
-  name: "HeaderRow",
+  const HeaderRow = defineComponent({
+    name: "HeaderRow",
 
-  components: {
-    InfoIcon,
-  },
-});
+    components: {
+      InfoIcon,
+    },
+  });
 
-export default HeaderRow;
+  export default HeaderRow;
 </script>
 
 <style lang="postcss" scoped>
-th {
-  @apply font-medium;
-}
+  th {
+    @apply font-medium;
+  }
 </style>

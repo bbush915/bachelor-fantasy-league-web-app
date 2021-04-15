@@ -103,190 +103,196 @@
 </template>
 
 <script lang="ts">
-import { useApolloClient, useMutation, useQuery, useResult } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { computed, defineComponent } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useStore } from "vuex";
+  import { useApolloClient, useMutation, useQuery, useResult } from "@vue/apollo-composable";
+  import gql from "graphql-tag";
+  import { computed, defineComponent } from "vue";
+  import { useRoute, useRouter } from "vue-router";
+  import { useStore } from "vuex";
 
-import EditIcon from "@/assets/edit.svg";
-import Avatar from "@/components/common/Avatar/index.vue";
-import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
-import { useAuthentication, useConfirmationModal } from "@/composables";
-import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
+  import EditIcon from "@/assets/edit.svg";
+  import Avatar from "@/components/common/Avatar/index.vue";
+  import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
+  import { useAuthentication, useConfirmationModal } from "@/composables";
+  import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
 
-type TResult = {
-  league: {
-    id: string;
-    name: string;
-    description: string;
-    logoUrl: string;
-    isPublic: boolean;
-    isShareable: boolean;
-    leagueMembers: {
+  type TResult = {
+    league: {
       id: string;
-      isActive: boolean;
-      isCommissioner: boolean;
-      user: {
+      name: string;
+      description: string;
+      logoUrl: string;
+      isPublic: boolean;
+      isShareable: boolean;
+      leagueMembers: {
         id: string;
-        displayName: string;
-        avatarUrl: string;
+        isActive: boolean;
+        isCommissioner: boolean;
+        user: {
+          id: string;
+          displayName: string;
+          avatarUrl: string;
+        };
+      }[];
+      myLeagueMember: {
+        id: string;
+        isActive: boolean;
+        isCommissioner: boolean;
       };
-    }[];
-    myLeagueMember: {
-      id: string;
-      isActive: boolean;
-      isCommissioner: boolean;
+      inviteLink: string;
     };
-    inviteLink: string;
   };
-};
 
-const LeagueDetails = defineComponent({
-  name: "LeagueDetails",
+  const LeagueDetails = defineComponent({
+    name: "LeagueDetails",
 
-  components: {
-    Avatar,
-    EditIcon,
-    ScrollContainer,
-    ConfirmationModal,
-  },
+    components: {
+      Avatar,
+      EditIcon,
+      ScrollContainer,
+      ConfirmationModal,
+    },
 
-  setup() {
-    const route = useRoute();
-    const router = useRouter();
-    const store = useStore();
+    setup() {
+      const route = useRoute();
+      const router = useRouter();
+      const store = useStore();
 
-    const { isAuthenticated } = useAuthentication();
+      const { isAuthenticated } = useAuthentication();
 
-    const {
-      params: { leagueId },
-    } = route;
+      const {
+        params: { leagueId },
+      } = route;
 
-    const { result } = useQuery<TResult>(
-      gql`
-        query LeagueDetails($leagueId: ID!) {
-          league(id: $leagueId) {
-            id
-            name
-            description
-            logoUrl
-            isPublic
-            isShareable
-            inviteLink
-            leagueMembers {
+      const { result } = useQuery<TResult>(
+        gql`
+          query LeagueDetails($leagueId: ID!) {
+            league(id: $leagueId) {
               id
-              isActive
-              isCommissioner
-              user {
+              name
+              description
+              logoUrl
+              isPublic
+              isShareable
+              inviteLink
+              leagueMembers {
                 id
-                displayName
-                avatarUrl
+                isActive
+                isCommissioner
+                user {
+                  id
+                  displayName
+                  avatarUrl
+                }
+              }
+              myLeagueMember {
+                id
+                isActive
+                isCommissioner
               }
             }
-            myLeagueMember {
+          }
+        `,
+        { leagueId },
+        { errorPolicy: "all" }
+      );
+
+      const league = useResult(result, null, (data) => data.league);
+
+      const {
+        isModalVisible,
+        showConfirmationModal,
+        hideConfirmationModal,
+      } = useConfirmationModal();
+
+      const commissioner = computed(() =>
+        league.value?.leagueMembers.find((x) => x.isCommissioner)
+      );
+      const isCommissioner = computed(() => league.value?.myLeagueMember?.isCommissioner);
+
+      const leagueMembers = computed(
+        () =>
+          league.value?.leagueMembers
+            .filter((x) => x.isActive)
+            .sort((x, y) => x.user.displayName.localeCompare(y.user.displayName)) ?? []
+      );
+
+      const { mutate: joinLeague } = useMutation(
+        gql`
+          mutation JoinLeague($input: JoinLeagueInput!) {
+            joinLeague(input: $input) {
               id
-              isActive
-              isCommissioner
             }
           }
-        }
-      `,
-      { leagueId },
-      { errorPolicy: "all" }
-    );
+        `
+      );
 
-    const league = useResult(result, null, (data) => data.league);
+      async function handleJoinLeagueClick() {
+        await joinLeague({ input: { leagueId } });
 
-    const { isModalVisible, showConfirmationModal, hideConfirmationModal } = useConfirmationModal();
+        router.push({ name: "league-home", params: { leagueId } });
 
-    const commissioner = computed(() => league.value?.leagueMembers.find((x) => x.isCommissioner));
-    const isCommissioner = computed(() => league.value?.myLeagueMember?.isCommissioner);
-
-    const leagueMembers = computed(
-      () =>
-        league.value?.leagueMembers
-          .filter((x) => x.isActive)
-          .sort((x, y) => x.user.displayName.localeCompare(y.user.displayName)) ?? []
-    );
-
-    const { mutate: joinLeague } = useMutation(
-      gql`
-        mutation JoinLeague($input: JoinLeagueInput!) {
-          joinLeague(input: $input) {
-            id
-          }
-        }
-      `
-    );
-
-    async function handleJoinLeagueClick() {
-      await joinLeague({ input: { leagueId } });
-
-      router.push({ name: "league-home", params: { leagueId } });
-
-      store.dispatch("pushNotification", {
-        type: "success",
-        message: "Joined league successfully!",
-      });
-    }
-
-    const { mutate: quitLeague } = useMutation(
-      gql`
-        mutation QuitLeague($input: QuitLeagueInput!) {
-          quitLeague(input: $input) {
-            id
-          }
-        }
-      `
-    );
-
-    async function handleQuitLeagueClick() {
-      await quitLeague({ input: { leagueId } });
-
-      router.push({ name: "my-leagues" });
-
-      store.dispatch("pushNotification", {
-        type: "success",
-        message: "Quit league successfully!",
-      });
-    }
-
-    function copyShareableLink() {
-      if (!league.value) {
-        return;
+        store.dispatch("pushNotification", {
+          type: "success",
+          message: "Joined league successfully!",
+        });
       }
 
-      navigator.clipboard.writeText(league.value.inviteLink);
+      const { mutate: quitLeague } = useMutation(
+        gql`
+          mutation QuitLeague($input: QuitLeagueInput!) {
+            quitLeague(input: $input) {
+              id
+            }
+          }
+        `
+      );
 
-      store.dispatch("pushNotification", {
-        type: "success",
-        message: "Copied link to clipboard!",
-      });
-    }
+      async function handleQuitLeagueClick() {
+        await quitLeague({ input: { leagueId } });
 
-    return {
-      league,
-      commissioner,
-      isAuthenticated,
-      isCommissioner,
-      leagueMembers,
-      handleJoinLeagueClick,
-      handleQuitLeagueClick,
-      isModalVisible,
-      showConfirmationModal,
-      hideConfirmationModal,
-      copyShareableLink,
-    };
-  },
-});
+        router.push({ name: "my-leagues" });
 
-export default LeagueDetails;
+        store.dispatch("pushNotification", {
+          type: "success",
+          message: "Quit league successfully!",
+        });
+      }
+
+      function copyShareableLink() {
+        if (!league.value) {
+          return;
+        }
+
+        navigator.clipboard.writeText(league.value.inviteLink);
+
+        store.dispatch("pushNotification", {
+          type: "success",
+          message: "Copied link to clipboard!",
+        });
+      }
+
+      return {
+        league,
+        commissioner,
+        isAuthenticated,
+        isCommissioner,
+        leagueMembers,
+        handleJoinLeagueClick,
+        handleQuitLeagueClick,
+        isModalVisible,
+        showConfirmationModal,
+        hideConfirmationModal,
+        copyShareableLink,
+      };
+    },
+  });
+
+  export default LeagueDetails;
 </script>
 
 <style scoped>
-.league-member-list {
-  max-height: 500px;
-  overflow-y: auto;
-}
+  .league-member-list {
+    max-height: 500px;
+    overflow-y: auto;
+  }
 </style>

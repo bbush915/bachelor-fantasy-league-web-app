@@ -17,33 +17,33 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+  import { defineComponent } from "vue";
 
-import BodyRow from "./BodyRow.vue";
-import HeaderRow from "./HeaderRow.vue";
+  import BodyRow from "./BodyRow.vue";
+  import HeaderRow from "./HeaderRow.vue";
 
-const ScoreTable = defineComponent({
-  name: "ScoreTable",
+  const ScoreTable = defineComponent({
+    name: "ScoreTable",
 
-  props: {
-    seasonWeekContestants: {
-      type: Array,
-      required: false,
-      default: () => [],
+    props: {
+      seasonWeekContestants: {
+        type: Array,
+        required: false,
+        default: () => [],
+      },
+
+      weekNumber: {
+        type: Number,
+        required: false,
+        default: () => 0,
+      },
     },
 
-    weekNumber: {
-      type: Number,
-      required: false,
-      default: () => 0,
+    components: {
+      BodyRow,
+      HeaderRow,
     },
-  },
+  });
 
-  components: {
-    BodyRow,
-    HeaderRow,
-  },
-});
-
-export default ScoreTable;
+  export default ScoreTable;
 </script>

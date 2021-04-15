@@ -27,60 +27,60 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, onMounted, onUnmounted } from "vue";
+  import { computed, defineComponent, ref, onMounted, onUnmounted } from "vue";
 
-import { useCurrentSeasonWeek } from "@/composables";
+  import { useCurrentSeasonWeek } from "@/composables";
 
-const EpisodeCountdown = defineComponent({
-  name: "EpisodeCountdown",
+  const EpisodeCountdown = defineComponent({
+    name: "EpisodeCountdown",
 
-  setup() {
-    const { currentSeasonWeek } = useCurrentSeasonWeek();
+    setup() {
+      const { currentSeasonWeek } = useCurrentSeasonWeek();
 
-    const now = ref(new Date());
-    const interval = ref<number>();
+      const now = ref(new Date());
+      const interval = ref<number>();
 
-    const timeRemaining = computed(() => {
-      if (!currentSeasonWeek.value) {
-        return null;
-      }
+      const timeRemaining = computed(() => {
+        if (!currentSeasonWeek.value) {
+          return null;
+        }
 
-      const episodeAirDate = new Date(currentSeasonWeek.value.episodeAirDate);
+        const episodeAirDate = new Date(currentSeasonWeek.value.episodeAirDate);
 
-      if (episodeAirDate < now.value) {
-        return null;
-      }
+        if (episodeAirDate < now.value) {
+          return null;
+        }
 
-      const difference = Math.floor((episodeAirDate.getTime() - now.value.getTime()) / 1000);
+        const difference = Math.floor((episodeAirDate.getTime() - now.value.getTime()) / 1000);
+
+        return {
+          seconds: difference % 60,
+          minutes: Math.floor(difference / 60) % 60,
+          hours: Math.floor(difference / 3600) % 24,
+          days: Math.floor(difference / 86400),
+        };
+      });
+
+      onMounted(() => {
+        interval.value = window.setInterval(() => (now.value = new Date()), 1000);
+      });
+
+      onUnmounted(() => {
+        window.clearInterval(interval.value);
+      });
 
       return {
-        seconds: difference % 60,
-        minutes: Math.floor(difference / 60) % 60,
-        hours: Math.floor(difference / 3600) % 24,
-        days: Math.floor(difference / 86400),
+        timeRemaining,
       };
-    });
+    },
+  });
 
-    onMounted(() => {
-      interval.value = window.setInterval(() => (now.value = new Date()), 1000);
-    });
-
-    onUnmounted(() => {
-      window.clearInterval(interval.value);
-    });
-
-    return {
-      timeRemaining,
-    };
-  },
-});
-
-export default EpisodeCountdown;
+  export default EpisodeCountdown;
 </script>
 
 <style scoped>
-.root {
-  background: linear-gradient(270deg, rgba(226, 28, 52, 1) -5%, rgba(226, 28, 52, 0) 105%);
-  min-width: 400px;
-}
+  .root {
+    background: linear-gradient(270deg, rgba(226, 28, 52, 1) -5%, rgba(226, 28, 52, 0) 105%);
+    min-width: 400px;
+  }
 </style>

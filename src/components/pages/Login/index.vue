@@ -34,103 +34,106 @@
 </template>
 
 <script lang="ts">
-import { useMutation } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { useField, useForm } from "vee-validate";
-import { computed, defineComponent } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useStore } from "vuex";
-import * as Yup from "yup";
+  import { useMutation } from "@vue/apollo-composable";
+  import gql from "graphql-tag";
+  import { useField, useForm } from "vee-validate";
+  import { computed, defineComponent } from "vue";
+  import { useRoute, useRouter } from "vue-router";
+  import { useStore } from "vuex";
+  import * as Yup from "yup";
 
-import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
-import Input from "@/components/common/Input/index.vue";
+  import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
+  import Input from "@/components/common/Input/index.vue";
 
-const Login = defineComponent({
-  name: "Login",
+  const Login = defineComponent({
+    name: "Login",
 
-  components: {
-    GradientOverlay,
-    Input,
-  },
+    components: {
+      GradientOverlay,
+      Input,
+    },
 
-  setup() {
-    const router = useRouter();
-    const route = useRoute();
-    const store = useStore();
+    setup() {
+      const router = useRouter();
+      const route = useRoute();
+      const store = useStore();
 
-    const { errors, handleSubmit, meta } = useForm({
-      validationSchema: Yup.object({
-        email: Yup.string().required("You must provide an email address."),
-        password: Yup.string().required("You must provide a password."),
-      }),
-    });
+      const { errors, handleSubmit, meta } = useForm({
+        validationSchema: Yup.object({
+          email: Yup.string().required("You must provide an email address."),
+          password: Yup.string().required("You must provide a password."),
+        }),
+      });
 
-    const { value: email } = useField<string | undefined>("email");
-    const { value: password } = useField<string | undefined>("password");
+      const { value: email } = useField<string | undefined>("email");
+      const { value: password } = useField<string | undefined>("password");
 
-    const canSubmit = computed(() => meta.value.valid);
+      const canSubmit = computed(() => meta.value.valid);
 
-    const { mutate: login } = useMutation(
-      gql`
-        mutation Login($input: LoginInput!) {
-          login(input: $input) {
-            token
+      const { mutate: login } = useMutation(
+        gql`
+          mutation Login($input: LoginInput!) {
+            login(input: $input) {
+              token
+            }
           }
-        }
-      `
-    );
-
-    const onSubmit = handleSubmit(async (values) => {
-      const { data, errors } = await login(
-        { input: { email: values.email, password: values.password } },
-        { errorPolicy: "all" }
+        `
       );
 
-      if (data) {
-        store.commit("login", data.login.token);
+      const onSubmit = handleSubmit(async (values) => {
+        const { data, errors } = await login(
+          { input: { email: values.email, password: values.password } },
+          { errorPolicy: "all" }
+        );
 
-        const routeName = (route.query.redirect as string) ?? "my-leagues";
-        router.push({ name: routeName });
+        if (data) {
+          store.commit("login", data.login.token);
 
-        store.dispatch("pushNotification", {
-          type: "success",
-          message: "Login successful!",
-        });
-      } else if (errors?.some((x) => x.extensions?.code === "INVALID_CREDENTIALS")) {
-        store.dispatch("pushNotification", {
-          type: "error",
-          message: "Invalid credentials. The email or password is incorrect.",
-        });
-      } else if (errors?.some((x) => x.extensions?.code === "UNVERIFIED_USER")) {
-        router.push({ name: "email-verification-sent", params: { email: email.value! } });
+          const routeName = (route.query.redirect as string) ?? "my-leagues";
+          router.push({ name: routeName });
 
-        store.dispatch("pushNotification", {
-          type: "error",
-          message: "Your email address has not been verified.",
-        });
-      } else {
-        store.dispatch("pushNotification", {
-          type: "error",
-          message: "Failed to log in. Please try again later",
-        });
-      }
-    });
+          store.dispatch("pushNotification", {
+            type: "success",
+            message: "Login successful!",
+          });
+        } else if (errors?.some((x) => x.extensions?.code === "INVALID_CREDENTIALS")) {
+          store.dispatch("pushNotification", {
+            type: "error",
+            message: "Invalid credentials. The email or password is incorrect.",
+          });
+        } else if (errors?.some((x) => x.extensions?.code === "UNVERIFIED_USER")) {
+          router.push({
+            name: "email-verification-sent",
+            params: { email: email.value! },
+          });
 
-    return {
-      email,
-      password,
-      errors,
-      canSubmit,
-      onSubmit,
-    };
-  },
-});
+          store.dispatch("pushNotification", {
+            type: "error",
+            message: "Your email address has not been verified.",
+          });
+        } else {
+          store.dispatch("pushNotification", {
+            type: "error",
+            message: "Failed to log in. Please try again later",
+          });
+        }
+      });
 
-export default Login;
+      return {
+        email,
+        password,
+        errors,
+        canSubmit,
+        onSubmit,
+      };
+    },
+  });
+
+  export default Login;
 </script>
 
 <style scoped>
-.login-form {
-  width: 400px;
-}
+  .login-form {
+    width: 400px;
+  }
 </style>

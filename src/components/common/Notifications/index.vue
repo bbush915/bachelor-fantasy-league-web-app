@@ -16,47 +16,47 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
-import { useStore } from "vuex";
+  import { computed, defineComponent } from "vue";
+  import { useStore } from "vuex";
 
-const Notifications = defineComponent({
-  name: "Notifications",
+  const Notifications = defineComponent({
+    name: "Notifications",
 
-  setup() {
-    const store = useStore();
+    setup() {
+      const store = useStore();
 
-    const notifications = computed(() => store.state.notifications);
+      const notifications = computed(() => store.state.notifications);
 
-    return {
-      notifications,
-    };
-  },
-});
+      return {
+        notifications,
+      };
+    },
+  });
 
-export default Notifications;
+  export default Notifications;
 </script>
 
 <style lang="postcss" scoped>
-.notification-list-enter-active,
-.notification-list-leave-active {
-  transition: all 1s ease;
-}
-
-.notification-list-enter-from,
-.notification-list-leave-to {
-  opacity: 0;
-  transform: translateX(200px);
-}
-
-.notification {
-  min-width: 375px;
-
-  &.error {
-    background: linear-gradient(110.73deg, #e21c34 18.94%, #500b28 79.72%);
+  .notification-list-enter-active,
+  .notification-list-leave-active {
+    transition: all 1s ease;
   }
 
-  &.success {
-    background: linear-gradient(92.94deg, #429634 -0.85%, #2e6125 101.08%);
+  .notification-list-enter-from,
+  .notification-list-leave-to {
+    opacity: 0;
+    transform: translateX(200px);
   }
-}
+
+  .notification {
+    min-width: 375px;
+
+    &.error {
+      background: linear-gradient(110.73deg, #e21c34 18.94%, #500b28 79.72%);
+    }
+
+    &.success {
+      background: linear-gradient(92.94deg, #429634 -0.85%, #2e6125 101.08%);
+    }
+  }
 </style>

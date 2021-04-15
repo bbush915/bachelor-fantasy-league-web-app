@@ -25,44 +25,44 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRef, toRefs } from "vue";
+  import { defineComponent, toRef, toRefs } from "vue";
 
-import Avatar from "@/components/common/Avatar/index.vue";
-import { useLineupContestants } from "@/composables";
+  import Avatar from "@/components/common/Avatar/index.vue";
+  import { useLineupContestants } from "@/composables";
 
-const Lineup = defineComponent({
-  name: "Lineup",
+  const Lineup = defineComponent({
+    name: "Lineup",
 
-  components: {
-    Avatar,
-  },
-
-  props: {
-    selectedLeagueMemberId: {
-      type: String,
-      required: true,
+    components: {
+      Avatar,
     },
 
-    selectedSeasonWeekId: {
-      type: String,
-      required: false,
+    props: {
+      selectedLeagueMemberId: {
+        type: String,
+        required: true,
+      },
+
+      selectedSeasonWeekId: {
+        type: String,
+        required: false,
+      },
     },
-  },
 
-  setup(props) {
-    const { selectedLeagueMemberId } = toRefs(props);
-    const selectedSeasonWeekId = toRef(props, "selectedSeasonWeekId");
+    setup(props) {
+      const { selectedLeagueMemberId } = toRefs(props);
+      const selectedSeasonWeekId = toRef(props, "selectedSeasonWeekId");
 
-    const { lineupContestants } = useLineupContestants(
-      selectedLeagueMemberId,
-      selectedSeasonWeekId
-    );
+      const { lineupContestants } = useLineupContestants(
+        selectedLeagueMemberId,
+        selectedSeasonWeekId
+      );
 
-    return {
-      lineupContestants,
-    };
-  },
-});
+      return {
+        lineupContestants,
+      };
+    },
+  });
 
-export default Lineup;
+  export default Lineup;
 </script>

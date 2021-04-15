@@ -1,5 +1,5 @@
 <template>
-  <div class="sticky top-0 flex w-full header bg-gray-dark">
+  <div class="sticky top-0 z-10 flex w-full header bg-gray-dark">
     <div class="self-center w-24 ml-12">
       <router-link to="/">
         <Logo />
@@ -12,7 +12,8 @@
 
     <div v-if="isAuthenticated" class="relative flex flex-col justify-center">
       <span class="mr-16 text-right txt-body">
-        Welcome, <router-link class="text-pink" to="/profile">{{ displayName }}</router-link>
+        Welcome,
+        <router-link class="text-pink" to="/profile">{{ displayName }}</router-link>
       </span>
 
       <EpisodeCountdown class="absolute bottom-0 right-0 pl-8 pr-16" />
@@ -32,79 +33,79 @@
 </template>
 
 <script lang="ts">
-import { useQuery, useResult } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { computed, defineComponent, watch } from "vue";
+  import { useQuery, useResult } from "@vue/apollo-composable";
+  import gql from "graphql-tag";
+  import { computed, defineComponent, watch } from "vue";
 
-import Logo from "@/assets/logo.svg";
-import { useAuthentication } from "@/composables";
-import EpisodeCountdown from "./components/EpisodeCountdown/index.vue";
-import Link from "./components/Link/index.vue";
+  import Logo from "@/assets/logo.svg";
+  import { useAuthentication } from "@/composables";
+  import EpisodeCountdown from "./components/EpisodeCountdown/index.vue";
+  import Link from "./components/Link/index.vue";
 
-const publicLinks = [
-  { to: "/about", content: "How it works" },
-  { to: "/join-league", content: "Join a League" },
-  { to: "/contestants", content: "Contestants" },
-];
+  const publicLinks = [
+    { to: "/about", content: "How it works" },
+    { to: "/join-league", content: "Join a League" },
+    { to: "/contestants", content: "Contestants" },
+  ];
 
-const authenticatedLinks = [
-  { to: "/my-leagues", content: "My Fantasy Leagues" },
-  { to: "/about", content: "How it works" },
-  { to: "/join-league", content: "Join a League" },
-  { to: "/create-league", content: "Create a League" },
-  { to: "/contestants", content: "Contestants" },
-];
+  const authenticatedLinks = [
+    { to: "/my-leagues", content: "My Fantasy Leagues" },
+    { to: "/about", content: "How it works" },
+    { to: "/join-league", content: "Join a League" },
+    { to: "/create-league", content: "Create a League" },
+    { to: "/contestants", content: "Contestants" },
+  ];
 
-const Header = defineComponent({
-  name: "Header",
+  const Header = defineComponent({
+    name: "Header",
 
-  components: {
-    EpisodeCountdown,
-    Link,
-    Logo,
-  },
+    components: {
+      EpisodeCountdown,
+      Link,
+      Logo,
+    },
 
-  setup() {
-    const { isAuthenticated } = useAuthentication();
+    setup() {
+      const { isAuthenticated } = useAuthentication();
 
-    const links = computed(() => (isAuthenticated.value ? authenticatedLinks : publicLinks));
+      const links = computed(() => (isAuthenticated.value ? authenticatedLinks : publicLinks));
 
-    const { result, refetch } = useQuery(
-      gql`
-        query Me {
-          me {
-            id
-            displayName
+      const { result, refetch } = useQuery(
+        gql`
+          query Me {
+            me {
+              id
+              displayName
+            }
           }
+        `,
+        {},
+        { fetchPolicy: "no-cache" }
+      );
+
+      const displayName = useResult(result, null, (data) => data.me.displayName);
+
+      watch(
+        () => isAuthenticated.value,
+        () => {
+          refetch();
         }
-      `,
-      {},
-      { fetchPolicy: "no-cache" }
-    );
+      );
 
-    const displayName = useResult(result, null, (data) => data.me.displayName);
+      return {
+        isAuthenticated,
+        displayName,
+        links,
+      };
+    },
+  });
 
-    watch(
-      () => isAuthenticated.value,
-      () => {
-        refetch();
-      }
-    );
-
-    return {
-      isAuthenticated,
-      displayName,
-      links,
-    };
-  },
-});
-
-export default Header;
+  export default Header;
 </script>
 
 <style scoped>
-.header {
-  box-shadow: 0 0 8px black;
-  height: 88px;
-}
+  .header {
+    box-shadow: 0 0 8px black;
+    height: 88px;
+  }
 </style>

@@ -44,93 +44,93 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, toRefs } from "vue";
+  import { computed, defineComponent, PropType, ref, toRefs } from "vue";
 
-import MoreIcon from "@/assets/more.svg";
-import PlaceholderIcon from "@/assets/placeholder.svg";
-import Avatar from "@/components/common/Avatar/index.vue";
-import { useSeasonWeekContestants } from "@/composables";
-import { LeagueContext } from "@/types";
-import { getOrdinal } from "@/utils";
+  import MoreIcon from "@/assets/more.svg";
+  import PlaceholderIcon from "@/assets/placeholder.svg";
+  import Avatar from "@/components/common/Avatar/index.vue";
+  import { useSeasonWeekContestants } from "@/composables";
+  import { LeagueContext } from "@/types";
+  import { getOrdinal } from "@/utils";
 
-const ContestantScores = defineComponent({
-  name: "ContestantScores",
+  const ContestantScores = defineComponent({
+    name: "ContestantScores",
 
-  components: {
-    Avatar,
-    MoreIcon,
-    PlaceholderIcon,
-  },
-
-  props: {
-    leagueContext: {
-      type: Object as PropType<LeagueContext>,
-      required: true,
+    components: {
+      Avatar,
+      MoreIcon,
+      PlaceholderIcon,
     },
-  },
 
-  setup(props) {
-    const { leagueContext } = toRefs(props);
+    props: {
+      leagueContext: {
+        type: Object as PropType<LeagueContext>,
+        required: true,
+      },
+    },
 
-    const {
-      previousSeasonWeekId,
-      currentSeasonWeekId,
-      weekNumber: weekNumber_,
-      isComplete,
-    } = leagueContext.value;
+    setup(props) {
+      const { leagueContext } = toRefs(props);
 
-    const { seasonWeekContestants } = useSeasonWeekContestants(
-      ref(isComplete ? currentSeasonWeekId : previousSeasonWeekId)
-    );
+      const {
+        previousSeasonWeekId,
+        currentSeasonWeekId,
+        weekNumber: weekNumber_,
+        isComplete,
+      } = leagueContext.value;
 
-    const weekNumber = computed(() => {
-      if (isComplete) {
-        return weekNumber_;
-      }
+      const { seasonWeekContestants } = useSeasonWeekContestants(
+        ref(isComplete ? currentSeasonWeekId : previousSeasonWeekId)
+      );
 
-      return Math.max(weekNumber_ - 1, 1);
-    });
+      const weekNumber = computed(() => {
+        if (isComplete) {
+          return weekNumber_;
+        }
 
-    const contestants = computed(() => {
-      const scores = seasonWeekContestants.value
-        .map((seasonWeekContestants) => seasonWeekContestants.score)
-        .sort((x, y) => y - x);
+        return Math.max(weekNumber_ - 1, 1);
+      });
 
-      return seasonWeekContestants.value
-        .slice(0)
-        .sort((x, y) => {
-          const scoreComparison = y.score - x.score;
+      const contestants = computed(() => {
+        const scores = seasonWeekContestants.value
+          .map((seasonWeekContestants) => seasonWeekContestants.score)
+          .sort((x, y) => y - x);
 
-          if (scoreComparison === 0) {
-            return x.contestant.name.localeCompare(y.contestant.name);
-          } else {
-            return scoreComparison;
-          }
-        })
-        .slice(0, 3)
-        .map((seasonWeekContestant) => ({
-          id: seasonWeekContestant.id,
-          name: seasonWeekContestant.contestant.name,
-          ordinal: getOrdinal(scores.findIndex((x) => x === seasonWeekContestant.score) + 1),
-          headshotUrl: seasonWeekContestant.contestant.headshotUrl,
-          score: seasonWeekContestant.score,
-        }));
-    });
+        return seasonWeekContestants.value
+          .slice(0)
+          .sort((x, y) => {
+            const scoreComparison = y.score - x.score;
 
-    return {
-      weekNumber,
-      contestants,
-    };
-  },
-});
+            if (scoreComparison === 0) {
+              return x.contestant.name.localeCompare(y.contestant.name);
+            } else {
+              return scoreComparison;
+            }
+          })
+          .slice(0, 3)
+          .map((seasonWeekContestant) => ({
+            id: seasonWeekContestant.id,
+            name: seasonWeekContestant.contestant.name,
+            ordinal: getOrdinal(scores.findIndex((x) => x === seasonWeekContestant.score) + 1),
+            headshotUrl: seasonWeekContestant.contestant.headshotUrl,
+            score: seasonWeekContestant.score,
+          }));
+      });
 
-export default ContestantScores;
+      return {
+        weekNumber,
+        contestants,
+      };
+    },
+  });
+
+  export default ContestantScores;
 </script>
 
 <style scoped>
-.placeholder-text {
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
+  .placeholder-text {
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 </style>

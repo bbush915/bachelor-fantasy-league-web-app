@@ -7,28 +7,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+  import { defineComponent } from "vue";
 
-import EditIcon from "@/assets/edit.svg";
-import Avatar from "@/components/common/Avatar/index.vue";
-import { useProfile } from "@/composables";
+  import EditIcon from "@/assets/edit.svg";
+  import Avatar from "@/components/common/Avatar/index.vue";
+  import { useProfile } from "@/composables";
 
-const Profile = defineComponent({
-  name: "Profile",
+  const Profile = defineComponent({
+    name: "Profile",
 
-  components: {
-    Avatar,
-    EditIcon,
-  },
+    components: {
+      Avatar,
+      EditIcon,
+    },
 
-  setup() {
-    const { profile } = useProfile();
+    setup() {
+      const { profile } = useProfile();
 
-    return {
-      profile,
-    };
-  },
-});
+      return {
+        profile,
+      };
+    },
+  });
 
-export default Profile;
+  export default Profile;
 </script>

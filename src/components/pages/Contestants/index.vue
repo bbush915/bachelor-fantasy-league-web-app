@@ -37,58 +37,58 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+  import { computed, defineComponent } from "vue";
 
-import Avatar from "@/components/common/Avatar/index.vue";
-import ContestantModal from "@/components/common/ContestantModal/index.vue";
-import FavoriteIndicator from "@/components/common/FavoriteIndicator/index.vue";
-import {
-  useAuthentication,
-  useContestantModal,
-  useContestants,
-  useUserFavorites,
-} from "@/composables";
+  import Avatar from "@/components/common/Avatar/index.vue";
+  import ContestantModal from "@/components/common/ContestantModal/index.vue";
+  import FavoriteIndicator from "@/components/common/FavoriteIndicator/index.vue";
+  import {
+    useAuthentication,
+    useContestantModal,
+    useContestants,
+    useUserFavorites,
+  } from "@/composables";
 
-const Contestants = defineComponent({
-  name: "Contestants",
+  const Contestants = defineComponent({
+    name: "Contestants",
 
-  components: {
-    Avatar,
-    ContestantModal,
-    FavoriteIndicator,
-  },
+    components: {
+      Avatar,
+      ContestantModal,
+      FavoriteIndicator,
+    },
 
-  setup() {
-    const { isAuthenticated } = useAuthentication();
+    setup() {
+      const { isAuthenticated } = useAuthentication();
 
-    const { contestants: contestants_ } = useContestants();
-    const { userFavorites, toggleUserFavorite } = useUserFavorites();
+      const { contestants: contestants_ } = useContestants();
+      const { userFavorites, toggleUserFavorite } = useUserFavorites();
 
-    const contestants = computed(() =>
-      contestants_.value.map((contestant) => ({
-        ...contestant,
-        isFavorite: userFavorites.value.some((x) => x.contestantId === contestant.id),
-      }))
-    );
+      const contestants = computed(() =>
+        contestants_.value.map((contestant) => ({
+          ...contestant,
+          isFavorite: userFavorites.value.some((x) => x.contestantId === contestant.id),
+        }))
+      );
 
-    const {
-      selectedContestant,
-      isContestantModalVisible,
-      showContestantModal,
-      hideContestantModal,
-    } = useContestantModal();
+      const {
+        selectedContestant,
+        isContestantModalVisible,
+        showContestantModal,
+        hideContestantModal,
+      } = useContestantModal();
 
-    return {
-      contestants,
-      isAuthenticated,
-      toggleUserFavorite,
-      selectedContestant,
-      isContestantModalVisible,
-      showContestantModal,
-      hideContestantModal,
-    };
-  },
-});
+      return {
+        contestants,
+        isAuthenticated,
+        toggleUserFavorite,
+        selectedContestant,
+        isContestantModalVisible,
+        showContestantModal,
+        hideContestantModal,
+      };
+    },
+  });
 
-export default Contestants;
+  export default Contestants;
 </script>

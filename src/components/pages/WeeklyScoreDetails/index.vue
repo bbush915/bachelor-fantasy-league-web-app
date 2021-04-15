@@ -39,60 +39,61 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, toRefs } from "vue";
+  import { computed, defineComponent, PropType, ref, toRefs } from "vue";
 
-import WeeklyLeaderboard from "@/components/common/WeeklyLeaderboard/index.vue";
-import { useSeasonWeeks } from "@/composables";
-import { LeagueContext } from "@/types";
-import Lineup from "./components/Lineup.vue";
+  import WeeklyLeaderboard from "@/components/common/WeeklyLeaderboard/index.vue";
+  import { useSeasonWeeks } from "@/composables";
+  import { LeagueContext } from "@/types";
+  import Lineup from "./components/Lineup.vue";
 
-const WeeklyScoreDetails = defineComponent({
-  name: "WeeklyScoreDetails",
+  const WeeklyScoreDetails = defineComponent({
+    name: "WeeklyScoreDetails",
 
-  components: {
-    Lineup,
-    WeeklyLeaderboard,
-  },
-
-  props: {
-    leagueContext: {
-      type: Object as PropType<LeagueContext>,
-      required: true,
+    components: {
+      Lineup,
+      WeeklyLeaderboard,
     },
-  },
 
-  setup(props) {
-    const { leagueContext } = toRefs(props);
-    const { leagueMemberId, seasonId, weekNumber, isComplete } = leagueContext.value;
+    props: {
+      leagueContext: {
+        type: Object as PropType<LeagueContext>,
+        required: true,
+      },
+    },
 
-    const { seasonWeeks } = useSeasonWeeks(seasonId);
+    setup(props) {
+      const { leagueContext } = toRefs(props);
+      const { leagueMemberId, seasonId, weekNumber, isComplete } = leagueContext.value;
 
-    const selectedWeekNumber = ref(weekNumber - (isComplete ? 0 : 1));
+      const { seasonWeeks } = useSeasonWeeks(seasonId);
 
-    const selectedLeagueMemberId = ref(leagueMemberId);
+      const selectedWeekNumber = ref(weekNumber - (isComplete ? 0 : 1));
 
-    const filteredSeasonWeeks = computed(
-      () => seasonWeeks.value?.filter((x) => x.weekNumber < weekNumber + (isComplete ? 1 : 0)) ?? []
-    );
+      const selectedLeagueMemberId = ref(leagueMemberId);
 
-    const selectedSeasonWeekId = computed(
-      () => filteredSeasonWeeks.value.find((x) => x.weekNumber === selectedWeekNumber.value)?.id
-    );
+      const filteredSeasonWeeks = computed(
+        () =>
+          seasonWeeks.value?.filter((x) => x.weekNumber < weekNumber + (isComplete ? 1 : 0)) ?? []
+      );
 
-    return {
-      seasonWeeks: filteredSeasonWeeks,
-      selectedWeekNumber,
-      selectedSeasonWeekId,
-      selectedLeagueMemberId,
-    };
-  },
-});
+      const selectedSeasonWeekId = computed(
+        () => filteredSeasonWeeks.value.find((x) => x.weekNumber === selectedWeekNumber.value)?.id
+      );
 
-export default WeeklyScoreDetails;
+      return {
+        seasonWeeks: filteredSeasonWeeks,
+        selectedWeekNumber,
+        selectedSeasonWeekId,
+        selectedLeagueMemberId,
+      };
+    },
+  });
+
+  export default WeeklyScoreDetails;
 </script>
 
 <style scoped>
-select {
-  background: transparent;
-}
+  select {
+    background: transparent;
+  }
 </style>

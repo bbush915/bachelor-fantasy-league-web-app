@@ -6,24 +6,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+  import { defineComponent } from "vue";
 
-import DefaultAvatar from "@/assets/default-avatar.svg";
+  import DefaultAvatar from "@/assets/default-avatar.svg";
 
-const Avatar = defineComponent({
-  name: "Avatar",
+  const Avatar = defineComponent({
+    name: "Avatar",
 
-  components: {
-    DefaultAvatar,
-  },
-
-  props: {
-    src: {
-      type: String,
-      required: false,
+    components: {
+      DefaultAvatar,
     },
-  },
-});
 
-export default Avatar;
+    props: {
+      src: {
+        type: String,
+        required: false,
+      },
+    },
+  });
+
+  export default Avatar;
 </script>

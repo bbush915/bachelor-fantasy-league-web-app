@@ -29,49 +29,57 @@
 </template>
 
 <script lang="ts">
-import SimpleBar from "simplebar";
-import { defineComponent, onMounted, onUnmounted, ref } from "vue";
+  import SimpleBar from "simplebar";
+  import { defineComponent, onMounted, onUnmounted, ref, watch } from "vue";
+  import { useRoute } from "vue-router";
 
-const ScrollContainer = defineComponent({
-  name: "ScrollContainer",
+  const ScrollContainer = defineComponent({
+    name: "ScrollContainer",
 
-  setup() {
-    const rootElement = ref<HTMLElement>();
-    const scrollElement = ref<HTMLElement>();
-    const contentElement = ref<HTMLElement>();
+    setup() {
+      const route = useRoute();
 
-    const simpleBar = ref<any>();
+      const rootElement = ref<HTMLElement>();
+      const scrollElement = ref<HTMLElement>();
+      const contentElement = ref<HTMLElement>();
 
-    onMounted(() => {
-      const options = SimpleBar.getOptions(rootElement.value!.attributes);
-      simpleBar.value = new SimpleBar(rootElement.value, options);
-    });
+      const simpleBar = ref<any>();
 
-    onUnmounted(() => {
-      simpleBar.value.unMount();
-    });
+      onMounted(() => {
+        const options = SimpleBar.getOptions(rootElement.value!.attributes);
+        simpleBar.value = new SimpleBar(rootElement.value, options);
+      });
 
-    return {
-      rootElement,
-      scrollElement,
-      contentElement,
-    };
-  },
-});
+      onUnmounted(() => {
+        simpleBar.value.unMount();
+      });
 
-export default ScrollContainer;
+      watch(
+        () => route.path,
+        () => scrollElement.value?.scrollTo({ top: 0 })
+      );
+
+      return {
+        rootElement,
+        scrollElement,
+        contentElement,
+      };
+    },
+  });
+
+  export default ScrollContainer;
 </script>
 
 <style lang="postcss" scoped>
-.simplebar-scrollbar::before {
-  @apply bg-white;
-}
+  .simplebar-scrollbar::before {
+    @apply bg-white;
+  }
 
-.simplebar-scrollbar.simplebar-visible:before {
-  @apply opacity-75;
-}
+  .simplebar-scrollbar.simplebar-visible:before {
+    @apply opacity-75;
+  }
 
-.simplebar-track.simplebar-vertical {
-  @apply w-4;
-}
+  .simplebar-track.simplebar-vertical {
+    @apply w-4;
+  }
 </style>

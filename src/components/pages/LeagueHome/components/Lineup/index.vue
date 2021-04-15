@@ -65,72 +65,72 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, toRefs } from "vue";
+  import { computed, defineComponent, PropType, ref, toRefs } from "vue";
 
-import AlertIcon from "@/assets/alert.svg";
-import EditIcon from "@/assets/edit.svg";
-import LockIcon from "@/assets/lock.svg";
-import Avatar from "@/components/common/Avatar/index.vue";
-import FavoriteIndicator from "@/components/common/FavoriteIndicator/index.vue";
-import { useCurrentSeasonWeek, useLineupContestants, useUserFavorites } from "@/composables";
-import { LeagueContext } from "@/types";
+  import AlertIcon from "@/assets/alert.svg";
+  import EditIcon from "@/assets/edit.svg";
+  import LockIcon from "@/assets/lock.svg";
+  import Avatar from "@/components/common/Avatar/index.vue";
+  import FavoriteIndicator from "@/components/common/FavoriteIndicator/index.vue";
+  import { useCurrentSeasonWeek, useLineupContestants, useUserFavorites } from "@/composables";
+  import { LeagueContext } from "@/types";
 
-const Lineup = defineComponent({
-  name: "Lineup",
+  const Lineup = defineComponent({
+    name: "Lineup",
 
-  components: {
-    AlertIcon,
-    Avatar,
-    EditIcon,
-    FavoriteIndicator,
-    LockIcon,
-  },
-
-  props: {
-    leagueContext: {
-      type: Object as PropType<LeagueContext>,
-      required: true,
+    components: {
+      AlertIcon,
+      Avatar,
+      EditIcon,
+      FavoriteIndicator,
+      LockIcon,
     },
-  },
 
-  setup(props) {
-    const { leagueContext } = toRefs(props);
-    const { leagueMemberId, currentSeasonWeekId } = leagueContext.value;
+    props: {
+      leagueContext: {
+        type: Object as PropType<LeagueContext>,
+        required: true,
+      },
+    },
 
-    const { lineupContestants: lineupContestants_ } = useLineupContestants(
-      ref(leagueMemberId),
-      ref(currentSeasonWeekId),
-      "no-cache"
-    );
+    setup(props) {
+      const { leagueContext } = toRefs(props);
+      const { leagueMemberId, currentSeasonWeekId } = leagueContext.value;
 
-    const { userFavorites } = useUserFavorites();
+      const { lineupContestants: lineupContestants_ } = useLineupContestants(
+        ref(leagueMemberId),
+        ref(currentSeasonWeekId),
+        "no-cache"
+      );
 
-    const lineupContestants = computed(() =>
-      lineupContestants_.value.map((lineupContestant) => ({
-        ...lineupContestant,
-        isFavorite: userFavorites.value.some(
-          (userFavorite) => userFavorite.contestantId === lineupContestant.contestantId
-        ),
-      }))
-    );
+      const { userFavorites } = useUserFavorites();
 
-    const isLineupSet = computed(() => lineupContestants_.value.length > 0);
+      const lineupContestants = computed(() =>
+        lineupContestants_.value.map((lineupContestant) => ({
+          ...lineupContestant,
+          isFavorite: userFavorites.value.some(
+            (userFavorite) => userFavorite.contestantId === lineupContestant.contestantId
+          ),
+        }))
+      );
 
-    const { currentSeasonWeek } = useCurrentSeasonWeek();
+      const isLineupSet = computed(() => lineupContestants_.value.length > 0);
 
-    const isLocked = computed(
-      () =>
-        currentSeasonWeek.value?.episodeAirDate &&
-        new Date(currentSeasonWeek.value.episodeAirDate) < new Date()
-    );
+      const { currentSeasonWeek } = useCurrentSeasonWeek();
 
-    return {
-      isLineupSet,
-      lineupContestants,
-      isLocked,
-    };
-  },
-});
+      const isLocked = computed(
+        () =>
+          currentSeasonWeek.value?.episodeAirDate &&
+          new Date(currentSeasonWeek.value.episodeAirDate) < new Date()
+      );
 
-export default Lineup;
+      return {
+        isLineupSet,
+        lineupContestants,
+        isLocked,
+      };
+    },
+  });
+
+  export default Lineup;
 </script>

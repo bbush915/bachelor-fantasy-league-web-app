@@ -30,63 +30,65 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, toRefs } from "vue";
+  import { computed, defineComponent, PropType, toRefs } from "vue";
 
-import MoreIcon from "@/assets/more.svg";
-import PlaceholderIcon from "@/assets/placeholder.svg";
-import WeeklyLeaderboard from "@/components/common/WeeklyLeaderboard/index.vue";
-import { LeagueContext } from "@/types";
+  import MoreIcon from "@/assets/more.svg";
+  import PlaceholderIcon from "@/assets/placeholder.svg";
+  import WeeklyLeaderboard from "@/components/common/WeeklyLeaderboard/index.vue";
+  import { LeagueContext } from "@/types";
 
-const WeeklyScores = defineComponent({
-  name: "WeeklyScores",
+  const WeeklyScores = defineComponent({
+    name: "WeeklyScores",
 
-  components: {
-    MoreIcon,
-    PlaceholderIcon,
-    WeeklyLeaderboard,
-  },
-
-  props: {
-    leagueContext: {
-      type: Object as PropType<LeagueContext>,
-      required: true,
+    components: {
+      MoreIcon,
+      PlaceholderIcon,
+      WeeklyLeaderboard,
     },
-  },
 
-  setup(props) {
-    const { leagueContext } = toRefs(props);
+    props: {
+      leagueContext: {
+        type: Object as PropType<LeagueContext>,
+        required: true,
+      },
+    },
 
-    const {
-      previousSeasonWeekId,
-      currentSeasonWeekId,
-      weekNumber: weekNumber_,
-      isComplete,
-    } = leagueContext.value;
+    setup(props) {
+      const { leagueContext } = toRefs(props);
 
-    const weekNumber = computed(() => {
-      if (isComplete) {
-        return weekNumber_;
-      }
+      const {
+        previousSeasonWeekId,
+        currentSeasonWeekId,
+        weekNumber: weekNumber_,
+        isComplete,
+      } = leagueContext.value;
 
-      return Math.max(weekNumber_ - 1, 1);
-    });
+      const weekNumber = computed(() => {
+        if (isComplete) {
+          return weekNumber_;
+        }
 
-    const seasonWeekId = computed(() => (isComplete ? currentSeasonWeekId : previousSeasonWeekId));
+        return Math.max(weekNumber_ - 1, 1);
+      });
 
-    return {
-      weekNumber,
-      seasonWeekId,
-    };
-  },
-});
+      const seasonWeekId = computed(() =>
+        isComplete ? currentSeasonWeekId : previousSeasonWeekId
+      );
 
-export default WeeklyScores;
+      return {
+        weekNumber,
+        seasonWeekId,
+      };
+    },
+  });
+
+  export default WeeklyScores;
 </script>
 
 <style scoped>
-.placeholder-text {
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
+  .placeholder-text {
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 </style>

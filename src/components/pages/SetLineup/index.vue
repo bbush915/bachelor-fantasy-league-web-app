@@ -67,201 +67,201 @@
 </template>
 
 <script lang="ts">
-import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { computed, defineComponent, PropType, ref, toRefs, watch } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+  import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
+  import gql from "graphql-tag";
+  import { computed, defineComponent, PropType, ref, toRefs, watch } from "vue";
+  import { useRouter } from "vue-router";
+  import { useStore } from "vuex";
 
-import InfoIcon from "@/assets/info.svg";
-import RoseIcon from "@/assets/rose.svg";
-import Avatar from "@/components/common/Avatar/index.vue";
-import ContestantModal from "@/components/common/ContestantModal/index.vue";
-import FavoriteIndicator from "@/components/common/FavoriteIndicator/index.vue";
-import {
-  IContestant,
-  useContestantModal,
-  useLineupContestants,
-  useUserFavorites,
-} from "@/composables";
-import { LeagueContext } from "@/types";
+  import InfoIcon from "@/assets/info.svg";
+  import RoseIcon from "@/assets/rose.svg";
+  import Avatar from "@/components/common/Avatar/index.vue";
+  import ContestantModal from "@/components/common/ContestantModal/index.vue";
+  import FavoriteIndicator from "@/components/common/FavoriteIndicator/index.vue";
+  import {
+    IContestant,
+    useContestantModal,
+    useLineupContestants,
+    useUserFavorites,
+  } from "@/composables";
+  import { LeagueContext } from "@/types";
 
-type TResult = {
-  weeklyContestants: IContestant[];
-};
+  type TResult = {
+    weeklyContestants: IContestant[];
+  };
 
-const SetLineup = defineComponent({
-  name: "SetLineup",
+  const SetLineup = defineComponent({
+    name: "SetLineup",
 
-  components: {
-    Avatar,
-    ContestantModal,
-    FavoriteIndicator,
-    InfoIcon,
-    RoseIcon,
-  },
-
-  props: {
-    leagueContext: {
-      type: Object as PropType<LeagueContext>,
-      required: true,
+    components: {
+      Avatar,
+      ContestantModal,
+      FavoriteIndicator,
+      InfoIcon,
+      RoseIcon,
     },
-  },
 
-  setup(props) {
-    const { leagueContext } = toRefs(props);
+    props: {
+      leagueContext: {
+        type: Object as PropType<LeagueContext>,
+        required: true,
+      },
+    },
 
-    const {
-      leagueId,
-      leagueMemberId,
-      currentSeasonWeekId,
-      lineupSpotsAvailable,
-    } = leagueContext.value;
+    setup(props) {
+      const { leagueContext } = toRefs(props);
 
-    const router = useRouter();
-    const store = useStore();
+      const {
+        leagueId,
+        leagueMemberId,
+        currentSeasonWeekId,
+        lineupSpotsAvailable,
+      } = leagueContext.value;
 
-    const { result } = useQuery<TResult>(
-      gql`
-        query WeeklyContestants($seasonWeekId: ID!) {
-          weeklyContestants(seasonWeekId: $seasonWeekId) {
-            id
-            name
-            headshotUrl
-            age
-            occupation
-            hometown
-            bio
-            trivia
-          }
-        }
-      `,
-      { seasonWeekId: currentSeasonWeekId },
-      { fetchPolicy: "cache-first" }
-    );
+      const router = useRouter();
+      const store = useStore();
 
-    const weeklyContestants = useResult(
-      result,
-      [] as TResult["weeklyContestants"],
-      (data) => data.weeklyContestants
-    );
-
-    const { userFavorites } = useUserFavorites();
-
-    const { lineupContestants } = useLineupContestants(
-      ref(leagueMemberId),
-      ref(currentSeasonWeekId),
-      "no-cache"
-    );
-
-    const {
-      selectedContestant,
-      isContestantModalVisible,
-      showContestantModal,
-      hideContestantModal,
-    } = useContestantModal();
-
-    const { mutate: saveLineup } = useMutation(
-      gql`
-        mutation SaveLineup($input: SaveLineupInput!) {
-          saveLineup(input: $input) {
-            id
-            lineupContestants {
+      const { result } = useQuery<TResult>(
+        gql`
+          query WeeklyContestants($seasonWeekId: ID!) {
+            weeklyContestants(seasonWeekId: $seasonWeekId) {
               id
-              contestant {
+              name
+              headshotUrl
+              age
+              occupation
+              hometown
+              bio
+              trivia
+            }
+          }
+        `,
+        { seasonWeekId: currentSeasonWeekId },
+        { fetchPolicy: "cache-first" }
+      );
+
+      const weeklyContestants = useResult(
+        result,
+        [] as TResult["weeklyContestants"],
+        (data) => data.weeklyContestants
+      );
+
+      const { userFavorites } = useUserFavorites();
+
+      const { lineupContestants } = useLineupContestants(
+        ref(leagueMemberId),
+        ref(currentSeasonWeekId),
+        "no-cache"
+      );
+
+      const {
+        selectedContestant,
+        isContestantModalVisible,
+        showContestantModal,
+        hideContestantModal,
+      } = useContestantModal();
+
+      const { mutate: saveLineup } = useMutation(
+        gql`
+          mutation SaveLineup($input: SaveLineupInput!) {
+            saveLineup(input: $input) {
+              id
+              lineupContestants {
                 id
-                name
-                headshotUrl
+                contestant {
+                  id
+                  name
+                  headshotUrl
+                }
               }
             }
           }
+        `
+      );
+
+      const contestants = computed(() => {
+        return weeklyContestants.value.map((contestant) => ({
+          ...contestant,
+          isSelected: lineupContestants.value.some(
+            (lineupContestant) => lineupContestant.contestantId === contestant.id
+          ),
+        }));
+      });
+
+      const rosesRemaining = ref(lineupSpotsAvailable - lineupContestants.value.length);
+
+      const canSave = computed(() => rosesRemaining.value === 0);
+
+      watch(
+        () => lineupContestants.value,
+        () => {
+          rosesRemaining.value = lineupSpotsAvailable - lineupContestants.value.length;
         }
-      `
-    );
+      );
 
-    const contestants = computed(() => {
-      return weeklyContestants.value.map((contestant) => ({
-        ...contestant,
-        isSelected: lineupContestants.value.some(
-          (lineupContestant) => lineupContestant.contestantId === contestant.id
-        ),
-      }));
-    });
-
-    const rosesRemaining = ref(lineupSpotsAvailable - lineupContestants.value.length);
-
-    const canSave = computed(() => rosesRemaining.value === 0);
-
-    watch(
-      () => lineupContestants.value,
-      () => {
-        rosesRemaining.value = lineupSpotsAvailable - lineupContestants.value.length;
+      function toggleContestant(contestant: typeof contestants.value[number]) {
+        if (contestant.isSelected) {
+          contestant.isSelected = false;
+          rosesRemaining.value++;
+        } else if (rosesRemaining.value > 0) {
+          contestant.isSelected = true;
+          rosesRemaining.value--;
+        }
       }
-    );
 
-    function toggleContestant(contestant: typeof contestants.value[number]) {
-      if (contestant.isSelected) {
-        contestant.isSelected = false;
-        rosesRemaining.value++;
-      } else if (rosesRemaining.value > 0) {
-        contestant.isSelected = true;
-        rosesRemaining.value--;
+      async function handleSaveClick(): Promise<void> {
+        try {
+          await saveLineup({
+            input: {
+              leagueId,
+              seasonWeekId: currentSeasonWeekId,
+              contestantIds: contestants.value.filter((x) => x.isSelected).map((x) => x.id),
+            },
+          });
+
+          store.dispatch("pushNotification", {
+            type: "success",
+            message: "Lineup set successfuly!",
+          });
+
+          router.push({ name: "league-home" });
+        } catch (error) {
+          store.dispatch("pushNotification", {
+            type: "error",
+            message: "Failed to set lineup. Try again later",
+          });
+        }
       }
-    }
 
-    async function handleSaveClick(): Promise<void> {
-      try {
-        await saveLineup({
-          input: {
-            leagueId,
-            seasonWeekId: currentSeasonWeekId,
-            contestantIds: contestants.value.filter((x) => x.isSelected).map((x) => x.id),
-          },
-        });
+      return {
+        contestants,
+        userFavorites,
+        selectedContestant,
+        isContestantModalVisible,
+        showContestantModal,
+        hideContestantModal,
+        rosesRemaining,
+        toggleContestant,
+        canSave,
+        handleSaveClick,
+      };
+    },
+  });
 
-        store.dispatch("pushNotification", {
-          type: "success",
-          message: "Lineup set successfuly!",
-        });
-
-        router.push({ name: "league-home" });
-      } catch (error) {
-        store.dispatch("pushNotification", {
-          type: "error",
-          message: "Failed to set lineup. Try again later",
-        });
-      }
-    }
-
-    return {
-      contestants,
-      userFavorites,
-      selectedContestant,
-      isContestantModalVisible,
-      showContestantModal,
-      hideContestantModal,
-      rosesRemaining,
-      toggleContestant,
-      canSave,
-      handleSaveClick,
-    };
-  },
-});
-
-export default SetLineup;
+  export default SetLineup;
 </script>
 
 <style lang="postcss" scoped>
-.contestant {
-  transition: transform 0.1s ease;
+  .contestant {
+    transition: transform 0.1s ease;
 
-  &.selected {
-    box-shadow: 0px 0px 8px 8px #e21c34;
-  }
+    &.selected {
+      box-shadow: 0px 0px 8px 8px #e21c34;
+    }
 
-  &:hover,
-  &:focus {
-    transform: scale(1.075);
+    &:hover,
+    &:focus {
+      transform: scale(1.075);
+    }
   }
-}
 </style>

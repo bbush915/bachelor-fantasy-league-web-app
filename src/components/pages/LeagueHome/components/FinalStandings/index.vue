@@ -11,39 +11,39 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, toRefs } from "vue";
+  import { computed, defineComponent, PropType, ref, toRefs } from "vue";
 
-import { useOverallLeaderboard } from "@/composables";
-import { LeagueContext } from "@/types";
-import Podium from "./components/Podium/index.vue";
+  import { useOverallLeaderboard } from "@/composables";
+  import { LeagueContext } from "@/types";
+  import Podium from "./components/Podium/index.vue";
 
-const FinalStandings = defineComponent({
-  name: "FinalStandings",
+  const FinalStandings = defineComponent({
+    name: "FinalStandings",
 
-  components: {
-    Podium,
-  },
-
-  props: {
-    leagueContext: {
-      type: Object as PropType<LeagueContext>,
-      required: true,
+    components: {
+      Podium,
     },
-  },
 
-  setup(props) {
-    const { leagueContext } = toRefs(props);
-    const { leagueId, currentSeasonWeekId } = leagueContext.value;
+    props: {
+      leagueContext: {
+        type: Object as PropType<LeagueContext>,
+        required: true,
+      },
+    },
 
-    const { leaderboardEntries } = useOverallLeaderboard(leagueId, ref(currentSeasonWeekId));
+    setup(props) {
+      const { leagueContext } = toRefs(props);
+      const { leagueId, currentSeasonWeekId } = leagueContext.value;
 
-    const medalists = computed(() => leaderboardEntries.value.slice(0, 3));
+      const { leaderboardEntries } = useOverallLeaderboard(leagueId, ref(currentSeasonWeekId));
 
-    return {
-      medalists,
-    };
-  },
-});
+      const medalists = computed(() => leaderboardEntries.value.slice(0, 3));
 
-export default FinalStandings;
+      return {
+        medalists,
+      };
+    },
+  });
+
+  export default FinalStandings;
 </script>

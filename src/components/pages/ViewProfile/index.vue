@@ -57,46 +57,46 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+  import { defineComponent } from "vue";
+  import { useRouter } from "vue-router";
+  import { useStore } from "vuex";
 
-import CheckIcon from "@/assets/check.svg";
-import CloseIcon from "@/assets/close.svg";
-import EditIcon from "@/assets/edit.svg";
-import Avatar from "@/components/common/Avatar/index.vue";
-import Input from "@/components/common/Input/index.vue";
-import { useProfile } from "@/composables";
+  import CheckIcon from "@/assets/check.svg";
+  import CloseIcon from "@/assets/close.svg";
+  import EditIcon from "@/assets/edit.svg";
+  import Avatar from "@/components/common/Avatar/index.vue";
+  import Input from "@/components/common/Input/index.vue";
+  import { useProfile } from "@/composables";
 
-const ViewProfile = defineComponent({
-  name: "ViewProfile",
+  const ViewProfile = defineComponent({
+    name: "ViewProfile",
 
-  components: {
-    Avatar,
-    CheckIcon,
-    CloseIcon,
-    EditIcon,
-    Input,
-  },
+    components: {
+      Avatar,
+      CheckIcon,
+      CloseIcon,
+      EditIcon,
+      Input,
+    },
 
-  setup() {
-    const router = useRouter();
-    const store = useStore();
+    setup() {
+      const router = useRouter();
+      const store = useStore();
 
-    const { profile } = useProfile();
+      const { profile } = useProfile();
 
-    function handleLogoutClick() {
-      store.commit("logout");
+      function handleLogoutClick() {
+        store.commit("logout");
 
-      router.push({ name: "home" });
-    }
+        router.push({ name: "home" });
+      }
 
-    return {
-      profile,
-      handleLogoutClick,
-    };
-  },
-});
+      return {
+        profile,
+        handleLogoutClick,
+      };
+    },
+  });
 
-export default ViewProfile;
+  export default ViewProfile;
 </script>

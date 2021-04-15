@@ -33,97 +33,97 @@
 </template>
 
 <script lang="ts">
-import { useMutation } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { useField, useForm } from "vee-validate";
-import { computed, defineComponent } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useStore } from "vuex";
-import * as Yup from "yup";
+  import { useMutation } from "@vue/apollo-composable";
+  import gql from "graphql-tag";
+  import { useField, useForm } from "vee-validate";
+  import { computed, defineComponent } from "vue";
+  import { useRoute, useRouter } from "vue-router";
+  import { useStore } from "vuex";
+  import * as Yup from "yup";
 
-import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
-import Input from "@/components/common/Input/index.vue";
+  import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
+  import Input from "@/components/common/Input/index.vue";
 
-const ResetPassword = defineComponent({
-  name: "ResetPassword",
+  const ResetPassword = defineComponent({
+    name: "ResetPassword",
 
-  components: {
-    GradientOverlay,
-    Input,
-  },
+    components: {
+      GradientOverlay,
+      Input,
+    },
 
-  setup() {
-    const router = useRouter();
-    const route = useRoute();
-    const store = useStore();
+    setup() {
+      const router = useRouter();
+      const route = useRoute();
+      const store = useStore();
 
-    const { token } = route.query;
+      const { token } = route.query;
 
-    const { errors, handleSubmit, meta } = useForm({
-      validationSchema: Yup.object({
-        password: Yup.string()
-          .min(8, "Password must be at least 8 characters long.")
-          .required("You must provide a new password."),
+      const { errors, handleSubmit, meta } = useForm({
+        validationSchema: Yup.object({
+          password: Yup.string()
+            .min(8, "Password must be at least 8 characters long.")
+            .required("You must provide a new password."),
 
-        passwordConfirmation: Yup.string()
-          .oneOf([Yup.ref("password")], "Passwords do not match.")
-          .required("You must confirm the new password."),
-      }),
-    });
-
-    const { value: password } = useField("password");
-    const { value: passwordConfirmation } = useField("passwordConfirmation");
-
-    const canSubmit = computed(() => meta.value.valid);
-
-    const { mutate: resetPassword } = useMutation(
-      gql`
-        mutation ResetPassword($input: ResetPasswordInput!) {
-          resetPassword(input: $input) {
-            success
-          }
-        }
-      `
-    );
-
-    const onSubmit = handleSubmit(async (values) => {
-      const { data } = await resetPassword({
-        input: {
-          token,
-          password: values.password,
-        },
+          passwordConfirmation: Yup.string()
+            .oneOf([Yup.ref("password")], "Passwords do not match.")
+            .required("You must confirm the new password."),
+        }),
       });
 
-      if (data) {
-        router.push({ name: "login" });
+      const { value: password } = useField("password");
+      const { value: passwordConfirmation } = useField("passwordConfirmation");
 
-        store.dispatch("pushNotification", {
-          type: "success",
-          message: "Reset password successfully!",
+      const canSubmit = computed(() => meta.value.valid);
+
+      const { mutate: resetPassword } = useMutation(
+        gql`
+          mutation ResetPassword($input: ResetPasswordInput!) {
+            resetPassword(input: $input) {
+              success
+            }
+          }
+        `
+      );
+
+      const onSubmit = handleSubmit(async (values) => {
+        const { data } = await resetPassword({
+          input: {
+            token,
+            password: values.password,
+          },
         });
-      } else {
-        store.dispatch("pushNotification", {
-          type: "error",
-          message: "Failed to reset password.",
-        });
-      }
-    });
 
-    return {
-      password,
-      passwordConfirmation,
-      errors,
-      canSubmit,
-      onSubmit,
-    };
-  },
-});
+        if (data) {
+          router.push({ name: "login" });
 
-export default ResetPassword;
+          store.dispatch("pushNotification", {
+            type: "success",
+            message: "Reset password successfully!",
+          });
+        } else {
+          store.dispatch("pushNotification", {
+            type: "error",
+            message: "Failed to reset password.",
+          });
+        }
+      });
+
+      return {
+        password,
+        passwordConfirmation,
+        errors,
+        canSubmit,
+        onSubmit,
+      };
+    },
+  });
+
+  export default ResetPassword;
 </script>
 
 <style scoped>
-.reset-password-form {
-  width: 400px;
-}
+  .reset-password-form {
+    width: 400px;
+  }
 </style>

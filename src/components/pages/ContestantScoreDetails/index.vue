@@ -16,57 +16,58 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, toRefs } from "vue";
+  import { computed, defineComponent, PropType, ref, toRefs } from "vue";
 
-import { useSeasonWeekContestants, useSeasonWeeks } from "@/composables";
-import { LeagueContext } from "@/types";
-import ScoreTable from "./components/ScoreTable/index.vue";
+  import { useSeasonWeekContestants, useSeasonWeeks } from "@/composables";
+  import { LeagueContext } from "@/types";
+  import ScoreTable from "./components/ScoreTable/index.vue";
 
-const ContestantScoreDetails = defineComponent({
-  name: "ContestantScoreDetails",
+  const ContestantScoreDetails = defineComponent({
+    name: "ContestantScoreDetails",
 
-  components: {
-    ScoreTable,
-  },
-
-  props: {
-    leagueContext: {
-      type: Object as PropType<LeagueContext>,
-      required: true,
+    components: {
+      ScoreTable,
     },
-  },
 
-  setup(props) {
-    const { leagueContext } = toRefs(props);
-    const { seasonId, weekNumber, isComplete } = leagueContext.value;
+    props: {
+      leagueContext: {
+        type: Object as PropType<LeagueContext>,
+        required: true,
+      },
+    },
 
-    const { seasonWeeks } = useSeasonWeeks(seasonId);
+    setup(props) {
+      const { leagueContext } = toRefs(props);
+      const { seasonId, weekNumber, isComplete } = leagueContext.value;
 
-    const selectedWeekNumber = ref(weekNumber - (isComplete ? 0 : 1));
+      const { seasonWeeks } = useSeasonWeeks(seasonId);
 
-    const filteredSeasonWeeks = computed(
-      () => seasonWeeks.value?.filter((x) => x.weekNumber < weekNumber + (isComplete ? 1 : 0)) ?? []
-    );
+      const selectedWeekNumber = ref(weekNumber - (isComplete ? 0 : 1));
 
-    const selectedSeasonWeekId = computed(
-      () => filteredSeasonWeeks.value.find((x) => x.weekNumber === selectedWeekNumber.value)?.id
-    );
+      const filteredSeasonWeeks = computed(
+        () =>
+          seasonWeeks.value?.filter((x) => x.weekNumber < weekNumber + (isComplete ? 1 : 0)) ?? []
+      );
 
-    const { seasonWeekContestants } = useSeasonWeekContestants(selectedSeasonWeekId);
+      const selectedSeasonWeekId = computed(
+        () => filteredSeasonWeeks.value.find((x) => x.weekNumber === selectedWeekNumber.value)?.id
+      );
 
-    return {
-      seasonWeeks: filteredSeasonWeeks,
-      selectedWeekNumber,
-      seasonWeekContestants,
-    };
-  },
-});
+      const { seasonWeekContestants } = useSeasonWeekContestants(selectedSeasonWeekId);
 
-export default ContestantScoreDetails;
+      return {
+        seasonWeeks: filteredSeasonWeeks,
+        selectedWeekNumber,
+        seasonWeekContestants,
+      };
+    },
+  });
+
+  export default ContestantScoreDetails;
 </script>
 
 <style scoped>
-select {
-  background: transparent;
-}
+  select {
+    background: transparent;
+  }
 </style>

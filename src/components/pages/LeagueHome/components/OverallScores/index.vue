@@ -31,48 +31,50 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, toRefs } from "vue";
+  import { computed, defineComponent, PropType, toRefs } from "vue";
 
-import MoreIcon from "@/assets/more.svg";
-import PlaceholderIcon from "@/assets/placeholder.svg";
-import OverallLeaderboard from "@/components/common/OverallLeaderboard/index.vue";
-import { LeagueContext } from "@/types";
+  import MoreIcon from "@/assets/more.svg";
+  import PlaceholderIcon from "@/assets/placeholder.svg";
+  import OverallLeaderboard from "@/components/common/OverallLeaderboard/index.vue";
+  import { LeagueContext } from "@/types";
 
-const OverallScores = defineComponent({
-  name: "OverallScores",
+  const OverallScores = defineComponent({
+    name: "OverallScores",
 
-  components: {
-    MoreIcon,
-    OverallLeaderboard,
-    PlaceholderIcon,
-  },
-
-  props: {
-    leagueContext: {
-      type: Object as PropType<LeagueContext>,
-      required: true,
+    components: {
+      MoreIcon,
+      OverallLeaderboard,
+      PlaceholderIcon,
     },
-  },
 
-  setup(props) {
-    const { leagueContext } = toRefs(props);
-    const { previousSeasonWeekId, currentSeasonWeekId, isComplete } = leagueContext.value;
+    props: {
+      leagueContext: {
+        type: Object as PropType<LeagueContext>,
+        required: true,
+      },
+    },
 
-    const seasonWeekId = computed(() => (isComplete ? currentSeasonWeekId : previousSeasonWeekId));
+    setup(props) {
+      const { leagueContext } = toRefs(props);
+      const { previousSeasonWeekId, currentSeasonWeekId, isComplete } = leagueContext.value;
 
-    return {
-      seasonWeekId,
-    };
-  },
-});
+      const seasonWeekId = computed(() =>
+        isComplete ? currentSeasonWeekId : previousSeasonWeekId
+      );
 
-export default OverallScores;
+      return {
+        seasonWeekId,
+      };
+    },
+  });
+
+  export default OverallScores;
 </script>
 
 <style scoped>
-.placeholder-text {
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
+  .placeholder-text {
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 </style>

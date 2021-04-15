@@ -40,7 +40,11 @@ const routes: RouteRecordRaw[] = [
     component: CreateLeague,
     meta: { requireAuth: true },
   },
-  { path: "/forgot-password", name: "forgot-password", component: ForgotPassword },
+  {
+    path: "/forgot-password",
+    name: "forgot-password",
+    component: ForgotPassword,
+  },
   { path: "/join-league", name: "join-league", component: JoinLeague },
   {
     path: "/leagues/:leagueId/details",
@@ -92,7 +96,12 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: validateLeagueMembership,
   },
   { path: "/login", name: "login", component: Login },
-  { path: "/my-leagues", name: "my-leagues", component: MyLeagues, meta: { requireAuth: true } },
+  {
+    path: "/my-leagues",
+    name: "my-leagues",
+    component: MyLeagues,
+    meta: { requireAuth: true },
+  },
   {
     path: "/profile",
     component: Profile,

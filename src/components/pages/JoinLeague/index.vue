@@ -63,7 +63,10 @@
               <div class="flex items-center">
                 <router-link
                   class="btn-secondary"
-                  :to="{ name: 'league-details', params: { leagueId: league.id } }"
+                  :to="{
+                    name: 'league-details',
+                    params: { leagueId: league.id },
+                  }"
                 >
                   Details
                 </router-link>
@@ -85,141 +88,141 @@
 </template>
 
 <script lang="ts">
-import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { computed, defineComponent, reactive, ref, watch } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+  import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
+  import gql from "graphql-tag";
+  import { computed, defineComponent, reactive, ref, watch } from "vue";
+  import { useRouter } from "vue-router";
+  import { useStore } from "vuex";
 
-import SearchIcon from "@/assets/search.svg";
-import Avatar from "@/components/common/Avatar/index.vue";
-import Input from "@/components/common/Input/index.vue";
-import { useAuthentication } from "@/composables";
+  import SearchIcon from "@/assets/search.svg";
+  import Avatar from "@/components/common/Avatar/index.vue";
+  import Input from "@/components/common/Input/index.vue";
+  import { useAuthentication } from "@/composables";
 
-type TResult = {
-  leagues: {
-    id: string;
-    name: string;
-    logoUrl: string;
-    commissioner: {
+  type TResult = {
+    leagues: {
       id: string;
-      displayName: string;
-      avatarUrl: string;
-    };
-  }[];
-};
+      name: string;
+      logoUrl: string;
+      commissioner: {
+        id: string;
+        displayName: string;
+        avatarUrl: string;
+      };
+    }[];
+  };
 
-const JoinLeague = defineComponent({
-  name: "JoinLeague",
+  const JoinLeague = defineComponent({
+    name: "JoinLeague",
 
-  components: {
-    Avatar,
-    Input,
-    SearchIcon,
-  },
+    components: {
+      Avatar,
+      Input,
+      SearchIcon,
+    },
 
-  setup() {
-    const router = useRouter();
-    const store = useStore();
+    setup() {
+      const router = useRouter();
+      const store = useStore();
 
-    const { isAuthenticated } = useAuthentication();
+      const { isAuthenticated } = useAuthentication();
 
-    const searchQuery = ref<string>();
-    const isSearchEnabled = ref(false);
+      const searchQuery = ref<string>();
+      const isSearchEnabled = ref(false);
 
-    const canSearch = computed(() => (searchQuery.value?.length ?? 0) > 0);
+      const canSearch = computed(() => (searchQuery.value?.length ?? 0) > 0);
 
-    const { result } = useQuery<TResult>(
-      gql`
-        query Leagues($query: String!) {
-          leagues(query: $query) {
-            id
-            name
-            logoUrl
-            commissioner {
+      const { result } = useQuery<TResult>(
+        gql`
+          query Leagues($query: String!) {
+            leagues(query: $query) {
               id
-              user {
+              name
+              logoUrl
+              commissioner {
                 id
-                displayName
-                avatarUrl
+                user {
+                  id
+                  displayName
+                  avatarUrl
+                }
+              }
+              myLeagueMember {
+                id
               }
             }
-            myLeagueMember {
+          }
+        `,
+        { query: searchQuery },
+        reactive({
+          enabled: isSearchEnabled,
+          errorPolicy: "all",
+        })
+      );
+
+      watch(
+        () => result.value,
+        () => (isSearchEnabled.value = false)
+      );
+
+      const leagues = useResult(result, [], (data) => data.leagues);
+
+      const { mutate: joinLeague } = useMutation(
+        gql`
+          mutation JoinLeague($input: JoinLeagueInput!) {
+            joinLeague(input: $input) {
               id
             }
           }
+        `
+      );
+
+      async function handleJoinLeagueClick(leagueId: string) {
+        try {
+          await joinLeague({
+            input: {
+              leagueId,
+            },
+          });
+
+          store.dispatch("pushNotification", {
+            type: "success",
+            message: "Joined league successfuly!",
+          });
+
+          router.push({ name: "league-home", params: { leagueId } });
+        } catch (error) {
+          store.dispatch("pushNotification", {
+            type: "error",
+            message: error?.message ?? "Failed to join league. Try again later",
+          });
         }
-      `,
-      { query: searchQuery },
-      reactive({
-        enabled: isSearchEnabled,
-        errorPolicy: "all",
-      })
-    );
-
-    watch(
-      () => result.value,
-      () => (isSearchEnabled.value = false)
-    );
-
-    const leagues = useResult(result, [], (data) => data.leagues);
-
-    const { mutate: joinLeague } = useMutation(
-      gql`
-        mutation JoinLeague($input: JoinLeagueInput!) {
-          joinLeague(input: $input) {
-            id
-          }
-        }
-      `
-    );
-
-    async function handleJoinLeagueClick(leagueId: string) {
-      try {
-        await joinLeague({
-          input: {
-            leagueId,
-          },
-        });
-
-        store.dispatch("pushNotification", {
-          type: "success",
-          message: "Joined league successfuly!",
-        });
-
-        router.push({ name: "league-home", params: { leagueId } });
-      } catch (error) {
-        store.dispatch("pushNotification", {
-          type: "error",
-          message: error?.message ?? "Failed to join league. Try again later",
-        });
       }
-    }
 
-    function handleSearchClick() {
-      isSearchEnabled.value = true;
-    }
+      function handleSearchClick() {
+        isSearchEnabled.value = true;
+      }
 
-    return {
-      leagues,
-      searchQuery,
-      canSearch,
-      handleSearchClick,
-      isAuthenticated,
-      handleJoinLeagueClick,
-    };
-  },
-});
+      return {
+        leagues,
+        searchQuery,
+        canSearch,
+        handleSearchClick,
+        isAuthenticated,
+        handleJoinLeagueClick,
+      };
+    },
+  });
 
-export default JoinLeague;
+  export default JoinLeague;
 </script>
 
 <style lang="postcss" scoped>
-.search-button:disabled {
-  opacity: 0.5;
-}
+  .search-button:disabled {
+    opacity: 0.5;
+  }
 
-th {
-  @apply font-medium text-sm;
-}
+  th {
+    @apply font-medium text-sm;
+  }
 </style>

@@ -60,19 +60,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+  import { defineComponent } from "vue";
 
-import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
-import SteamOverlay from "@/components/common/SteamOverlay/index.vue";
+  import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
+  import SteamOverlay from "@/components/common/SteamOverlay/index.vue";
 
-const About = defineComponent({
-  name: "About",
+  const About = defineComponent({
+    name: "About",
 
-  components: {
-    GradientOverlay,
-    SteamOverlay,
-  },
-});
+    components: {
+      GradientOverlay,
+      SteamOverlay,
+    },
+  });
 
-export default About;
+  export default About;
 </script>

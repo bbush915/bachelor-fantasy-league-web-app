@@ -43,79 +43,82 @@
 </template>
 
 <script lang="ts">
-import { useMutation } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { computed, defineComponent, ref } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+  import { useMutation } from "@vue/apollo-composable";
+  import gql from "graphql-tag";
+  import { computed, defineComponent, ref } from "vue";
+  import { useRouter } from "vue-router";
+  import { useStore } from "vuex";
 
-import { useMutableImage } from "@/composables";
+  import { useMutableImage } from "@/composables";
 
-const CreateLeague = defineComponent({
-  name: "CreateLeague",
+  const CreateLeague = defineComponent({
+    name: "CreateLeague",
 
-  setup() {
-    const router = useRouter();
-    const store = useStore();
+    setup() {
+      const router = useRouter();
+      const store = useStore();
 
-    const { source: logo, handleSourceChange: handleLogoChange } = useMutableImage();
+      const { source: logo, handleSourceChange: handleLogoChange } = useMutableImage();
 
-    const { mutate: createLeague } = useMutation(
-      gql`
-        mutation CreateLeague($input: CreateLeagueInput!) {
-          createLeague(input: $input) {
-            id
+      const { mutate: createLeague } = useMutation(
+        gql`
+          mutation CreateLeague($input: CreateLeagueInput!) {
+            createLeague(input: $input) {
+              id
+            }
           }
+        `
+      );
+
+      const name = ref<string>();
+      const description = ref<string>();
+
+      const isPublic = ref(false);
+      const isShareable = ref(false);
+
+      const canCreate = computed(() => name.value && description.value && logo.value);
+
+      async function handleCreateClick() {
+        const { data } = await createLeague({
+          input: {
+            name: name.value,
+            description: description.value,
+            logo: logo.value,
+            isPublic: isPublic.value,
+            isShareable: isShareable.value,
+          },
+        });
+
+        if (data) {
+          router.push({
+            name: "league-home",
+            params: { leagueId: data.createLeague.id },
+          });
+
+          store.dispatch("pushNotification", {
+            type: "success",
+            message: "League created successfully!",
+          });
+        } else {
+          store.dispatch("pushNotification", {
+            type: "error",
+            message: "Failed to create league. Try again later",
+          });
         }
-      `
-    );
-
-    const name = ref<string>();
-    const description = ref<string>();
-
-    const isPublic = ref(false);
-    const isShareable = ref(false);
-
-    const canCreate = computed(() => name.value && description.value && logo.value);
-
-    async function handleCreateClick() {
-      const { data } = await createLeague({
-        input: {
-          name: name.value,
-          description: description.value,
-          logo: logo.value,
-          isPublic: isPublic.value,
-          isShareable: isShareable.value,
-        },
-      });
-
-      if (data) {
-        router.push({ name: "league-home", params: { leagueId: data.createLeague.id } });
-
-        store.dispatch("pushNotification", {
-          type: "success",
-          message: "League created successfully!",
-        });
-      } else {
-        store.dispatch("pushNotification", {
-          type: "error",
-          message: "Failed to create league. Try again later",
-        });
       }
-    }
 
-    return {
-      name,
-      description,
-      logo,
-      isPublic,
-      isShareable,
-      handleLogoChange,
-      canCreate,
-      handleCreateClick,
-    };
-  },
-});
+      return {
+        name,
+        description,
+        logo,
+        isPublic,
+        isShareable,
+        handleLogoChange,
+        canCreate,
+        handleCreateClick,
+      };
+    },
+  });
 
-export default CreateLeague;
+  export default CreateLeague;
 </script>

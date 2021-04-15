@@ -11,41 +11,41 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+  import { defineComponent } from "vue";
 
-const PetalLink = defineComponent({
-  name: "PetalLink",
+  const PetalLink = defineComponent({
+    name: "PetalLink",
 
-  props: {
-    to: {
-      type: String,
-      required: true,
+    props: {
+      to: {
+        type: String,
+        required: true,
+      },
+
+      content: {
+        type: String,
+        required: true,
+      },
+
+      mirror: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
     },
+  });
 
-    content: {
-      type: String,
-      required: true,
-    },
-
-    mirror: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-  },
-});
-
-export default PetalLink;
+  export default PetalLink;
 </script>
 
 <style lang="postcss" scoped>
-.petal-link {
-  background: linear-gradient(120deg, #e21c34 20%, #500b28 80%);
-  border-radius: 6rem 0;
+  .petal-link {
+    background: linear-gradient(120deg, #e21c34 20%, #500b28 80%);
+    border-radius: 6rem 0;
 
-  &.mirror {
-    background: linear-gradient(240deg, #e21c34 20%, #500b28 80%);
-    border-radius: 0 6rem;
+    &.mirror {
+      background: linear-gradient(240deg, #e21c34 20%, #500b28 80%);
+      border-radius: 0 6rem;
+    }
   }
-}
 </style>

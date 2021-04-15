@@ -3,21 +3,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+  import { defineComponent } from "vue";
 
-const SteamOverlay = defineComponent({
-  name: "GradientOverlay",
-});
+  const GradientOverlay = defineComponent({
+    name: "GradientOverlay",
+  });
 
-export default SteamOverlay;
+  export default GradientOverlay;
 </script>
 
 <style scoped>
-.gradient-overlay {
-  background: linear-gradient(
-    rgba(0, 0, 0, 0) 0%,
-    rgba(80, 11, 40, 0.8) 70%,
-    rgba(226, 28, 52, 1) 120%
-  );
-}
+  .gradient-overlay {
+    background: linear-gradient(
+      rgba(0, 0, 0, 0) 0%,
+      rgba(80, 11, 40, 0.8) 70%,
+      rgba(226, 28, 52, 1) 120%
+    );
+  }
 </style>
