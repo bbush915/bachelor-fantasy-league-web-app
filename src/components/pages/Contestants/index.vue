@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap justify-center p-3">
+  <section class="flex flex-wrap justify-center p-3">
     <div
       v-for="contestant in contestants"
       :key="contestant.id"
@@ -33,7 +33,7 @@
       :contestant="selectedContestant"
       :onClose="hideContestantModal"
     />
-  </div>
+  </section>
 </template>
 
 <script lang="ts">

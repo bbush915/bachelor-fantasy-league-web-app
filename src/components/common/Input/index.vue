@@ -9,6 +9,7 @@
   />
   <input
     v-else
+    autocomplete="off"
     class="px-4 py-2 my-2 border border-white outline-none rounded-xl"
     v-bind="$attrs"
     :type="type"

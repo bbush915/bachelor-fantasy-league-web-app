@@ -1,37 +1,37 @@
 <template>
-  <div class="flex flex-col mx-40">
-    <h1 class="my-8">Edit League Members</h1>
+  <div class="flex flex-col">
+    <h1 class="mb-8">Edit League Members</h1>
 
-    <div class="flex flex-col px-8 pt-6 pb-8 mx-40 bg-gray-dark rounded-xl">
-      <h2 class="mb-2">League Members</h2>
-      <div class="flex-1">
-        <ScrollContainer class="px-4 py-2 bg-gray rounded-xl league-member-list">
-          <div
-            v-for="leagueMember in leagueMembers"
-            :key="leagueMember.id"
-            class="flex flex-row items-center justify-between my-2"
-          >
-            <div class="flex flex-row items-center">
-              <Avatar class="w-16 h-16 mr-4" :src="leagueMember.user.avatarUrl" />
+    <section class="flex flex-col w-1/2 px-8 pb-8 mx-auto bg-gray-dark rounded-xl">
+      <h2 class="mt-6 mb-4">League Members</h2>
 
-              <span>{{ leagueMember.user.displayName }}</span>
-            </div>
-            <button
-              v-if="!leagueMember.isCommissioner"
-              class="btn-secondary"
-              @click="showConfirmationModal(leagueMember)"
-            >
-              Remove
-            </button>
+      <ScrollContainer class="px-4 py-2 bg-gray rounded-xl edit-league-members__list">
+        <div
+          v-for="leagueMember in leagueMembers"
+          :key="leagueMember.id"
+          class="flex flex-row items-center justify-between pr-2 my-2"
+        >
+          <div class="flex flex-row items-center">
+            <Avatar class="w-16 h-16 mr-4" :src="leagueMember.avatarUrl" />
+            <span>{{ leagueMember.displayName }}</span>
           </div>
-        </ScrollContainer>
-      </div>
-    </div>
+
+          <button
+            v-if="!leagueMember.isCommissioner"
+            class="btn-secondary"
+            @click="showRemoveConfirmationModal(leagueMember)"
+          >
+            Remove
+          </button>
+        </div>
+      </ScrollContainer>
+    </section>
+
     <ConfirmationModal
-      v-if="isConfirmationModalVisible"
-      :onClose="hideConfirmationModal"
-      :onConfirm="() => handleRemoveClick(selectedLeagueMember.id)"
-      :message="`Are you sure you want to remove ${selectedLeagueMember.user.displayName} from this league?`"
+      v-if="isRemoveConfirmationModalVisible"
+      :onConfirm="() => handleRemoveLeagueMember(selectedLeagueMember.id)"
+      :onClose="hideRemoveConfirmationModal"
+      :message="`Are you sure you want to remove ${selectedLeagueMember.displayName} from this league?`"
     />
   </div>
 </template>
@@ -39,16 +39,43 @@
 <script lang="ts">
   import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
   import gql from "graphql-tag";
-  import { computed, defineComponent, PropType, ref, toRefs } from "vue";
-  import { useRouter } from "vue-router";
+  import { defineComponent, PropType, ref, toRefs } from "vue";
   import { useStore } from "vuex";
 
   import EditIcon from "@/assets/edit.svg";
   import Avatar from "@/components/common/Avatar/index.vue";
+  import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
   import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
   import { useConfirmationModal } from "@/composables";
-  import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
   import { LeagueContext } from "@/types";
+
+  type TLeagueMembersResult = {
+    league: {
+      id: string;
+      leagueMembers: {
+        id: string;
+        isActive: boolean;
+        isCommissioner: boolean;
+        user: {
+          id: string;
+          displayName: string;
+          avatarUrl: string;
+        };
+      }[];
+    };
+  };
+
+  type TLeagueMembersVariables = { leagueId: string };
+
+  type TLeagueMember = {
+    id: string;
+    avatarUrl: string;
+    displayName: string;
+    isCommissioner: boolean;
+  };
+
+  type TRemoveLeagueMemberResult = { removeLeagueMember: { id: string } };
+  type TRemoveLeagueMemberVariables = { input: { leagueMemberId: string } };
 
   const EditLeagueMembers = defineComponent({
     components: {
@@ -57,37 +84,22 @@
       ScrollContainer,
       ConfirmationModal,
     },
+
     props: {
       leagueContext: {
         type: Object as PropType<LeagueContext>,
         required: true,
       },
     },
+
     setup(props) {
-      const store = useStore();
-      const {
-        isConfirmationModalVisible,
-        showConfirmationModal: showConfirmationModal_,
-        hideConfirmationModal: hideConfirmationModal_,
-      } = useConfirmationModal();
-      const selectedLeagueMember = ref<any | null>(null);
-
-      function showConfirmationModal(leagueMember: any) {
-        selectedLeagueMember.value = leagueMember;
-        showConfirmationModal_();
-      }
-
-      function hideConfirmationModal() {
-        selectedLeagueMember.value = null;
-        hideConfirmationModal_();
-      }
       const { leagueContext } = toRefs(props);
       const { leagueId } = leagueContext.value;
 
-      const { result, refetch } = useQuery(
+      const { result, refetch } = useQuery<TLeagueMembersResult, TLeagueMembersVariables>(
         gql`
-          query LeagueDetails($id: ID!) {
-            league(id: $id) {
+          query LeagueMembers($leagueId: ID!) {
+            league(id: $leagueId) {
               id
               leagueMembers {
                 id
@@ -99,27 +111,49 @@
                   avatarUrl
                 }
               }
-              myLeagueMember {
-                id
-                isActive
-                isCommissioner
-              }
             }
           }
         `,
-        { id: leagueId },
-        { fetchPolicy: "cache-first" }
+        { leagueId }
       );
-      const leagueMembers = computed(
-        () =>
-          league.value?.leagueMembers
+
+      const leagueMembers = useResult<TLeagueMembersResult, TLeagueMember[], TLeagueMember[]>(
+        result,
+        [],
+        (data) =>
+          data.league.leagueMembers
             .filter((x) => x.isActive)
-            .sort((x, y) => x.user.displayName.localeCompare(y.user.displayName)) ?? []
+            .map((x) => ({
+              id: x.id,
+              avatarUrl: x.user.avatarUrl,
+              displayName: x.user.displayName,
+              isCommissioner: x.isCommissioner,
+            }))
+            .sort((x, y) => x.displayName.localeCompare(y.displayName))
       );
 
-      const league = useResult(result, null, (data) => data.league);
+      const {
+        isConfirmationModalVisible,
+        showConfirmationModal,
+        hideConfirmationModal,
+      } = useConfirmationModal();
 
-      const { mutate: removeLeagueMember } = useMutation(
+      const selectedLeagueMember = ref<TLeagueMember | null>(null);
+
+      function showRemoveConfirmationModal(leagueMember: TLeagueMember) {
+        selectedLeagueMember.value = leagueMember;
+        showConfirmationModal();
+      }
+
+      function hideRemoveConfirmationModal() {
+        selectedLeagueMember.value = null;
+        hideConfirmationModal();
+      }
+
+      const { mutate: removeLeagueMember } = useMutation<
+        TRemoveLeagueMemberResult,
+        TRemoveLeagueMemberVariables
+      >(
         gql`
           mutation RemoveLeagueMember($input: RemoveLeagueMemberInput!) {
             removeLeagueMember(input: $input) {
@@ -129,35 +163,47 @@
         `
       );
 
-      const handleRemoveClick = async (leagueMemberId: string) => {
-        const { data, errors } = await removeLeagueMember({
+      const store = useStore();
+
+      async function handleRemoveLeagueMember(leagueMemberId: string) {
+        const { data } = await removeLeagueMember({
           input: { leagueMemberId },
         });
-        hideConfirmationModal_();
+
+        hideRemoveConfirmationModal();
+
         if (data) {
           store.dispatch("pushNotification", {
             type: "success",
             message: "League member removed successfully!",
           });
+
           refetch();
         } else {
           store.dispatch("pushNotification", {
             type: "error",
-            message: "Failed to remove league member.",
+            message: "Failed to remove league member. Please try again later",
           });
         }
-      };
+      }
+
       return {
-        league,
-        leagueId,
         leagueMembers,
-        handleRemoveClick,
-        isConfirmationModalVisible,
-        showConfirmationModal,
-        hideConfirmationModal,
+        handleRemoveLeagueMember,
+        isRemoveConfirmationModalVisible: isConfirmationModalVisible,
+        showRemoveConfirmationModal,
+        hideRemoveConfirmationModal,
         selectedLeagueMember,
       };
     },
   });
+
   export default EditLeagueMembers;
 </script>
+
+<style scoped>
+  .edit-league-members__list {
+    max-height: 75vh;
+    overflow-y: auto;
+  }
+</style>

@@ -43,7 +43,7 @@
   import LeagueDetails from "./components/LeagueDetails/index.vue";
   import LeagueMembers from "./components/LeagueMembers/index.vue";
 
-  type TLeagueDetailsResult = {
+  type TLeagueInformationResult = {
     league: {
       id: string;
       name: string;
@@ -69,7 +69,7 @@
     };
   };
 
-  type TLeagueDetailsVariables = { leagueId: string };
+  type TLeagueInformationVariables = { leagueId: string };
 
   const LeagueInformation = defineComponent({
     components: {
@@ -84,9 +84,9 @@
         params: { leagueId },
       } = route;
 
-      const { result } = useQuery<TLeagueDetailsResult, TLeagueDetailsVariables>(
+      const { result } = useQuery<TLeagueInformationResult, TLeagueInformationVariables>(
         gql`
-          query LeagueDetails($leagueId: ID!) {
+          query LeagueInformation($leagueId: ID!) {
             league(id: $leagueId) {
               id
               name

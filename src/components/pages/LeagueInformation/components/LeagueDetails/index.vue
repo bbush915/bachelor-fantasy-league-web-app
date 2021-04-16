@@ -7,7 +7,7 @@
         v-if="canEdit"
         class="flex items-center"
         :to="{
-          name: 'edit-league',
+          name: 'edit-league-details',
         }"
       >
         <span class="mr-2 txt-label">Edit League Details</span>
