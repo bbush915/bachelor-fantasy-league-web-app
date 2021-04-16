@@ -48,8 +48,6 @@
   import InfoIcon from "@/assets/info.svg";
 
   const HeaderRow = defineComponent({
-    name: "HeaderRow",
-
     components: {
       InfoIcon,
     },

@@ -47,8 +47,6 @@
   import Lineup from "./components/Lineup.vue";
 
   const WeeklyScoreDetails = defineComponent({
-    name: "WeeklyScoreDetails",
-
     components: {
       Lineup,
       WeeklyLeaderboard,

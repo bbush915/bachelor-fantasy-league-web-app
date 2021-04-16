@@ -17,8 +17,6 @@
   import RegistrationForm from "./components/RegistrationForm/index.vue";
 
   const Registration = defineComponent({
-    name: "Registration",
-
     components: {
       GradientOverlay,
       RegistrationForm,

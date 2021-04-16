@@ -17,8 +17,6 @@
   import ResetPasswordForm from "./components/ResetPasswordForm/index.vue";
 
   const ResetPassword = defineComponent({
-    name: "ResetPassword",
-
     components: {
       GradientOverlay,
       ResetPasswordForm,

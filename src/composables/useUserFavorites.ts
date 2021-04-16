@@ -77,7 +77,7 @@ export function useUserFavorites() {
     if (!data) {
       store.dispatch("pushNotification", {
         type: "error",
-        message: "Failed to save favorite. Try again later",
+        message: "Failed to save favorite. Please try again later",
       });
     }
   }
@@ -128,7 +128,7 @@ export function useUserFavorites() {
     if (!data) {
       store.dispatch("pushNotification", {
         type: "error",
-        message: "Failed to remove favorite. Try again later",
+        message: "Failed to remove favorite. Please try again later",
       });
     }
   }

@@ -33,8 +33,6 @@
   import { LeagueContext } from "@/types";
 
   const OverallLeaderboard = defineComponent({
-    name: "OverallLeaderboard",
-
     components: {
       Avatar,
     },

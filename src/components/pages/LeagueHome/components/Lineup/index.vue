@@ -76,8 +76,6 @@
   import { LeagueContext } from "@/types";
 
   const Lineup = defineComponent({
-    name: "Lineup",
-
     components: {
       AlertIcon,
       Avatar,

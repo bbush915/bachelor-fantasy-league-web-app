@@ -57,8 +57,6 @@
   import Input from "@/components/common/Input/index.vue";
 
   const ChangePassword = defineComponent({
-    name: "ChangePassword",
-
     components: {
       Input,
     },

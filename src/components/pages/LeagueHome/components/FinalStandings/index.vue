@@ -18,8 +18,6 @@
   import Podium from "./components/Podium/index.vue";
 
   const FinalStandings = defineComponent({
-    name: "FinalStandings",
-
     components: {
       Podium,
     },

@@ -11,8 +11,6 @@
   import DefaultAvatar from "@/assets/default-avatar.svg";
 
   const Avatar = defineComponent({
-    name: "Avatar",
-
     components: {
       DefaultAvatar,
     },

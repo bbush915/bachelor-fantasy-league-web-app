@@ -54,8 +54,6 @@
   import { getOrdinal } from "@/utils";
 
   const ContestantScores = defineComponent({
-    name: "ContestantScores",
-
     components: {
       Avatar,
       MoreIcon,

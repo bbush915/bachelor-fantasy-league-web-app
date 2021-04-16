@@ -23,8 +23,6 @@
   import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
 
   const PasswordResetSent = defineComponent({
-    name: "PasswordResetSent",
-
     components: {
       EmailIcon,
       GradientOverlay,

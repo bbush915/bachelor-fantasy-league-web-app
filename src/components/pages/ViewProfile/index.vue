@@ -69,8 +69,6 @@
   import { useProfile } from "@/composables";
 
   const ViewProfile = defineComponent({
-    name: "ViewProfile",
-
     components: {
       Avatar,
       CheckIcon,

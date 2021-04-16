@@ -28,7 +28,7 @@
       </div>
     </div>
     <ConfirmationModal
-      v-if="isModalVisible"
+      v-if="isConfirmationModalVisible"
       :onClose="hideConfirmationModal"
       :onConfirm="() => handleRemoveClick(selectedLeagueMember.id)"
       :message="`Are you sure you want to remove ${selectedLeagueMember.user.displayName} from this league?`"
@@ -40,19 +40,17 @@
   import { useMutation, useQuery, useResult } from "@vue/apollo-composable";
   import gql from "graphql-tag";
   import { computed, defineComponent, PropType, ref, toRefs } from "vue";
-  import { useRoute, useRouter } from "vue-router";
+  import { useRouter } from "vue-router";
   import { useStore } from "vuex";
 
   import EditIcon from "@/assets/edit.svg";
   import Avatar from "@/components/common/Avatar/index.vue";
   import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
-  import { useAuthentication, useConfirmationModal } from "@/composables";
+  import { useConfirmationModal } from "@/composables";
   import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
   import { LeagueContext } from "@/types";
 
   const EditLeagueMembers = defineComponent({
-    name: "EditLeagueMembers",
-
     components: {
       Avatar,
       EditIcon,
@@ -66,10 +64,9 @@
       },
     },
     setup(props) {
-      const router = useRouter();
       const store = useStore();
       const {
-        isModalVisible,
+        isConfirmationModalVisible,
         showConfirmationModal: showConfirmationModal_,
         hideConfirmationModal: hideConfirmationModal_,
       } = useConfirmationModal();
@@ -155,7 +152,7 @@
         leagueId,
         leagueMembers,
         handleRemoveClick,
-        isModalVisible,
+        isConfirmationModalVisible,
         showConfirmationModal,
         hideConfirmationModal,
         selectedLeagueMember,

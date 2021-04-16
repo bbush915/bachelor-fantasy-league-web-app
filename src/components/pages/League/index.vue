@@ -1,19 +1,14 @@
 <template>
   <div v-if="leagueContext" class="flex flex-col mx-40">
-    <div class="mt-4 mb-2">
-      <router-link
-        v-if="showHomeLink"
-        class="underline txt-body text-pink"
-        :to="{
-          name: 'league-home',
-          params: { leagueId: leagueContext.leagueId },
-        }"
-      >
-        {{ leagueContext.leagueName }}
-      </router-link>
-
-      <span v-else class="txt-body text-pink">{{ leagueContext.leagueName }}</span>
-    </div>
+    <router-link
+      class="mt-4 mb-1 underline txt-body text-pink"
+      :to="{
+        name: 'league-home',
+        params: { leagueId: leagueContext.leagueId },
+      }"
+    >
+      {{ leagueContext.leagueName }}
+    </router-link>
 
     <router-view :leagueContext="leagueContext" />
   </div>
@@ -22,10 +17,8 @@
 <script lang="ts">
   import { useQuery, useResult } from "@vue/apollo-composable";
   import gql from "graphql-tag";
-  import { computed, defineComponent } from "vue";
+  import { defineComponent } from "vue";
   import { useRoute } from "vue-router";
-
-  import { useAuthentication } from "@/composables";
 
   type TResult = {
     league: {
@@ -50,13 +43,8 @@
   };
 
   const League = defineComponent({
-    name: "League",
-
     setup() {
       const route = useRoute();
-      const { isAuthenticated } = useAuthentication();
-
-      const showHomeLink = computed(() => isAuthenticated && route.name !== "league-home");
 
       const {
         params: { leagueId },
@@ -105,7 +93,6 @@
 
       return {
         leagueContext,
-        showHomeLink,
       };
     },
   });

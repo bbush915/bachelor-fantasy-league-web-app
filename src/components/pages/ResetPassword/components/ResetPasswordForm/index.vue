@@ -37,8 +37,6 @@
   type TResetPasswordVariables = { input: { token: string; password: string } };
 
   const ResetPasswordForm = defineComponent({
-    name: "ResetPasswordForm",
-
     components: {
       Input,
     },

@@ -44,8 +44,6 @@
   import Avatar from "@/components/common/Avatar/index.vue";
 
   const BodyRow = defineComponent({
-    name: "BodyRow",
-
     components: {
       Avatar,
     },

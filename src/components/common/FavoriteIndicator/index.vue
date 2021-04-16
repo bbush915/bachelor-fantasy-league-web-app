@@ -12,8 +12,6 @@
   import FavoriteIcon from "@/assets/favorite.svg";
 
   const FavoriteIndicator = defineComponent({
-    name: "FavoriteIndicator",
-
     components: {
       FavoriteIcon,
       FavoriteIconFilled,

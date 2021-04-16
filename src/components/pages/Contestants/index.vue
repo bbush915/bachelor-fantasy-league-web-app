@@ -50,8 +50,6 @@
   } from "@/composables";
 
   const Contestants = defineComponent({
-    name: "Contestants",
-
     components: {
       Avatar,
       ContestantModal,

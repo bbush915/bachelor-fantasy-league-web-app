@@ -60,7 +60,11 @@
         </section>
       </div>
 
-      <router-link class="w-48 btn-primary mb-80" :to="{ name: 'registration' }">
+      <router-link
+        v-if="!isAuthenticated"
+        class="w-48 btn-primary mb-80"
+        :to="{ name: 'registration' }"
+      >
         Sign up
       </router-link>
     </section>
@@ -72,13 +76,20 @@
 
   import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
   import SteamOverlay from "@/components/common/SteamOverlay/index.vue";
+  import { useAuthentication } from "@/composables";
 
   const About = defineComponent({
-    name: "About",
-
     components: {
       GradientOverlay,
       SteamOverlay,
+    },
+
+    setup() {
+      const { isAuthenticated } = useAuthentication();
+
+      return {
+        isAuthenticated,
+      };
     },
   });
 

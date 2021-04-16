@@ -24,8 +24,6 @@
   import { defineComponent } from "vue";
 
   const Input = defineComponent({
-    name: "Input",
-
     props: {
       value: {
         type: String,

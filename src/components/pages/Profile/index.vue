@@ -14,8 +14,6 @@
   import { useProfile } from "@/composables";
 
   const Profile = defineComponent({
-    name: "Profile",
-
     components: {
       Avatar,
       EditIcon,

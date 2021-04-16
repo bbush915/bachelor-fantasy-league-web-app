@@ -9,9 +9,7 @@
 <script lang="ts">
   import { defineComponent } from "vue";
 
-  const HeaderRow = defineComponent({
-    name: "HeaderRow",
-  });
+  const HeaderRow = defineComponent({});
 
   export default HeaderRow;
 </script>

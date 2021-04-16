@@ -38,8 +38,6 @@
   import { LeagueContext } from "@/types";
 
   const WeeklyScores = defineComponent({
-    name: "WeeklyScores",
-
     components: {
       MoreIcon,
       PlaceholderIcon,

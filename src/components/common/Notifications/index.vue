@@ -20,8 +20,6 @@
   import { useStore } from "vuex";
 
   const Notifications = defineComponent({
-    name: "Notifications",
-
     setup() {
       const store = useStore();
 

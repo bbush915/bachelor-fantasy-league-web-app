@@ -32,8 +32,6 @@
   import { useCurrentSeasonWeek } from "@/composables";
 
   const EpisodeCountdown = defineComponent({
-    name: "EpisodeCountdown",
-
     setup() {
       const { currentSeasonWeek } = useCurrentSeasonWeek();
 

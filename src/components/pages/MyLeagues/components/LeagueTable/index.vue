@@ -1,5 +1,5 @@
 <template>
-  <table>
+  <table class="w-full">
     <thead>
       <HeaderRow />
     </thead>
@@ -17,8 +17,6 @@
   import HeaderRow from "./HeaderRow.vue";
 
   const LeagueTable = defineComponent({
-    name: "LeagueTable",
-
     components: {
       BodyRow,
       HeaderRow,

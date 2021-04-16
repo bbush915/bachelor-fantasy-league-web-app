@@ -3,8 +3,8 @@
     <div class="flex justify-between mb-10 mr-40">
       <h1>League Home</h1>
 
-      <router-link class="btn-secondary" :to="{ name: 'league-details' }">
-        League Details
+      <router-link class="btn-secondary" :to="{ name: 'league-info' }">
+        More Information
       </router-link>
     </div>
 
@@ -37,8 +37,6 @@
   import WeeklyScores from "./components/WeeklyScores/index.vue";
 
   const LeagueHome = defineComponent({
-    name: "LeagueHome",
-
     components: {
       ContestantScores,
       FinalStandings,

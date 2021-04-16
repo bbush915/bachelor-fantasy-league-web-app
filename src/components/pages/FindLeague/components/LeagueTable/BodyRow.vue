@@ -27,17 +27,17 @@
         <router-link
           class="btn-secondary"
           :to="{
-            name: 'league-details',
+            name: 'league-info',
             params: { leagueId: league.id },
           }"
         >
-          Details
+          More Info
         </router-link>
 
         <button
-          v-if="isAuthenticated && !league.myLeagueMember"
+          v-if="isAuthenticated.value && !!!league.myLeagueMember?.isActive"
           class="ml-4 btn-primary"
-          @click="onJoinLeagueClick(league.id)"
+          @click="onJoinLeagueClick"
         >
           Join League
         </button>
@@ -47,21 +47,13 @@
 </template>
 
 <script lang="ts">
-  import { useAuthentication } from "@/composables";
-  import { useMutation } from "@vue/apollo-composable";
-  import gql from "graphql-tag";
+  import { useAuthentication, useJoinLeague } from "@/composables";
   import { defineComponent, toRefs } from "vue";
   import { useRouter } from "vue-router";
-  import { useStore } from "vuex";
 
   import Avatar from "@/components/common/Avatar/index.vue";
 
-  type TJoinLeagueResult = { joinLeague: { id: string } };
-  type TJoinLeagueVariables = { input: { leagueId: string } };
-
   const BodyRow = defineComponent({
-    name: "BodyRow",
-
     components: {
       Avatar,
     },
@@ -76,41 +68,18 @@
     setup(props) {
       const { league } = toRefs(props);
 
-      const store = useStore();
       const router = useRouter();
 
       const { isAuthenticated } = useAuthentication();
 
-      const { mutate: joinLeague } = useMutation<TJoinLeagueResult, TJoinLeagueVariables>(
-        gql`
-          mutation JoinLeague($input: JoinLeagueInput!) {
-            joinLeague(input: $input) {
-              id
-            }
-          }
-        `
-      );
+      const { joinLeague } = useJoinLeague(league.value.id);
 
-      async function onJoinLeagueClick(leagueId: string) {
-        const { data } = await joinLeague({
-          input: {
-            leagueId,
-          },
-        });
+      function onJoinLeagueClick() {
+        const callback = () => {
+          router.push({ name: "league-home", params: { leagueId: league.value.id } });
+        };
 
-        if (data) {
-          store.dispatch("pushNotification", {
-            type: "success",
-            message: "Joined league successfuly!",
-          });
-
-          router.push({ name: "league-home", params: { leagueId } });
-        } else {
-          store.dispatch("pushNotification", {
-            type: "error",
-            message: "Failed to join league. Please try again later",
-          });
-        }
+        return joinLeague(callback);
       }
 
       return {

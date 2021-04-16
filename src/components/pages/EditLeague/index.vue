@@ -49,7 +49,7 @@
         <div class="flex self-end space-x-4">
           <router-link
             class="btn-secondary"
-            :to="{ name: 'league-details', params: { leagueId: leagueId } }"
+            :to="{ name: 'league-info', params: { leagueId: leagueId } }"
           >
             Cancel
           </router-link>
@@ -59,7 +59,7 @@
       </form>
     </div>
     <ConfirmationModal
-      v-if="isModalVisible"
+      v-if="isConfirmationModalVisible"
       :onClose="hideConfirmationModal"
       :onConfirm="handleDelete"
       :message="'Are you sure you want to permanently delete this league? This cannot be undone.'"
@@ -85,14 +85,15 @@
   import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
 
   const EditLeague = defineComponent({
-    name: "EditLeague",
     components: { Avatar, Input, DeleteIcon, ConfirmationModal, ScrollContainer },
+
     props: {
       leagueContext: {
         type: Object as PropType<LeagueContext>,
         required: true,
       },
     },
+
     setup(props) {
       const { leagueContext } = toRefs(props);
       const { leagueId } = leagueContext.value;
@@ -133,7 +134,7 @@
       const league = useResult(result, null, (data) => data.league);
       const isCommissioner = computed(() => league.value?.myLeagueMember?.isCommissioner);
       const {
-        isModalVisible,
+        isConfirmationModalVisible,
         showConfirmationModal,
         hideConfirmationModal,
       } = useConfirmationModal();
@@ -278,7 +279,7 @@
         isCommissioner,
         showConfirmationModal,
         hideConfirmationModal,
-        isModalVisible,
+        isConfirmationModalVisible,
         handleDelete,
         leagueMembers,
       };

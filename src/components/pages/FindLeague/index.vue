@@ -67,13 +67,12 @@
       };
       myLeagueMember: {
         id: string;
+        isActive: boolean;
       };
     }[];
   };
 
   const FindLeague = defineComponent({
-    name: "FindLeague",
-
     components: {
       Input,
       LeagueTable,
@@ -110,6 +109,7 @@
               }
               myLeagueMember {
                 id
+                isActive
               }
             }
           }
@@ -120,7 +120,9 @@
         })
       );
 
-      const leagues = useResult(result, [], (data) => data.leagues);
+      const leagues = useResult(result, [], (data) =>
+        data.leagues.sort((x, y) => x.name.localeCompare(y.name))
+      );
 
       watch(
         () => result.value,

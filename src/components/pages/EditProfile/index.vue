@@ -79,8 +79,6 @@
   import { useMutableImage, useProfile } from "@/composables";
 
   const EditProfile = defineComponent({
-    name: "EditProfile",
-
     components: {
       Checkbox,
       Input,

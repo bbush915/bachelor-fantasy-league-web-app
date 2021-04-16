@@ -11,8 +11,6 @@
   type TVerifyEmailVariables = { input: { token: string } };
 
   const VerifyEmail = defineComponent({
-    name: "VerifyEmail",
-
     setup() {
       const store = useStore();
       const router = useRouter();

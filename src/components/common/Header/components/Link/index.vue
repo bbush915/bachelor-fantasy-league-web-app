@@ -13,8 +13,6 @@
   import LipstickSmear from "@/assets/lipstick-smear.svg";
 
   const Link = defineComponent({
-    name: "Link",
-
     components: {
       LipstickSmear,
     },

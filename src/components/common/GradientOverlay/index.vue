@@ -5,9 +5,7 @@
 <script lang="ts">
   import { defineComponent } from "vue";
 
-  const GradientOverlay = defineComponent({
-    name: "GradientOverlay",
-  });
+  const GradientOverlay = defineComponent({});
 
   export default GradientOverlay;
 </script>

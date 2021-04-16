@@ -91,8 +91,6 @@
   };
 
   const SetLineup = defineComponent({
-    name: "SetLineup",
-
     components: {
       Avatar,
       ContestantModal,
@@ -228,7 +226,7 @@
         } catch (error) {
           store.dispatch("pushNotification", {
             type: "error",
-            message: "Failed to set lineup. Try again later",
+            message: "Failed to set lineup. Please try again later",
           });
         }
       }

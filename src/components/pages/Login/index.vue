@@ -17,8 +17,6 @@
   import LoginForm from "./components/LoginForm/index.vue";
 
   const Login = defineComponent({
-    name: "Login",
-
     components: {
       GradientOverlay,
       LoginForm,

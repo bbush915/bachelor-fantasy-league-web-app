@@ -17,8 +17,6 @@
   import HeaderRow from "./HeaderRow.vue";
 
   const LeagueTable = defineComponent({
-    name: "LeagueTable",
-
     props: {
       leagues: {
         type: Array,

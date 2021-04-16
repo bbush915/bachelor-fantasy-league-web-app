@@ -8,24 +8,24 @@
       <Loading v-if="loading" />
 
       <div v-else class="flex flex-col">
-        <div v-if="leagues.length > 0">
-          <LeagueTable class="w-full" :leagues="leagues" :isLocked="isLocked" />
-        </div>
-
-        <div v-else class="flex flex-col items-center">
-          <div class="w-16 h-16 mb-8">
+        <div v-if="leagues.length === 0" class="flex flex-col items-center">
+          <div class="w-16 h-16 mb-8 animated-rose">
             <RoseIcon />
           </div>
 
-          <p class="w-2/3 mb-8 text-center txt-body">
-            You are not a member of any fantasy leagues! Search for a league to join or create a new
-            league to get started.
+          <p class="w-1/2 mb-8 text-center txt-body">
+            You are not a member of any fantasy leagues! To get started, find a league to join or
+            create one of your own!
           </p>
 
           <div class="flex flex-col items-center">
             <router-link class="mb-6 w-52 btn-primary" to="/find-league">Find a League</router-link>
             <router-link class="w-52 btn-primary" to="/create-league">Create a League</router-link>
           </div>
+        </div>
+
+        <div v-else>
+          <LeagueTable :leagues="leagues" :isLocked="isLocked" />
         </div>
       </div>
     </div>
@@ -56,8 +56,6 @@
   };
 
   const MyLeagues = defineComponent({
-    name: "MyLeagues",
-
     components: {
       LeagueTable,
       Loading,

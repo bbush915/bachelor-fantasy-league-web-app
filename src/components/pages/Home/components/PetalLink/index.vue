@@ -14,8 +14,6 @@
   import { defineComponent } from "vue";
 
   const PetalLink = defineComponent({
-    name: "PetalLink",
-
     props: {
       to: {
         type: String,

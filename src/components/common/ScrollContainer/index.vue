@@ -34,8 +34,6 @@
   import { useRoute } from "vue-router";
 
   const ScrollContainer = defineComponent({
-    name: "ScrollContainer",
-
     setup() {
       const route = useRoute();
 

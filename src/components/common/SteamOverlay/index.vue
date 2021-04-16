@@ -5,9 +5,7 @@
 <script lang="ts">
   import { defineComponent } from "vue";
 
-  const SteamOverlay = defineComponent({
-    name: "SteamOverlay",
-  });
+  const SteamOverlay = defineComponent({});
 
   export default SteamOverlay;
 </script>

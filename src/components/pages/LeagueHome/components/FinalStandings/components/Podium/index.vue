@@ -26,8 +26,6 @@
   import SilverMedal from "@/assets/silver-medal.svg";
 
   const Podium = defineComponent({
-    name: "Podium",
-
     components: {
       Avatar,
       BronzeMedal,

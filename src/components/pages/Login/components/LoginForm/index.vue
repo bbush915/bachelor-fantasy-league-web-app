@@ -38,8 +38,6 @@
   type TLoginVariables = { input: { email: string; password: string } };
 
   const LoginForm = defineComponent({
-    name: "LoginForm",
-
     components: {
       Input,
     },

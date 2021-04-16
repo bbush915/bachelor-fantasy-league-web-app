@@ -23,8 +23,6 @@
   import ScoreTable from "./components/ScoreTable/index.vue";
 
   const ContestantScoreDetails = defineComponent({
-    name: "ContestantScoreDetails",
-
     components: {
       ScoreTable,
     },

@@ -1,18 +1,18 @@
 import { ref } from "vue";
 
 export function useConfirmationModal() {
-  const isModalVisible = ref(false);
+  const isConfirmationModalVisible = ref(false);
 
   function showConfirmationModal() {
-    isModalVisible.value = true;
+    isConfirmationModalVisible.value = true;
   }
 
   function hideConfirmationModal() {
-    isModalVisible.value = false;
+    isConfirmationModalVisible.value = false;
   }
 
   return {
-    isModalVisible,
+    isConfirmationModalVisible,
     showConfirmationModal,
     hideConfirmationModal,
   };

@@ -29,9 +29,7 @@
 <script lang="ts">
   import { defineComponent } from "vue";
 
-  const Footer = defineComponent({
-    name: "Footer",
-  });
+  const Footer = defineComponent({});
 
   export default Footer;
 </script>

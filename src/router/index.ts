@@ -14,8 +14,8 @@ import FindLeague from "@/components/pages/FindLeague/index.vue";
 import ForgotPassword from "@/components/pages/ForgotPassword/index.vue";
 import Home from "@/components/pages/Home/index.vue";
 import League from "@/components/pages/League/index.vue";
-import LeagueDetails from "@/components/pages/LeagueDetails/index.vue";
 import LeagueHome from "@/components/pages/LeagueHome/index.vue";
+import LeagueInformation from "@/components/pages/LeagueInformation/index.vue";
 import Login from "@/components/pages/Login/index.vue";
 import MyLeagues from "@/components/pages/MyLeagues/index.vue";
 import OverallScoreDetails from "@/components/pages/OverallScoreDetails/index.vue";
@@ -47,9 +47,9 @@ const routes: RouteRecordRaw[] = [
     component: ForgotPassword,
   },
   {
-    path: "/leagues/:leagueId/details",
-    name: "league-details",
-    component: LeagueDetails,
+    path: "/leagues/:leagueId/info",
+    name: "league-info",
+    component: LeagueInformation,
     beforeEnter: validateLeagueAccessibility,
   },
   {

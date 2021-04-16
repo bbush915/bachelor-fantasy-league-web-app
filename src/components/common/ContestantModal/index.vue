@@ -57,8 +57,6 @@
   import { IContestant, useAuthentication, useUserFavorites } from "@/composables";
 
   const ContestantModal = defineComponent({
-    name: "ContestantModal",
-
     components: {
       Avatar,
       CloseIcon,

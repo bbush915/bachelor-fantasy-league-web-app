@@ -52,8 +52,6 @@
   import { useMutableImage } from "@/composables";
 
   const CreateLeague = defineComponent({
-    name: "CreateLeague",
-
     setup() {
       const router = useRouter();
       const store = useStore();
@@ -102,7 +100,7 @@
         } else {
           store.dispatch("pushNotification", {
             type: "error",
-            message: "Failed to create league. Try again later",
+            message: "Failed to create league. Please try again later",
           });
         }
       }

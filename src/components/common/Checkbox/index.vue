@@ -27,8 +27,6 @@
   import CheckIcon from "@/assets/check.svg";
 
   const Checkbox = defineComponent({
-    name: "Checkbox",
-
     components: {
       CheckIcon,
     },

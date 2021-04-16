@@ -25,8 +25,6 @@
   import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
 
   const EmailVerificationSuccess = defineComponent({
-    name: "EmailVerificationSuccess",
-
     components: {
       EmailIcon,
       GradientOverlay,

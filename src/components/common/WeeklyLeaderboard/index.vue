@@ -43,8 +43,6 @@
   import { LeagueContext } from "@/types";
 
   const WeeklyLeaderboard = defineComponent({
-    name: "WeeklyLeaderboard",
-
     components: {
       Avatar,
     },

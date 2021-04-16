@@ -32,8 +32,6 @@
   import { LeagueContext } from "@/types";
 
   const OverallScoreDetails = defineComponent({
-    name: "OverallScoreDetails",
-
     components: {
       OverallLeaderboard,
     },

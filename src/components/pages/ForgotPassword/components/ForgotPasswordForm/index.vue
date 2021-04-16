@@ -29,8 +29,6 @@
   type TSendPasswordResetEmailVariables = { email: string };
 
   const ForgotPasswordForm = defineComponent({
-    name: "ForgotPasswordForm",
-
     components: {
       Input,
     },

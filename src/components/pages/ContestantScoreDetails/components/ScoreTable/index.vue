@@ -23,8 +23,6 @@
   import HeaderRow from "./HeaderRow.vue";
 
   const ScoreTable = defineComponent({
-    name: "ScoreTable",
-
     props: {
       seasonWeekContestants: {
         type: Array,

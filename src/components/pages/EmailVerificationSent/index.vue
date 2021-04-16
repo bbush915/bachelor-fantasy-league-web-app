@@ -31,8 +31,6 @@
   type TSendVerificationEmailVariables = { email: string };
 
   const EmailVerificationSent = defineComponent({
-    name: "EmailVerificationSent",
-
     components: {
       EmailIcon,
       GradientOverlay,

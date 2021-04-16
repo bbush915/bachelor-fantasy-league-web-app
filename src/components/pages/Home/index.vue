@@ -8,24 +8,25 @@
         <Logo />
       </div>
 
-      <div class="relative mb-10 w-80">
+      <div class="relative mb-16 w-80">
         <div class="text-3xl font-light text-center">Welcome to the Fantasy Suite</div>
         <div class="text-4xl text-right font-accent text-red">League</div>
         <Strikethrough class="w-24 title__strikethrough" />
       </div>
 
-      <div v-if="!isAuthenticated">
-        <router-link class="mb-6 btn-primary" :to="{ name: 'registration' }">Sign up</router-link>
-        <p>
-          <span class="mr-2 font-extralight">Already have an account?</span>
-
-          <router-link class="underline text-pink" to="/login">Log in.</router-link>
-        </p>
-      </div>
-      <div v-else>
-        <router-link class="mb-6 btn-primary" :to="{ name: 'my-leagues' }">
+      <div v-if="isAuthenticated">
+        <router-link class="btn-primary" :to="{ name: 'my-leagues' }">
           My Fantasy Leagues
         </router-link>
+      </div>
+
+      <div v-else>
+        <router-link class="mb-6 btn-primary" :to="{ name: 'registration' }">Sign up</router-link>
+
+        <p>
+          <span class="mr-2 font-extralight">Already have an account?</span>
+          <router-link class="underline text-pink" to="/login">Log in.</router-link>
+        </p>
       </div>
 
       <div class="mb-40 space-y-4 mt-60">
@@ -58,8 +59,6 @@
   ];
 
   const Home = defineComponent({
-    name: "Home",
-
     components: {
       GradientOverlay,
       Logo,

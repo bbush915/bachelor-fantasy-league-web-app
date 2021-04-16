@@ -31,8 +31,6 @@
   import { useLineupContestants } from "@/composables";
 
   const Lineup = defineComponent({
-    name: "Lineup",
-
     components: {
       Avatar,
     },

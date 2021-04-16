@@ -55,8 +55,6 @@
   import { getOrdinal } from "@/utils";
 
   const BodyRow = defineComponent({
-    name: "BodyRow",
-
     components: {
       ActionRequiredIcon,
       EditIcon,

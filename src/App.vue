@@ -30,8 +30,6 @@
   import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
 
   export default defineComponent({
-    name: "App",
-
     components: {
       Header,
       Footer,

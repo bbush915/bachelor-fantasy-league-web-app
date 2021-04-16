@@ -57,8 +57,6 @@
   ];
 
   const Header = defineComponent({
-    name: "Header",
-
     components: {
       EpisodeCountdown,
       Link,

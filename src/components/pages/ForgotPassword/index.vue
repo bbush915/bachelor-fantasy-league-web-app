@@ -21,8 +21,6 @@
   import ForgotPasswordForm from "./components/ForgotPasswordForm/index.vue";
 
   const ForgotPassword = defineComponent({
-    name: "ForgotPassword",
-
     components: {
       ForgotPasswordForm,
       GradientOverlay,

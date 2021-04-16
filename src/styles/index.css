@@ -86,3 +86,25 @@ textarea {
   margin-top: 0;
   margin-bottom: 0;
 }
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(50deg);
+  }
+
+  25% {
+    transform: rotate(15deg);
+  }
+
+  75% {
+    transform: rotate(85deg);
+  }
+
+  100% {
+    transform: rotate(50deg);
+  }
+}
+
+.animated-rose {
+  animation: wiggle 2s infinite linear;
+}
