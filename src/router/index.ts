@@ -25,7 +25,6 @@ import Registration from "@/components/pages/Registration/index.vue";
 import ResetPassword from "@/components/pages/ResetPassword/index.vue";
 import SetLineup from "@/components/pages/SetLineup/index.vue";
 import VerifyEmail from "@/components/pages/VerifyEmail/index.vue";
-import ViewProfile from "@/components/pages/ViewProfile/index.vue";
 import WeeklyScoreDetails from "@/components/pages/WeeklyScoreDetails/index.vue";
 import { isAuthenticated } from "@/utils/authentication";
 import { validateLeagueAccessibility, validateLeagueMembership } from "./guards";
@@ -104,24 +103,24 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/profile",
+    name: "profile",
     component: Profile,
-    children: [
-      {
-        path: "",
-        name: "view-profile",
-        component: ViewProfile,
-      },
-      {
-        path: "edit",
-        name: "edit-profile",
-        component: EditProfile,
-      },
-      {
-        path: "change-password",
-        name: "change-password",
-        component: ChangePassword,
-      },
-    ],
+    meta: {
+      requireAuth: true,
+    },
+  },
+  {
+    path: "/profile/change-password",
+    name: "change-password",
+    component: ChangePassword,
+    meta: {
+      requireAuth: true,
+    },
+  },
+  {
+    path: "/profile/edit",
+    name: "edit-profile",
+    component: EditProfile,
     meta: {
       requireAuth: true,
     },

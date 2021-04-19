@@ -27,9 +27,7 @@ export function useProfile() {
           sendScoringRecaps
         }
       }
-    `,
-    null,
-    { fetchPolicy: "cache-first" }
+    `
   );
 
   const profile = useResult<TResult, null, TResult["me"]>(result, null, (data) => data.me);

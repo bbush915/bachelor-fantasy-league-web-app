@@ -88,7 +88,7 @@
     };
   };
 
-  const LoginForm = defineComponent({
+  const EditLeagueDetailsForm = defineComponent({
     components: {
       Checkbox,
       Input,
@@ -216,5 +216,5 @@
     },
   });
 
-  export default LoginForm;
+  export default EditLeagueDetailsForm;
 </script>

@@ -68,7 +68,7 @@
     };
   };
 
-  const LoginForm = defineComponent({
+  const CreateLeagueForm = defineComponent({
     components: {
       Checkbox,
       Input,
@@ -179,5 +179,5 @@
     },
   });
 
-  export default LoginForm;
+  export default CreateLeagueForm;
 </script>
