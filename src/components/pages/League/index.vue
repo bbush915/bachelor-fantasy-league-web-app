@@ -20,10 +20,12 @@
   import { defineComponent } from "vue";
   import { useRoute } from "vue-router";
 
-  type TResult = {
+  type TLeagueResult = {
     league: {
       id: string;
       name: string;
+      isShareable: boolean;
+      inviteLink?: string;
       season: {
         id: string;
         currentWeekNumber: number;
@@ -38,8 +40,13 @@
       };
       myLeagueMember: {
         id: string;
+        isCommissioner: boolean;
       };
     };
+  };
+
+  type TLeagueVariables = {
+    id: string;
   };
 
   const League = defineComponent({
@@ -50,12 +57,14 @@
         params: { leagueId },
       } = route;
 
-      const { result } = useQuery<TResult>(
+      const { result } = useQuery<TLeagueResult, TLeagueVariables>(
         gql`
           query League($id: ID!) {
             league(id: $id) {
               id
               name
+              isShareable
+              inviteLink
               season {
                 id
                 currentWeekNumber
@@ -71,18 +80,21 @@
               }
               myLeagueMember {
                 id
+                isCommissioner
               }
             }
           }
         `,
-        { id: leagueId },
-        { errorPolicy: "all" }
+        { id: leagueId as string }
       );
 
       const leagueContext = useResult(result, null, (data) => ({
         leagueId: data.league.id,
         leagueName: data.league.name,
+        isShareable: data.league.isShareable,
+        inviteLink: data.league.inviteLink,
         leagueMemberId: data.league.myLeagueMember?.id,
+        isCommissioner: data.league.myLeagueMember?.isCommissioner ?? false,
         seasonId: data.league.season.id,
         weekNumber: data.league.season.currentWeekNumber,
         isComplete: data.league.season.isComplete,

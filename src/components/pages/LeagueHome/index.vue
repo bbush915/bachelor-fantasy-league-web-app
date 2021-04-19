@@ -3,9 +3,15 @@
     <div class="flex justify-between mb-10 mr-40">
       <h1>League Home</h1>
 
-      <router-link class="btn-secondary" :to="{ name: 'league-info' }">
-        More Information
-      </router-link>
+      <div class="flex">
+        <button v-if="canShareLeague" class="mr-4 btn-primary" @click="onShareLeagueClick">
+          Copy Invite Link
+        </button>
+
+        <router-link class="btn-secondary" :to="{ name: 'league-info' }">
+          More Information
+        </router-link>
+      </div>
     </div>
 
     <div class="flex flex-col mx-40 space-y-8">
@@ -27,9 +33,10 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, PropType } from "vue";
+  import { computed, defineComponent, PropType, toRefs } from "vue";
 
   import { LeagueContext } from "@/types";
+  import { useAuthentication, useShareLeague } from "@/composables";
   import ContestantScores from "./components/ContestantScores/index.vue";
   import FinalStandings from "./components/FinalStandings/index.vue";
   import Lineup from "./components/Lineup/index.vue";
@@ -50,6 +57,25 @@
         type: Object as PropType<LeagueContext>,
         required: true,
       },
+    },
+
+    setup(props) {
+      const { leagueContext } = toRefs(props);
+
+      const { isAuthenticated } = useAuthentication();
+
+      const canShareLeague = computed(
+        () =>
+          isAuthenticated.value &&
+          (leagueContext.value.isShareable || !!leagueContext.value.isCommissioner)
+      );
+
+      const { copyInviteLink } = useShareLeague(leagueContext.value.inviteLink);
+
+      return {
+        canShareLeague,
+        onShareLeagueClick: copyInviteLink,
+      };
     },
   });
 

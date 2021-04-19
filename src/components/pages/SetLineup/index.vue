@@ -5,20 +5,7 @@
     <div class="relative flex flex-col p-8 bg-gray-dark rounded-xl">
       <h2 class="mb-4">Select who you think deserves a rose.</h2>
 
-      <div class="flex flex-col items-start">
-        <span class="my-2 txt-body">
-          {{ rosesRemaining === 1 ? "1 rose" : `${rosesRemaining} roses` }}
-          left
-        </span>
-
-        <div class="flex flex-wrap h-12 mb-8">
-          <div v-for="i in rosesRemaining" :key="i" class="w-12 h-12">
-            <RoseIcon />
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-wrap justify-center mb-8">
+      <div class="flex flex-wrap justify-center">
         <div
           v-for="contestant in contestants"
           :key="contestant.id"
@@ -49,6 +36,19 @@
           </button>
 
           <span class="txt-body">{{ contestant.name }}</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-start mb-8">
+        <span class="my-2 txt-body">
+          {{ rosesRemaining === 1 ? "1 rose" : `${rosesRemaining} roses` }}
+          left
+        </span>
+
+        <div class="flex flex-wrap h-12">
+          <div v-for="i in rosesRemaining" :key="i" class="w-12 h-12">
+            <RoseIcon />
+          </div>
         </div>
       </div>
 
