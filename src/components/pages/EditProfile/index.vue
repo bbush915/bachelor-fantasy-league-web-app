@@ -4,7 +4,7 @@
 
     <section
       v-if="profile"
-      class="relative flex flex-col w-2/5 px-8 pt-6 pb-8 mx-auto bg-gray-dark rounded-3xl"
+      class="relative flex flex-col w-2/5 px-8 pt-6 pb-8 mx-auto mb-8 bg-gray-dark rounded-3xl"
     >
       <h2 class="mb-4">Details</h2>
 

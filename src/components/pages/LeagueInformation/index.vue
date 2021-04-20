@@ -17,7 +17,7 @@
       <h1 class="mt-1">League Information</h1>
     </div>
 
-    <div class="flex flex-row space-x-8">
+    <div class="flex flex-row mb-8 space-x-8">
       <LeagueDetails
         class="w-1/2 league-information__details"
         :league="league"

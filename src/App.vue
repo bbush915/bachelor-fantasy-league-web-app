@@ -6,7 +6,7 @@
     <ScrollContainer
       class="scroll-container"
       :style="{
-        'min-height': `calc(100vh - ${showRunners ? '88px' : '0px'})`,
+        height: `calc(100vh - ${showRunners ? '88px' : '0px'})`,
       }"
     >
       <router-view
