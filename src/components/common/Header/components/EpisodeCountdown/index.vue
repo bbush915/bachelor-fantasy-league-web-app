@@ -1,9 +1,9 @@
 <template>
   <div class="flex justify-end p-1 root txt-label">
     <div v-if="timeRemaining" class="flex">
-      <span>Lineup locks in</span>
+      <span class="mr-1">Lineup locks in</span>
 
-      <div v-if="timeRemaining.days > 0" class="flex mx-1">
+      <div v-if="timeRemaining.days > 0" class="flex mr-1">
         <span class="mr-0.5">{{ timeRemaining.days }}</span>
         <span>days</span>
       </div>
