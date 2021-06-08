@@ -39,7 +39,7 @@ export function useContestants() {
   const contestants = useResult(
     result,
     [] as TResult["allContestants"],
-    (data) => data.allContestants
+    (data) => data.allContestants.sort((x, y) => x.name.localeCompare(y.name))
   );
 
   return {
