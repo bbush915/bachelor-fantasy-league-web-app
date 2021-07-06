@@ -22,7 +22,7 @@
           </button>
 
           <button
-            class="relative w-24 h-24 mb-3 overflow-hidden rounded-full focus:outline-none contestant"
+            class="relative w-24 h-24 mb-3 overflow-hidden rounded-full  focus:outline-none contestant"
             @click="toggleContestant(contestant)"
             :class="{
               selected: contestant.isSelected,
@@ -109,12 +109,8 @@
     setup(props) {
       const { leagueContext } = toRefs(props);
 
-      const {
-        leagueId,
-        leagueMemberId,
-        currentSeasonWeekId,
-        lineupSpotsAvailable,
-      } = leagueContext.value;
+      const { leagueId, leagueMemberId, currentSeasonWeekId, lineupSpotsAvailable } =
+        leagueContext.value;
 
       const router = useRouter();
       const store = useStore();
@@ -138,10 +134,8 @@
         { fetchPolicy: "cache-first" }
       );
 
-      const weeklyContestants = useResult(
-        result,
-        [] as TResult["weeklyContestants"],
-        (data) => data.weeklyContestants
+      const weeklyContestants = useResult(result, [] as TResult["weeklyContestants"], (data) =>
+        data.weeklyContestants.sort((x, y) => x.name.localeCompare(y.name))
       );
 
       const { userFavorites } = useUserFavorites();
