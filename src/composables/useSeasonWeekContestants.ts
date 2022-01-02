@@ -1,6 +1,6 @@
 import { useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
-import { computed, reactive, Ref } from "vue";
+import { computed, reactive, ref, Ref, watch } from "vue";
 
 type TResult = {
   seasonWeekContestants: {
@@ -45,15 +45,29 @@ export function useSeasonWeekContestants(seasonWeekId: Ref<string | undefined>) 
     `,
     { seasonWeekId },
     reactive({
-      fetchPolicy: "cache-first",
       enabled: isQueryEnabled,
     })
   );
 
-  const seasonWeekContestants = useResult(result, [] as TResult["seasonWeekContestants"], (data) =>
+  const seasonWeekContestants_ = useResult(result, [] as TResult["seasonWeekContestants"], (data) =>
     data.seasonWeekContestants
       .slice(0)
       .sort((x, y) => x.contestant.name.localeCompare(y.contestant.name))
+  );
+
+  const seasonWeekContestants = ref<any[]>([]);
+
+  watch(
+    () => seasonWeekContestants_.value,
+    () => {
+      if (seasonWeekContestants_.value) {
+        seasonWeekContestants.value.splice(0, seasonWeekContestants.value.length);
+
+        seasonWeekContestants.value.push(
+          ...JSON.parse(JSON.stringify(seasonWeekContestants_.value))
+        );
+      }
+    }
   );
 
   return {

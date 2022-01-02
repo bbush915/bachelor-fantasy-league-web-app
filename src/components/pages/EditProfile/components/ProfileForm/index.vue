@@ -27,6 +27,15 @@
       <Input id="email" type="email" v-model:value="email" :error="errors.email" />
     </div>
 
+    <label class="mt-8 mb-2">General Preferences</label>
+
+    <Checkbox
+      class="mb-1"
+      id="random-lineup"
+      label="Use random lineup if you forget to set one"
+      v-model:checked="setRandomLineup"
+    />
+
     <label class="mt-8 mb-2">Email Preferences</label>
 
     <Checkbox
@@ -79,6 +88,7 @@
     avatarUrl?: string;
     sendLineupReminders: boolean;
     sendScoringRecaps: boolean;
+    setRandomLineup: boolean;
   };
 
   type TUpdateProfileResult = { updateProfile: { id: string } };
@@ -90,6 +100,7 @@
       avatarUrl?: string | null;
       sendLineupReminders: boolean;
       sendScoringRecaps: boolean;
+      setRandomLineup: boolean;
     };
   };
 
@@ -139,6 +150,8 @@
           sendLineupReminders: boolean(),
 
           sendScoringRecaps: boolean(),
+
+          setRandomLineup: boolean(),
         }),
 
         initialValues: {
@@ -147,6 +160,7 @@
           email: profile.value.email,
           sendLineupReminders: profile.value.sendLineupReminders,
           sendScoringRecaps: profile.value.sendScoringRecaps,
+          setRandomLineup: profile.value.setRandomLineup,
         },
       });
 
@@ -155,6 +169,7 @@
       const { value: email } = useField<string | undefined>("email");
       const { value: sendLineupReminders } = useField<boolean>("sendLineupReminders");
       const { value: sendScoringRecaps } = useField<boolean>("sendScoringRecaps");
+      const { value: setRandomLineup } = useField<boolean>("setRandomLineup");
 
       const unsubscribe = ref(false);
 
@@ -194,6 +209,7 @@
             avatarUrl: values.avatarUrl,
             sendLineupReminders: sendLineupReminders.value,
             sendScoringRecaps: sendScoringRecaps.value,
+            setRandomLineup: setRandomLineup.value,
           },
         });
 
@@ -221,6 +237,7 @@
         handleAvatarUrlChange,
         displayName,
         email,
+        setRandomLineup,
         sendLineupReminders,
         sendScoringRecaps,
         unsubscribe,

@@ -225,11 +225,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@popperjs/core@^2.11.0":
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.0.tgz#6734f8ebc106a0860dff7f92bf90df193f0935d7"
-  integrity sha512-zrsUxjLOKAzdewIDRWy9nsV1GQsKBCWaGwsZQlCgr6/q+vjyZhFgqedLfFBuI9anTPEUT4APq9Mu0SZBTzIcGQ==
-
 "@sentry/core@5.30.0":
   version "5.30.0"
   resolved "https://registry.yarnpkg.com/@sentry/core/-/core-5.30.0.tgz#6b203664f69e75106ee8b5a2fe1d717379b331f3"
@@ -1505,7 +1500,7 @@ lodash.truncate@^4.4.2:
   resolved "https://registry.yarnpkg.com/lodash.truncate/-/lodash.truncate-4.4.2.tgz#5a350da0b1113b837ecfffd5812cbe58d6eae193"
   integrity sha1-WjUNoLERO4N+z//VgSy+WNbq4ZM=
 
-lodash@^4.17.19, lodash@^4.17.21:
+lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -1791,6 +1786,11 @@ pify@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"
   integrity sha1-7RQaasBDqEnqWISY59yosVMw6Qw=
+
+popper.js@^1.16.0:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
+  integrity sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==
 
 postcss-import@14.0.2:
   version "14.0.2"
@@ -2355,13 +2355,13 @@ uuid@^3.3.3:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
-v-tooltip@v4.0.0-beta.5:
-  version "4.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/v-tooltip/-/v-tooltip-4.0.0-beta.5.tgz#ac761c4806ec0872ed0915193e3505418e1ddfa1"
-  integrity sha512-HQFh4sOcYbyEBVmpvhV8CJ6O1pEZ8RAqKKgTmU0sHzhxQn1srH/jtWqW+3H+3lsEgqu0FuKn3Viwd6N45yebmw==
+"v-tooltip@https://github.com/paulshen/v-tooltip.git#vue3":
+  version "2.0.3"
+  resolved "https://github.com/paulshen/v-tooltip.git#8445d63aad4464dcc79d6b5815240e855422fc8d"
   dependencies:
-    "@popperjs/core" "^2.11.0"
-    vue-resize "^2.0.0-alpha.1"
+    lodash "^4.17.15"
+    popper.js "^1.16.0"
+    vue-resize "^0.4.5"
 
 v8-compile-cache@^2.3.0:
   version "2.3.0"
@@ -2422,10 +2422,10 @@ vue-demi@^0.12.1:
   resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.12.1.tgz#f7e18efbecffd11ab069d1472d7a06e319b4174c"
   integrity sha512-QL3ny+wX8c6Xm1/EZylbgzdoDolye+VpCXRhI2hug9dJTP3OUJ3lmiKN3CsVV3mOJKwFi0nsstbgob0vG7aoIw==
 
-vue-resize@^2.0.0-alpha.1:
-  version "2.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/vue-resize/-/vue-resize-2.0.0-alpha.1.tgz#43eeb79e74febe932b9b20c5c57e0ebc14e2df3a"
-  integrity sha512-7+iqOueLU7uc9NrMfrzbG8hwMqchfVfSzpVlCMeJQe4pyibqyoifDNbKTZvwxZKDvGkB+PdFeKvnGZMoEb8esg==
+vue-resize@^0.4.5:
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/vue-resize/-/vue-resize-0.4.5.tgz#4777a23042e3c05620d9cbda01c0b3cc5e32dcea"
+  integrity sha512-bhP7MlgJQ8TIkZJXAfDf78uJO+mEI3CaLABLjv0WNzr4CcGRGPIAItyWYnP6LsPA4Oq0WE+suidNs6dgpO4RHg==
 
 vue-router@4.0.12:
   version "4.0.12"

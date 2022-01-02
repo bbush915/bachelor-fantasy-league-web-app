@@ -1,5 +1,6 @@
 import { useQuery, useResult } from "@vue/apollo-composable";
 import gql from "graphql-tag";
+import { computed, reactive, Ref } from "vue";
 
 type TResult = {
   seasonWeeks: {
@@ -8,7 +9,9 @@ type TResult = {
   }[];
 };
 
-export function useSeasonWeeks(seasonId: string) {
+export function useSeasonWeeks(seasonId: Ref<string | undefined>) {
+  const isQueryEnabled = computed(() => !!seasonId.value);
+
   const { result } = useQuery<TResult>(
     gql`
       query SeasonWeeks($seasonId: ID!) {
@@ -18,7 +21,10 @@ export function useSeasonWeeks(seasonId: string) {
         }
       }
     `,
-    { seasonId }
+    { seasonId },
+    reactive({
+      enabled: isQueryEnabled,
+    })
   );
 
   const seasonWeeks = useResult(result, [] as TResult["seasonWeeks"], (data) =>

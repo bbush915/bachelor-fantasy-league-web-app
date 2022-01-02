@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-  import { computed, defineComponent, PropType, ref, toRefs } from "vue";
+  import { computed, defineComponent, PropType, ref, toRef, toRefs } from "vue";
 
   import WeeklyLeaderboard from "@/components/common/WeeklyLeaderboard/index.vue";
   import { useSeasonWeeks } from "@/composables";
@@ -61,7 +61,8 @@
 
     setup(props) {
       const { leagueContext } = toRefs(props);
-      const { leagueMemberId, seasonId, weekNumber, isComplete } = leagueContext.value;
+      const { leagueMemberId, weekNumber, isComplete } = leagueContext.value;
+      const seasonId = toRef(leagueContext.value, "seasonId");
 
       const { seasonWeeks } = useSeasonWeeks(seasonId);
 

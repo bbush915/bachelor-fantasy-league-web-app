@@ -29,21 +29,21 @@
 <script lang="ts">
   import { computed, defineComponent, ref, onMounted, onUnmounted } from "vue";
 
-  import { useCurrentSeasonWeek } from "@/composables";
+  import { useActiveSeason } from "@/composables";
 
   const EpisodeCountdown = defineComponent({
     setup() {
-      const { currentSeasonWeek } = useCurrentSeasonWeek();
+      const { activeSeason } = useActiveSeason();
 
       const now = ref(new Date());
       const interval = ref<number>();
 
       const timeRemaining = computed(() => {
-        if (!currentSeasonWeek.value) {
+        if (!activeSeason.value?.currentSeasonWeek) {
           return null;
         }
 
-        const episodeAirDate = new Date(currentSeasonWeek.value.episodeAirDate);
+        const episodeAirDate = new Date(activeSeason.value.currentSeasonWeek.episodeAirDate);
 
         if (episodeAirDate < now.value) {
           return null;

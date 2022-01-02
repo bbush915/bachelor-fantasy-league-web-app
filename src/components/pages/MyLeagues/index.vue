@@ -38,7 +38,7 @@
   import { computed, defineComponent, reactive } from "vue";
 
   import RoseIcon from "@/assets/rose.svg?component";
-  import { useCurrentSeasonWeek } from "@/composables";
+  import { useActiveSeason } from "@/composables";
   import Loading from "@/components/common/Loading/index.vue";
   import LeagueTable from "./components/LeagueTable/index.vue";
 
@@ -63,14 +63,14 @@
     },
 
     setup() {
-      const { currentSeasonWeek } = useCurrentSeasonWeek();
+      const { activeSeason } = useActiveSeason();
 
-      const currentSeasonWeekId = computed(() => currentSeasonWeek.value?.id);
+      const currentSeasonWeekId = computed(() => activeSeason.value?.currentSeasonWeek.id);
       const isQueryEnabled = computed(() => !!currentSeasonWeekId.value);
       const isLocked = computed(
         () =>
-          currentSeasonWeek.value?.episodeAirDate &&
-          new Date(currentSeasonWeek.value.episodeAirDate) < new Date()
+          activeSeason.value?.currentSeasonWeek.episodeAirDate &&
+          new Date(activeSeason.value.currentSeasonWeek.episodeAirDate) < new Date()
       );
 
       const { result, loading } = useQuery<TResult>(

@@ -12,6 +12,7 @@ export interface IProfile {
   avatarUrl?: string;
   sendLineupReminders: boolean;
   sendScoringRecaps: boolean;
+  setRandomLineup: boolean;
 }
 
 export function useProfile() {
@@ -25,6 +26,7 @@ export function useProfile() {
           avatarUrl
           sendLineupReminders
           sendScoringRecaps
+          setRandomLineup
         }
       }
     `

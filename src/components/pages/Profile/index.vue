@@ -32,6 +32,19 @@
       </div>
 
       <div class="flex flex-col mb-8">
+        <label class="mb-2">General Preferences</label>
+
+        <div class="flex items-center mb-1">
+          <div class="w-5 h-5 mr-2">
+            <CheckIcon v-if="profile.setRandomLineup" />
+            <CloseIcon v-else />
+          </div>
+
+          <span class="mt-0.5 txt-label"> Use random lineup if you forget to set one</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col mb-8">
         <label class="mb-2">Email Preferences</label>
 
         <div class="flex items-center mb-1">

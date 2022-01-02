@@ -17,7 +17,7 @@
       <CheckIcon v-if="checked" />
     </div>
 
-    <label class="block pt-1 ml-2" :for="$attrs.id">{{ label }}</label>
+    <label v-if="label" class="block pt-1 ml-2" :for="$attrs.id">{{ label }}</label>
   </div>
 </template>
 
@@ -41,7 +41,6 @@
 
       label: {
         type: String,
-        required: true,
       },
     },
   });

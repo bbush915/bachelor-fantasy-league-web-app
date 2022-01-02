@@ -1,6 +1,6 @@
 import { useApolloClient } from "@vue/apollo-composable";
 import gql from "graphql-tag";
-import { NavigationGuard, RouteLocationNormalized } from "vue-router";
+import { NavigationGuard } from "vue-router";
 
 import { getToken } from "@/utils/authentication";
 
@@ -27,7 +27,7 @@ export const validateLeagueMembership: NavigationGuard = async (to) => {
   return true;
 };
 
-export const validateLeagueAccessibility: NavigationGuard = async (to: RouteLocationNormalized) => {
+export const validateLeagueAccessibility: NavigationGuard = async (to) => {
   const { client } = useApolloClient();
 
   const { data } = await client.query({
@@ -59,3 +59,28 @@ export const validateLeagueAccessibility: NavigationGuard = async (to: RouteLoca
 
   return true;
 };
+
+export const validateRole =
+  (role: string): NavigationGuard =>
+  async () => {
+    const { client } = useApolloClient();
+
+    const { data } = await client.query({
+      query: gql`
+        query ValidateUserRole($role: String!) {
+          validateUserRole(role: $role) {
+            success
+          }
+        }
+      `,
+      variables: {
+        role,
+      },
+    });
+
+    if (!data?.validateUserRole.success) {
+      return { name: "home" };
+    }
+
+    return true;
+  };

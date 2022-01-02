@@ -72,7 +72,7 @@
   import LockIcon from "@/assets/lock.svg?component";
   import Avatar from "@/components/common/Avatar/index.vue";
   import FavoriteIndicator from "@/components/common/FavoriteIndicator/index.vue";
-  import { useCurrentSeasonWeek, useLineupContestants, useUserFavorites } from "@/composables";
+  import { useActiveSeason, useLineupContestants, useUserFavorites } from "@/composables";
   import { LeagueContext } from "@/types";
 
   const Lineup = defineComponent({
@@ -114,12 +114,12 @@
 
       const isLineupSet = computed(() => lineupContestants_.value.length > 0);
 
-      const { currentSeasonWeek } = useCurrentSeasonWeek();
+      const { activeSeason } = useActiveSeason();
 
       const isLocked = computed(
         () =>
-          currentSeasonWeek.value?.episodeAirDate &&
-          new Date(currentSeasonWeek.value.episodeAirDate) < new Date()
+          activeSeason.value?.currentSeasonWeek.episodeAirDate &&
+          new Date(activeSeason.value.currentSeasonWeek.episodeAirDate) < new Date()
       );
 
       return {

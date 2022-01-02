@@ -4,6 +4,8 @@ import gql from "graphql-tag";
 type TResult = {
   activeSeason: {
     id: string;
+    currentWeekNumber: number;
+    isComplete: boolean;
     currentSeasonWeek: {
       id: string;
       episodeAirDate: string;
@@ -11,12 +13,14 @@ type TResult = {
   };
 };
 
-export function useCurrentSeasonWeek() {
+export function useActiveSeason() {
   const { result } = useQuery<TResult>(
     gql`
-      query CurrentSeasonWeek {
+      query ActiveSeason {
         activeSeason {
           id
+          currentWeekNumber
+          isComplete
           currentSeasonWeek {
             id
             episodeAirDate
@@ -26,9 +30,9 @@ export function useCurrentSeasonWeek() {
     `
   );
 
-  const currentSeasonWeek = useResult(result, null, (data) => data.activeSeason.currentSeasonWeek);
+  const activeSeason = useResult(result, null, (data) => data.activeSeason);
 
   return {
-    currentSeasonWeek,
+    activeSeason,
   };
 }

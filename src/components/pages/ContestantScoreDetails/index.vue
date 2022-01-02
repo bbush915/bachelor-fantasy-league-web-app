@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-  import { computed, defineComponent, PropType, ref, toRefs } from "vue";
+  import { computed, defineComponent, PropType, ref, toRef, toRefs } from "vue";
 
   import { useSeasonWeekContestants, useSeasonWeeks } from "@/composables";
   import { LeagueContext } from "@/types";
@@ -36,7 +36,8 @@
 
     setup(props) {
       const { leagueContext } = toRefs(props);
-      const { seasonId, weekNumber, isComplete } = leagueContext.value;
+      const { weekNumber, isComplete } = leagueContext.value;
+      const seasonId = toRef(leagueContext.value, "seasonId");
 
       const { seasonWeeks } = useSeasonWeeks(seasonId);
 

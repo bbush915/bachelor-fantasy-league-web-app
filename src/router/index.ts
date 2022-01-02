@@ -8,6 +8,7 @@ import CreateLeague from "@/components/pages/CreateLeague/index.vue";
 import EditProfile from "@/components/pages/EditProfile/index.vue";
 import EditLeagueDetails from "@/components/pages/EditLeagueDetails/index.vue";
 import EditLeagueMembers from "@/components/pages/EditLeagueMembers/index.vue";
+import EditWeeklyScores from "@/components/pages/EditWeeklyScores/index.vue";
 import EmailVerificationSent from "@/components/pages/EmailVerificationSent/index.vue";
 import EmailVerificationSuccess from "@/components/pages/EmailVerificationSuccess/index.vue";
 import FindLeague from "@/components/pages/FindLeague/index.vue";
@@ -27,7 +28,7 @@ import SetLineup from "@/components/pages/SetLineup/index.vue";
 import VerifyEmail from "@/components/pages/VerifyEmail/index.vue";
 import WeeklyScoreDetails from "@/components/pages/WeeklyScoreDetails/index.vue";
 import { isAuthenticated } from "@/utils/authentication";
-import { validateLeagueAccessibility, validateLeagueMembership } from "./guards";
+import { validateLeagueAccessibility, validateLeagueMembership, validateRole } from "./guards";
 
 const routes: RouteRecordRaw[] = [
   { path: "/", name: "home", component: Home },
@@ -38,6 +39,12 @@ const routes: RouteRecordRaw[] = [
     name: "create-league",
     component: CreateLeague,
     meta: { requireAuth: true },
+  },
+  {
+    path: "/edit-weekly-scores",
+    name: "edit-weekly-scores",
+    component: EditWeeklyScores,
+    beforeEnter: validateRole("admin"),
   },
   { path: "/find-league", name: "find-league", component: FindLeague },
   {
