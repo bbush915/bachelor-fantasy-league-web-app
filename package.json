@@ -1,40 +1,40 @@
 {
   "name": "bachelor-fantasy-league-web-app",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "repository": "https://github.com/bbush915/bachelor-fantasy-web-app.git",
   "author": "Bryan Bush <bryan@dialexa.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "vite",
-    "build": "vuedx-typecheck . && vite build",
-    "serve": "vite preview"
+    "start": "vite",
+    "build": "vuedx-typecheck . && vite build"
   },
   "dependencies": {
-    "@apollo/client": "^3.3.15",
-    "@vue/apollo-composable": "^4.0.0-alpha.12",
-    "graphql": "^15.5.0",
-    "graphql-tag": "^2.11.0",
-    "simplebar": "^5.3.0",
-    "v-tooltip": "https://github.com/paulshen/v-tooltip.git#vue3",
-    "vee-validate": "^4.3.0",
-    "vue": "^3.0.11",
-    "vue-router": "4.0.6",
-    "vuex": "^4.0.0",
-    "yup": "^0.32.9"
+    "@apollo/client": "3.5.6",
+    "@vue/apollo-composable": "4.0.0-alpha.16",
+    "graphql": "15.8.0",
+    "graphql-tag": "2.12.6",
+    "simplebar": "5.3.6",
+    "v-tooltip": "v4.0.0-beta.5",
+    "vee-validate": "4.5.7",
+    "vue": "3.2.26",
+    "vue-router": "4.0.12",
+    "vuex": "4.0.2",
+    "yup": "0.32.11"
   },
   "devDependencies": {
-    "@types/node": "^14.14.39",
-    "@vitejs/plugin-vue": "^1.2.1",
-    "@vue/compiler-sfc": "^3.0.11",
-    "@vuedx/typecheck": "^0.6.3",
-    "@vuedx/typescript-plugin-vue": "^0.6.3",
-    "autoprefixer": "^10.2.5",
-    "postcss": "^8.2.10",
-    "postcss-import": "^14.0.1",
-    "postcss-nesting": "^7.0.1",
-    "tailwindcss": "^2.1.1",
-    "typescript": "^4.2.4",
-    "vite": "^2.1.5",
-    "vite-svg-loader": "^1.5.1"
+    "@types/node": "17.0.6",
+    "@vitejs/plugin-vue": "2.0.1",
+    "@vuedx/typecheck": "0.7.4",
+    "@vuedx/typescript-plugin-vue": "0.7.4",
+    "autoprefixer": "10.4.1",
+    "postcss": "8.4.5",
+    "postcss-import": "14.0.2",
+    "postcss-nesting": "10.1.0",
+    "stylelint": "14.2.0",
+    "stylelint-config-recommended": "6.0.0",
+    "tailwindcss": "3.0.8",
+    "typescript": "4.5.4",
+    "vite": "2.7.10",
+    "vite-svg-loader": "1.5.1"
   }
 }

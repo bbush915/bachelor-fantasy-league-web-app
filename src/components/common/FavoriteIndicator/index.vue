@@ -8,8 +8,8 @@
 <script lang="ts">
   import { defineComponent } from "vue";
 
-  import FavoriteIconFilled from "@/assets/favorite-filled.svg";
-  import FavoriteIcon from "@/assets/favorite.svg";
+  import FavoriteIconFilled from "@/assets/favorite-filled.svg?component";
+  import FavoriteIcon from "@/assets/favorite.svg?component";
 
   const FavoriteIndicator = defineComponent({
     components: {

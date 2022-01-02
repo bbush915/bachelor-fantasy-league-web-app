@@ -46,8 +46,8 @@
 <script lang="ts">
   import { computed, defineComponent, PropType, ref, toRefs } from "vue";
 
-  import MoreIcon from "@/assets/more.svg";
-  import PlaceholderIcon from "@/assets/placeholder.svg";
+  import MoreIcon from "@/assets/more.svg?component";
+  import PlaceholderIcon from "@/assets/placeholder.svg?component";
   import Avatar from "@/components/common/Avatar/index.vue";
   import { useSeasonWeekContestants } from "@/composables";
   import { LeagueContext } from "@/types";

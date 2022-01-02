@@ -30,7 +30,7 @@ export function useProfile() {
     `
   );
 
-  const profile = useResult<TResult, null, TResult["me"]>(result, null, (data) => data.me);
+  const profile = useResult(result, null, (data) => data.me);
 
   return { profile };
 }

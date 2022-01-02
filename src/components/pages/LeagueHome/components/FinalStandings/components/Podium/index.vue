@@ -21,9 +21,9 @@
   import { defineComponent } from "vue";
 
   import Avatar from "@/components/common/Avatar/index.vue";
-  import BronzeMedal from "@/assets/bronze-medal.svg";
-  import GoldMedal from "@/assets/gold-medal.svg";
-  import SilverMedal from "@/assets/silver-medal.svg";
+  import BronzeMedal from "@/assets/bronze-medal.svg?component";
+  import GoldMedal from "@/assets/gold-medal.svg?component";
+  import SilverMedal from "@/assets/silver-medal.svg?component";
 
   const Podium = defineComponent({
     components: {

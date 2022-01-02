@@ -15,7 +15,7 @@ const authLink = setContext((_, { headers }) => {
 
 export const getApolloClient = () => {
   const httpLink = createHttpLink({
-    uri: import.meta.env.VITE_API_URL as string,
+    uri: (import.meta as any).env.VITE_API_URL as string,
   });
 
   const errorLink = onError(({ graphQLErrors, networkError }) => {

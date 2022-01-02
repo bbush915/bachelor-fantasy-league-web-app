@@ -45,8 +45,8 @@
 <script lang="ts">
   import { defineComponent } from "vue";
 
-  import Logo from "@/assets/logo.svg";
-  import Strikethrough from "@/assets/strikethrough.svg";
+  import Logo from "@/assets/logo.svg?component";
+  import Strikethrough from "@/assets/strikethrough.svg?component";
   import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
   import SteamOverlay from "@/components/common/SteamOverlay/index.vue";
   import { useAuthentication } from "@/composables";

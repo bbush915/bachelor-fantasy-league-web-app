@@ -23,7 +23,17 @@
       <router-link class="mr-5 text-sm font-thin" to="/login">Log in</router-link>
 
       <router-link
-        class="flex items-center justify-center w-32 text-sm rounded-full h-9 bg-pink text-gray-darkest"
+        class="
+          flex
+          items-center
+          justify-center
+          w-32
+          text-sm
+          rounded-full
+          h-9
+          bg-pink
+          text-gray-darkest
+        "
         :to="{ name: 'registration' }"
       >
         Sign up
@@ -37,7 +47,7 @@
   import gql from "graphql-tag";
   import { computed, defineComponent, watch } from "vue";
 
-  import Logo from "@/assets/logo.svg";
+  import Logo from "@/assets/logo.svg?component";
   import { useAuthentication } from "@/composables";
   import EpisodeCountdown from "./components/EpisodeCountdown/index.vue";
   import Link from "./components/Link/index.vue";

@@ -10,11 +10,8 @@ type TQuitLeagueVariables = { input: { leagueId: string } };
 export function useQuitLeague(leagueId: string) {
   const store = useStore();
 
-  const {
-    isConfirmationModalVisible,
-    showConfirmationModal,
-    hideConfirmationModal,
-  } = useConfirmationModal();
+  const { isConfirmationModalVisible, showConfirmationModal, hideConfirmationModal } =
+    useConfirmationModal();
 
   const { mutate: _quitLeague } = useMutation<TQuitLeagueResult, TQuitLeagueVariables>(
     gql`
@@ -27,13 +24,13 @@ export function useQuitLeague(leagueId: string) {
   );
 
   async function quitLeague(callback: () => void) {
-    const { data } = await _quitLeague({
+    const response = await _quitLeague({
       input: {
         leagueId,
       },
     });
 
-    if (data) {
+    if (response?.data) {
       callback();
 
       store.dispatch("pushNotification", {

@@ -37,7 +37,7 @@
   import gql from "graphql-tag";
   import { computed, defineComponent, reactive } from "vue";
 
-  import RoseIcon from "@/assets/rose.svg";
+  import RoseIcon from "@/assets/rose.svg?component";
   import { useCurrentSeasonWeek } from "@/composables";
   import Loading from "@/components/common/Loading/index.vue";
   import LeagueTable from "./components/LeagueTable/index.vue";

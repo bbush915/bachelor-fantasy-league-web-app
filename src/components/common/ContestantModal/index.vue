@@ -51,7 +51,7 @@
 <script lang="ts">
   import { computed, defineComponent, PropType, toRefs } from "vue";
 
-  import CloseIcon from "@/assets/close.svg";
+  import CloseIcon from "@/assets/close.svg?component";
   import Avatar from "@/components/common/Avatar/index.vue";
   import FavoriteIndicator from "@/components/common/FavoriteIndicator/index.vue";
   import { IContestant, useAuthentication, useUserFavorites } from "@/composables";

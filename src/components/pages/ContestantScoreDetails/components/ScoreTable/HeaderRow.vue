@@ -45,7 +45,7 @@
 <script lang="ts">
   import { defineComponent } from "vue";
 
-  import InfoIcon from "@/assets/info.svg";
+  import InfoIcon from "@/assets/info.svg?component";
 
   const HeaderRow = defineComponent({
     components: {

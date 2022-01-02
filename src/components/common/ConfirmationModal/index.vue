@@ -28,7 +28,7 @@
 <script lang="ts">
   import { defineComponent } from "vue";
 
-  import CloseIcon from "@/assets/close.svg";
+  import CloseIcon from "@/assets/close.svg?component";
 
   const ConfirmationModal = defineComponent({
     components: {

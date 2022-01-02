@@ -24,7 +24,7 @@
   import { defineComponent } from "vue";
   import { useStore } from "vuex";
 
-  import EmailIcon from "@/assets/email.svg";
+  import EmailIcon from "@/assets/email.svg?component";
   import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
 
   type TSendVerificationEmailResult = { sendVerificationEmail: { success: boolean } };

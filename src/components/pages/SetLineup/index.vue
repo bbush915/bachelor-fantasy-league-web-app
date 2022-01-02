@@ -22,7 +22,16 @@
           </button>
 
           <button
-            class="relative w-24 h-24 mb-3 overflow-hidden rounded-full  focus:outline-none contestant"
+            class="
+              relative
+              w-24
+              h-24
+              mb-3
+              overflow-hidden
+              rounded-full
+              focus:outline-none
+              contestant
+            "
             @click="toggleContestant(contestant)"
             :class="{
               selected: contestant.isSelected,
@@ -73,8 +82,8 @@
   import { useRouter } from "vue-router";
   import { useStore } from "vuex";
 
-  import InfoIcon from "@/assets/info.svg";
-  import RoseIcon from "@/assets/rose.svg";
+  import InfoIcon from "@/assets/info.svg?component";
+  import RoseIcon from "@/assets/rose.svg?component";
   import Avatar from "@/components/common/Avatar/index.vue";
   import ContestantModal from "@/components/common/ContestantModal/index.vue";
   import FavoriteIndicator from "@/components/common/FavoriteIndicator/index.vue";
@@ -135,7 +144,7 @@
       );
 
       const weeklyContestants = useResult(result, [] as TResult["weeklyContestants"], (data) =>
-        data.weeklyContestants.sort((x, y) => x.name.localeCompare(y.name))
+        data.weeklyContestants.slice(0).sort((x, y) => x.name.localeCompare(y.name))
       );
 
       const { userFavorites } = useUserFavorites();

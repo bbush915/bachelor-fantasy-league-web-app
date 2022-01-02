@@ -24,7 +24,7 @@
 <script lang="ts">
   import { defineComponent } from "vue";
 
-  import CheckIcon from "@/assets/check.svg";
+  import CheckIcon from "@/assets/check.svg?component";
 
   const Checkbox = defineComponent({
     components: {

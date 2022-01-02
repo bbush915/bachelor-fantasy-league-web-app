@@ -36,10 +36,8 @@ export function useContestants() {
     { fetchPolicy: "cache-first" }
   );
 
-  const contestants = useResult(
-    result,
-    [] as TResult["allContestants"],
-    (data) => data.allContestants.sort((x, y) => x.name.localeCompare(y.name))
+  const contestants = useResult(result, [] as TResult["allContestants"], (data) =>
+    data.allContestants.slice(0).sort((x, y) => x.name.localeCompare(y.name))
   );
 
   return {

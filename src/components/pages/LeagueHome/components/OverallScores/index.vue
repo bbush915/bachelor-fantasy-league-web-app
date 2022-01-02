@@ -33,8 +33,8 @@
 <script lang="ts">
   import { computed, defineComponent, PropType, toRefs } from "vue";
 
-  import MoreIcon from "@/assets/more.svg";
-  import PlaceholderIcon from "@/assets/placeholder.svg";
+  import MoreIcon from "@/assets/more.svg?component";
+  import PlaceholderIcon from "@/assets/placeholder.svg?component";
   import OverallLeaderboard from "@/components/common/OverallLeaderboard/index.vue";
   import { LeagueContext } from "@/types";
 

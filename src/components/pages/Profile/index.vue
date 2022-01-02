@@ -69,9 +69,9 @@
   import { useRouter } from "vue-router";
   import { useStore } from "vuex";
 
-  import CheckIcon from "@/assets/check.svg";
-  import CloseIcon from "@/assets/close.svg";
-  import EditIcon from "@/assets/edit.svg";
+  import CheckIcon from "@/assets/check.svg?component";
+  import CloseIcon from "@/assets/close.svg?component";
+  import EditIcon from "@/assets/edit.svg?component";
   import Avatar from "@/components/common/Avatar/index.vue";
   import Input from "@/components/common/Input/index.vue";
   import { useProfile } from "@/composables";

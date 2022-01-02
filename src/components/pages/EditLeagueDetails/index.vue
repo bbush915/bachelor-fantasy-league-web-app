@@ -34,7 +34,7 @@
   import { useRouter } from "vue-router";
   import { useStore } from "vuex";
 
-  import DeleteIcon from "@/assets/delete.svg";
+  import DeleteIcon from "@/assets/delete.svg?component";
   import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
   import { useConfirmationModal } from "@/composables";
   import { LeagueContext } from "@/types";
@@ -94,11 +94,8 @@
 
       const league = useResult(result, null, (data) => data.league);
 
-      const {
-        isConfirmationModalVisible,
-        showConfirmationModal,
-        hideConfirmationModal,
-      } = useConfirmationModal();
+      const { isConfirmationModalVisible, showConfirmationModal, hideConfirmationModal } =
+        useConfirmationModal();
 
       const { mutate: deleteLeague } = useMutation<TDeleteLeagueResult, TDeleteLeagueVariables>(
         gql`

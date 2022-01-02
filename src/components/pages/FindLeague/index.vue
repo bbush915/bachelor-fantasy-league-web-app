@@ -47,7 +47,7 @@
   import gql from "graphql-tag";
   import { computed, defineComponent, reactive, ref, watch } from "vue";
 
-  import SearchIcon from "@/assets/search.svg";
+  import SearchIcon from "@/assets/search.svg?component";
   import Input from "@/components/common/Input/index.vue";
   import Loading from "@/components/common/Loading/index.vue";
   import LeagueTable from "./components/LeagueTable/index.vue";
@@ -121,7 +121,7 @@
       );
 
       const leagues = useResult(result, [], (data) =>
-        data.leagues.sort((x, y) => x.name.localeCompare(y.name))
+        data.leagues.slice(0).sort((x, y) => x.name.localeCompare(y.name))
       );
 
       watch(

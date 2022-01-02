@@ -34,7 +34,7 @@
 <script lang="ts">
   import { defineComponent, PropType } from "vue";
 
-  import EditIcon from "@/assets/edit.svg";
+  import EditIcon from "@/assets/edit.svg?component";
   import Avatar from "@/components/common/Avatar/index.vue";
   import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
 

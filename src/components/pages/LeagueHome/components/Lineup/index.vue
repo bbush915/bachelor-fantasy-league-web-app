@@ -67,9 +67,9 @@
 <script lang="ts">
   import { computed, defineComponent, PropType, ref, toRefs } from "vue";
 
-  import AlertIcon from "@/assets/alert.svg";
-  import EditIcon from "@/assets/edit.svg";
-  import LockIcon from "@/assets/lock.svg";
+  import AlertIcon from "@/assets/alert.svg?component";
+  import EditIcon from "@/assets/edit.svg?component";
+  import LockIcon from "@/assets/lock.svg?component";
   import Avatar from "@/components/common/Avatar/index.vue";
   import FavoriteIndicator from "@/components/common/FavoriteIndicator/index.vue";
   import { useCurrentSeasonWeek, useLineupContestants, useUserFavorites } from "@/composables";

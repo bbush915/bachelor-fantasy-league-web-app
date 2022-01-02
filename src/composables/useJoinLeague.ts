@@ -19,13 +19,13 @@ export function useJoinLeague(leagueId: string) {
   );
 
   async function joinLeague(callback: () => void) {
-    const { data } = await _joinLeague({
+    const response = await _joinLeague({
       input: {
         leagueId,
       },
     });
 
-    if (data) {
+    if (response?.data) {
       callback();
 
       store.dispatch("pushNotification", {

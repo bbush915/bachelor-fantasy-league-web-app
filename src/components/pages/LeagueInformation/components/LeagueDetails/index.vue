@@ -62,7 +62,7 @@
   import { computed, defineComponent, PropType, toRefs } from "vue";
   import { useRouter } from "vue-router";
 
-  import EditIcon from "@/assets/edit.svg";
+  import EditIcon from "@/assets/edit.svg?component";
   import Avatar from "@/components/common/Avatar/index.vue";
   import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
   import { useAuthentication, useJoinLeague, useQuitLeague, useShareLeague } from "@/composables";

@@ -72,7 +72,6 @@ export function useWeeklyLeaderboard(leagueId: string, seasonWeekId: Ref<string 
     const leagueMembers = data.league.leagueMembers.filter((x) => x.isActive);
 
     return leagueMembers
-      .slice(0)
       .sort((x, y) => {
         const rankComparison =
           (x.leagueMemberScore.weeklyRank ?? Number.MAX_VALUE) -
@@ -93,7 +92,7 @@ export function useWeeklyLeaderboard(leagueId: string, seasonWeekId: Ref<string 
               : "-",
             avatarUrl: leagueMember.user.avatarUrl,
             displayName: leagueMember.user.displayName,
-            score: leagueMember.leagueMemberScore.weeklyScore ?? "-",
+            score: leagueMember.leagueMemberScore.weeklyScore?.toString() ?? "-",
           } as WeeklyLeaderboardEntry)
       );
   });

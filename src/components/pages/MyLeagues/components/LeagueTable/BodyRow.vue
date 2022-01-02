@@ -48,10 +48,10 @@
 <script lang="ts">
   import { defineComponent, toRefs } from "vue";
 
-  import ActionRequiredIcon from "@/assets/action-required.svg";
-  import EditIcon from "@/assets/edit.svg";
-  import LockIcon from "@/assets/lock.svg";
-  import OkIcon from "@/assets/ok.svg";
+  import ActionRequiredIcon from "@/assets/action-required.svg?component";
+  import EditIcon from "@/assets/edit.svg?component";
+  import LockIcon from "@/assets/lock.svg?component";
+  import OkIcon from "@/assets/ok.svg?component";
   import { getOrdinal } from "@/utils";
 
   const BodyRow = defineComponent({

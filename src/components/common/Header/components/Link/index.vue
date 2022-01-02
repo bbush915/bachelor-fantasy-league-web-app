@@ -10,7 +10,7 @@
 <script lang="ts">
   import { defineComponent } from "vue";
 
-  import LipstickSmear from "@/assets/lipstick-smear.svg";
+  import LipstickSmear from "@/assets/lipstick-smear.svg?component";
 
   const Link = defineComponent({
     components: {

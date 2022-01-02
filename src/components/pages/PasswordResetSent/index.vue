@@ -19,7 +19,7 @@
 <script lang="ts">
   import { defineComponent } from "vue";
 
-  import EmailIcon from "@/assets/email.svg";
+  import EmailIcon from "@/assets/email.svg?component";
   import GradientOverlay from "@/components/common/GradientOverlay/index.vue";
 
   const PasswordResetSent = defineComponent({

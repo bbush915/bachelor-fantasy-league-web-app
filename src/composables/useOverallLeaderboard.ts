@@ -85,7 +85,6 @@ export function useOverallLeaderboard(leagueId: string, seasonWeekId: Ref<string
     }
 
     return leagueMembers
-      .slice(0)
       .sort((x, y) => {
         const rankComparison =
           (x.leagueMemberScore.cumulativeRank ?? Number.MAX_VALUE) -
@@ -106,7 +105,7 @@ export function useOverallLeaderboard(leagueId: string, seasonWeekId: Ref<string
               : "-",
             avatarUrl: leagueMember.user.avatarUrl,
             displayName: leagueMember.user.displayName,
-            score: leagueMember.leagueMemberScore.cumulativeScore ?? "-",
+            score: leagueMember.leagueMemberScore.cumulativeScore?.toString() ?? "-",
             widthFactor: getWidthFactor(
               minScore,
               maxScore,

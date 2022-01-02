@@ -8,7 +8,7 @@
 <script lang="ts">
   import { defineComponent } from "vue";
 
-  import DefaultAvatar from "@/assets/default-avatar.svg";
+  import DefaultAvatar from "@/assets/default-avatar.svg?component";
 
   const Avatar = defineComponent({
     components: {

@@ -42,7 +42,7 @@
   import { defineComponent, PropType, ref, toRefs } from "vue";
   import { useStore } from "vuex";
 
-  import EditIcon from "@/assets/edit.svg";
+  import EditIcon from "@/assets/edit.svg?component";
   import Avatar from "@/components/common/Avatar/index.vue";
   import ConfirmationModal from "@/components/common/ConfirmationModal/index.vue";
   import ScrollContainer from "@/components/common/ScrollContainer/index.vue";
@@ -132,11 +132,8 @@
             .sort((x, y) => x.displayName.localeCompare(y.displayName))
       );
 
-      const {
-        isConfirmationModalVisible,
-        showConfirmationModal,
-        hideConfirmationModal,
-      } = useConfirmationModal();
+      const { isConfirmationModalVisible, showConfirmationModal, hideConfirmationModal } =
+        useConfirmationModal();
 
       const selectedLeagueMember = ref<TLeagueMember | null>(null);
 

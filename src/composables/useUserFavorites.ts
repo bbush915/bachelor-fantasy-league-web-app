@@ -68,13 +68,13 @@ export function useUserFavorites() {
   );
 
   async function addUserFavorite(contestantId: string) {
-    const { data } = await addFavorite_({
+    const response = await addFavorite_({
       input: {
         contestantId,
       },
     });
 
-    if (!data) {
+    if (!response?.data) {
       store.dispatch("pushNotification", {
         type: "error",
         message: "Failed to save favorite. Please try again later",
@@ -119,13 +119,13 @@ export function useUserFavorites() {
   );
 
   async function removeUserFavorite(contestantId: string) {
-    const { data } = await removeFavorite_({
+    const response = await removeFavorite_({
       input: {
         contestantId,
       },
     });
 
-    if (!data) {
+    if (!response?.data) {
       store.dispatch("pushNotification", {
         type: "error",
         message: "Failed to remove favorite. Please try again later",
