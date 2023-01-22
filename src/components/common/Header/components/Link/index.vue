@@ -38,6 +38,7 @@
     visibility: collapse;
     top: -18px;
     left: -18px;
+    z-index: -1;
   }
 
   .router-link-active {
